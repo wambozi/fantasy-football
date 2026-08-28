@@ -21,6 +21,7 @@
     cards: $("cards"), bypos: $("bypos"), brief: $("brief"), briefKicker: $("brief-kicker"), briefBody: $("brief-body"),
     needsRows: $("needs-rows"), likelyHead: $("likely-head"),
     rosterCount: $("roster-count"), roster: $("roster"),
+    myteam: $("myteam"), myteamCount: $("myteam-count"), myteamNote: $("myteam-note"),
     picksIn: $("picks-in"), ondeck: $("ondeck"), board: $("board"), toast: $("toast"),
   };
   const ORDER = ["QB", "RB", "WR", "TE", "DST"];
@@ -164,6 +165,7 @@
     renderBrief(p, live);
     renderLeague(st, ad, me, live, next);
     renderRoster(st, me, myCounts);
+    renderMyTeam(st, ad, me, myCounts);
     renderRail(st, ad, me, live, next);
     renderAutomation(p.automation);
   }
@@ -351,6 +353,62 @@
       ? `<div class="dc-slot"><b>${esc(s.label)}</b><span title="${esc(s.pl.name)}">${esc(lastName(s.pl.name))}</span></div>`
       : `<div class="dc-slot is-open"><b>${esc(s.label)}</b><span>open</span></div>`).join("") +
       bench.map((p) => `<div class="dc-slot"><b>Bench</b><span title="${esc(p.name)}">${esc(lastName(p.name))}</span></div>`).join("");
+  }
+
+  // My team, every spot: starters in league order, flex, bench, with the draft facts
+  // behind each player. Empty starter/flex slots stay visible as "open" rows.
+  function renderMyTeam(st, ad, me, c) {
+    if (!league) { el.myteam.innerHTML = ""; return; }
+    const ids = ((st.rosters || {})[me] || []);
+    const pickOf = new Map((st.picks || []).filter((pk) => pk.team === me).map((pk) => [pk.player_id, pk]));
+    const keeperSlot = new Map(league.slots.filter((s) => s.keeper_id && s.team === me).map((s) => [s.keeper_id, s]));
+    const players = ids.map((id) => byId.get(id)).filter(Boolean);
+    const byPos = {};
+    for (const p of players) (byPos[p.pos] = byPos[p.pos] || []).push(p);
+    // Same slotting as the roster strip: starters by position order, then flex from the
+    // surplus, then everything else on the bench.
+    const rows = [];
+    for (const pos of ORDER) {
+      const n = roster().starters[pos] || 0;
+      for (let i = 0; i < n; i++) rows.push({ label: pos + (n > 1 ? i + 1 : ""), pl: (byPos[pos] || [])[i] });
+    }
+    const surplus = roster().flex.eligible.flatMap((pos) => (byPos[pos] || []).slice(roster().starters[pos] || 0));
+    for (let i = 0; i < roster().flex.count; i++) rows.push({ label: "Flex", pl: surplus[i] });
+    const bench = surplus.slice(roster().flex.count).concat((byPos.QB || []).slice(roster().starters.QB || 0), (byPos.DST || []).slice(roster().starters.DST || 0));
+    for (const p of bench) rows.push({ label: "Bench", pl: p });
+    // Bye collisions among rostered players: two or more sharing a week.
+    const byeCount = {};
+    for (const p of players) if (p.bye) byeCount[p.bye] = (byeCount[p.bye] || 0) + 1;
+    el.myteamCount.textContent = `${players.length} of ${roster().total_spots} · ${openStarters(c)} starters open`;
+    el.myteam.innerHTML = rows.map((r) => {
+      if (!r.pl) return `<tr class="is-open"><td><span class="dc-slot-label">${esc(r.label)}</span></td><td colspan="11">open</td></tr>`;
+      const p = r.pl;
+      const pk = pickOf.get(p.id);
+      const ks = keeperSlot.get(p.id);
+      const pickTxt = pk ? `#${pk.live_pick}` : ks ? `keeper · R${ks.round}` : "—";
+      const overall = pk ? (slotAt(pk.live_pick) || {}).overall : ks ? ks.overall : null;
+      const d = overall && p.adp_mean ? Math.round(overall - p.adp_mean) : null;
+      const adpTxt = p.adp_mean ? `${Math.round(p.adp_mean)}` + (d != null && !ks ? ` <span class="dc-pick-delta ${d >= 3 ? "is-value" : d <= -3 ? "is-reach" : "is-flat"}">${d > 0 ? "+" : ""}${d}</span>` : "") : "—";
+      const recorded = pk && cur.pick_vor && cur.pick_vor[pk.live_pick];
+      const vor = recorded != null ? recorded : vorOf(p, ad);
+      const clash = p.bye && byeCount[p.bye] > 1;
+      return `<tr>
+        <td><span class="dc-slot-label">${esc(r.label)}</span></td>
+        <td class="is-name">${esc(p.name)}</td>
+        <td>${esc(posTitle(p.pos))}</td>
+        <td>${esc(p.team)}</td>
+        <td class="is-num${clash ? " is-bye-clash" : ""}">${p.bye || "—"}</td>
+        <td class="is-num">${pickTxt}</td>
+        <td class="is-num">${adpTxt}</td>
+        <td class="is-num">${p.ecr ? Math.round(p.ecr) : "—"}</td>
+        <td class="is-num">${p.proj_points ? Math.round(p.proj_points) : "—"}</td>
+        <td class="is-num">${vor == null ? "—" : f1(vor)}</td>
+        <td class="is-num">${p.age || "—"}</td>
+        <td class="is-num">${p.last && p.last.points ? `${Math.round(p.last.points)} / ${p.last.games}g` : "—"}</td>
+      </tr>`;
+    }).join("");
+    const clashes = Object.entries(byeCount).filter(([, n]) => n > 1).map(([w, n]) => `week ${w} ×${n}`);
+    el.myteamNote.textContent = clashes.length ? `Bye collisions: ${clashes.join(", ")}. Proj is 2026 full-PPR points; VOR is value over the waiver level at the time of the pick; 2025 is last season's points and games.` : "Proj is 2026 full-PPR points; VOR is value over the waiver level at the time of the pick; 2025 is last season's points and games.";
   }
 
   // The rail: on deck (next five slots, keepers included) and every slot already

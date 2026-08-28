@@ -599,3 +599,13 @@
 }
 .dc-toast.is-ok  { background: var(--dc-tint-live); }
 .dc-toast.is-err { background: var(--dc-tint-urgent); color: var(--color-accent-2-800); }
+
+/* My team table (league view). Broadsheet's .table does the rows; this only sets the
+   numeric columns tabular and right-aligned, and the slot label in the small-caps voice. */
+.dc-myteam { margin-top: 4px; font-size: 13.5px; }
+.dc-myteam th.is-num, .dc-myteam td.is-num { text-align: right; font-variant-numeric: tabular-nums; }
+.dc-myteam .dc-slot-label { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.dc-myteam tr.is-open td { color: var(--dc-faint); font-style: italic; }
+.dc-myteam tr.is-open .dc-slot-label { color: var(--dc-urgent); font-style: normal; }
+.dc-myteam td.is-name { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+.dc-myteam td.is-bye-clash { color: var(--dc-urgent); }
