@@ -7,6 +7,7 @@
   const $ = (id) => document.getElementById(id);
   const el = {
     app: $("app"), status: $("status"), pick: $("st-pick"), turn: $("st-turn"), gate: $("st-gate"),
+    auto: $("st-auto"), conflict: $("conflict"), conflictText: $("conflict-text"), conflictOk: $("conflict-ok"),
     recs: $("recs"), brief: $("brief"), bypos: $("bypos"), search: $("search"), undo: $("undo"),
     results: $("results"), recent: $("recent"), roster: $("roster"), toast: $("toast"),
   };
@@ -112,7 +113,29 @@
 
     renderRecent(st);
     renderRoster(st, ad, me);
+    renderAutomation(p.automation);
   }
+
+  // Automation freshness (§9.5): seconds since the last event from the userscript, and
+  // the conflict banner when the board and a manual entry disagree.
+  let autoState = null;
+  function renderAutomation(a) {
+    autoState = a || null;
+    tickAutomation();
+    const c = a && (a.last_conflict || a.conflict_note);
+    el.conflict.classList.toggle("hidden", !c);
+    if (c) el.conflictText.textContent = "CONFLICT — " + (a.conflict_note || `pick #${a.last_conflict.live_pick}`) + ". Fix with undo/search, then dismiss.";
+  }
+  function tickAutomation() {
+    const a = autoState;
+    if (!a || !a.seen) { el.auto.classList.add("hidden"); return; }
+    const secs = Math.max(0, Math.round((Date.now() - new Date(a.last_event_at).getTime()) / 1000));
+    const stale = secs > 90;
+    el.auto.textContent = `auto ${secs}s ago · ${a.picks} picks` + (a.unmatched && a.unmatched.length ? ` · unmatched: ${a.unmatched.join(", ")}` : "");
+    el.auto.classList.toggle("stale", stale);
+    el.auto.classList.remove("hidden");
+  }
+  setInterval(tickAutomation, 1000);
 
   function lastName(n) {
     const parts = (n || "").split(" ");
@@ -230,6 +253,7 @@
     if (rec && cur && cur.advice && cur.advice.on_clock) pick(rec.dataset.id);
   });
   el.undo.addEventListener("click", (e) => { e.preventDefault(); undo(); });
+  el.conflictOk.addEventListener("click", async (e) => { e.preventDefault(); try { await api("/api/fandraft/resolve", {}); } catch (err) { toast(err.message); } focus(); });
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); return; }
     // 1/2/3 draft a recommendation, but only when I'm on the clock and the box is empty

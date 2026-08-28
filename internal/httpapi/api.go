@@ -9,6 +9,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -49,6 +50,7 @@ type Server struct {
 	static  fs.FS
 	log     *slog.Logger
 	search  func(q string, snap state.Snapshot, limit int) []*players.Player
+	auto    *automation
 }
 
 // Options configure optional collaborators.
@@ -58,6 +60,10 @@ type Options struct {
 	Static  fs.FS
 	Search  func(q string, snap state.Snapshot, limit int) []*players.Player
 	Log     *slog.Logger
+	// FrameLog is where raw FanDraft frames are appended (recon). "" disables.
+	FrameLog string
+	// FrameParser extracts picks from raw frames once the wire shape is known.
+	FrameParser FrameParser
 }
 
 // New builds the mux.
@@ -65,6 +71,15 @@ func New(lg *league.League, pool *players.Pool, st *state.DraftState, o Options)
 	s := &Server{lg: lg, pool: pool, st: st, advisor: o.Advisor, briefer: o.Briefer, static: o.Static, search: o.Search, log: o.Log}
 	if s.log == nil {
 		s.log = slog.Default()
+	}
+	s.auto = &automation{parser: o.FrameParser}
+	if o.FrameLog != "" {
+		f, err := os.OpenFile(o.FrameLog, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
+		if err != nil {
+			s.log.Warn("frame log unavailable", "path", o.FrameLog, "err", err)
+		} else {
+			s.auto.log = f
+		}
 	}
 	return s
 }
@@ -80,6 +95,10 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/search", s.handleSearch)
 	mux.HandleFunc("GET /api/brief", s.handleBrief)
 	mux.HandleFunc("GET /api/league", s.handleLeague)
+	mux.HandleFunc("POST /api/fandraft/frame", s.handleFrame)
+	mux.HandleFunc("POST /api/fandraft/pick", s.handleAutoPick)
+	mux.HandleFunc("POST /api/fandraft/resolve", s.handleResolve)
+	mux.HandleFunc("GET /api/fandraft/status", s.handleAutoStatus)
 	if s.static != nil {
 		mux.Handle("/", http.FileServerFS(s.static))
 	}
@@ -102,9 +121,10 @@ func (s *Server) cors(next http.Handler) http.Handler {
 
 // StatePayload is the GET /api/state body.
 type StatePayload struct {
-	State  state.Snapshot `json:"state"`
-	Advice any            `json:"advice,omitempty"`
-	Brief  *BriefPayload  `json:"brief,omitempty"`
+	State      state.Snapshot   `json:"state"`
+	Advice     any              `json:"advice,omitempty"`
+	Brief      *BriefPayload    `json:"brief,omitempty"`
+	Automation AutomationStatus `json:"automation"`
 }
 
 // BriefPayload is the Claude commentary, if any.
@@ -112,7 +132,7 @@ type BriefPayload = Brief
 
 func (s *Server) payload() StatePayload {
 	snap := s.st.Snapshot()
-	p := StatePayload{State: snap}
+	p := StatePayload{State: snap, Automation: s.automationStatus()}
 	if s.advisor != nil {
 		p.Advice = s.advisor.Advise(snap)
 	}

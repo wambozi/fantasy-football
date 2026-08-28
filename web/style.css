@@ -30,6 +30,12 @@ body { overflow-x: hidden; }
 .status-gate { margin-top: 4px; color: var(--gate); font-size: 17px; }
 .status.onclock .status-gate { color: #7a0c06; }
 
+.status-auto { margin-top: 3px; font-size: 13px; font-weight: 600; color: var(--ok); }
+.status-auto.stale { color: var(--gate); }
+.status.onclock .status-auto { color: #1a1400; }
+.conflict { background: var(--gate); color: #fff; padding: 8px 14px; font-weight: 700; font-size: 15px; display: flex; gap: 12px; align-items: center; }
+.conflict button { margin-left: auto; font-size: 14px; padding: 4px 10px; border-radius: 6px; border: 1px solid #fff; background: transparent; color: #fff; }
+
 /* recommendations */
 .recs { padding: 6px 10px; border-bottom: 1px solid var(--line); }
 .rec { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; column-gap: 10px; padding: 7px 4px; border-radius: 6px; }
