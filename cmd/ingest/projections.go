@@ -72,7 +72,7 @@ func applyProjections(dataDir string, list []*players.Player, log *slog.Logger) 
 		}
 	}
 
-	ecrFiles, _ := filepath.Glob(filepath.Join(dataDir, "FantasyPros_*_ALL_Rankings.csv"))
+	ecrFiles, _ := filepath.Glob(filepath.Join(dataDir, "FantasyPros_*_Draft_ALL_Rankings.csv"))
 	if ef := filepath.Join(dataDir, "ecr.csv"); fileExists(ef) {
 		ecrFiles = append(ecrFiles, ef)
 	}
@@ -88,6 +88,16 @@ func applyProjections(dataDir string, list []*players.Player, log *slog.Logger) 
 				miss = append(miss[:12], "…")
 			}
 			log.Warn("ecr: names not in ADP pool", "names", strings.Join(miss, ", "))
+		}
+	}
+	for kind, pat := range map[string]string{"dynasty": "FantasyPros_*_Dynasty_ALL_Rankings.csv", "rookie": "FantasyPros_*_Rookies_ALL_Rankings.csv"} {
+		files, _ := filepath.Glob(filepath.Join(dataDir, pat))
+		for _, f := range files {
+			m, miss, err := loadRanking(f, kind, resolve)
+			if err != nil {
+				return n, fmt.Errorf("%s: %w", f, err)
+			}
+			log.Info(kind+" rankings", "file", filepath.Base(f), "matched", m, "unmatched", len(miss))
 		}
 	}
 	for _, p := range list {
@@ -358,4 +368,71 @@ func loadECR(path string, resolve func(string, players.Position) *players.Player
 func fileExists(p string) bool {
 	st, err := os.Stat(p)
 	return err == nil && !st.IsDir()
+}
+
+// loadRanking reads a FantasyPros dynasty or rookie ranking export: RK, PLAYER NAME,
+// POS, AGE. Sets Age (either file) and DynastyRank or RookieRank.
+func loadRanking(path, kind string, resolve func(string, players.Position) *players.Player) (int, []string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return 0, nil, err
+	}
+	defer f.Close()
+	cr := csv.NewReader(f)
+	cr.FieldsPerRecord = -1
+	cr.LazyQuotes = true
+	h, err := readHeader(cr)
+	if err != nil {
+		return 0, nil, err
+	}
+	nameI, ok := h.find(nameCols...)
+	if !ok {
+		return 0, nil, fmt.Errorf("no player-name column")
+	}
+	rkI, ok := h.find("rk", "rank")
+	if !ok {
+		return 0, nil, fmt.Errorf("no RK column")
+	}
+	posI, hasPos := h.find(posCols...)
+	ageI, hasAge := h.find("age")
+	n := 0
+	var miss []string
+	for {
+		rec, err := cr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return n, miss, err
+		}
+		if nameI >= len(rec) || rkI >= len(rec) {
+			continue
+		}
+		name := strings.TrimSpace(rec[nameI])
+		rk, err := strconv.Atoi(strings.TrimSpace(rec[rkI]))
+		if name == "" || err != nil {
+			continue
+		}
+		var pos players.Position
+		if hasPos && posI < len(rec) {
+			pos = players.NormPos(strings.TrimRight(strings.TrimSpace(rec[posI]), "0123456789"))
+		}
+		p := resolve(name, pos)
+		if p == nil {
+			miss = append(miss, name)
+			continue
+		}
+		if hasAge && ageI < len(rec) {
+			if a, err := strconv.Atoi(strings.TrimSpace(rec[ageI])); err == nil && a > 0 {
+				p.Age = a
+			}
+		}
+		if kind == "dynasty" {
+			p.DynastyRank = rk
+		} else {
+			p.RookieRank = rk
+		}
+		n++
+	}
+	return n, miss, nil
 }

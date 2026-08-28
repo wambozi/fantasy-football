@@ -51,6 +51,10 @@ type Player struct {
 	// ProjSource says where ProjPoints came from: "projection" (a real forecast) or
 	// "finish-curve" (last season's finish-order points assigned by ECR rank).
 	ProjSource string `json:"proj_source,omitempty"`
+	// Keeper-economics inputs from the FantasyPros dynasty/rookie rankings.
+	Age         int `json:"age,omitempty"`
+	DynastyRank int `json:"dynasty_rank,omitempty"` // overall dynasty ECR, 0 if unranked
+	RookieRank  int `json:"rookie_rank,omitempty"`  // 2026 rookie ECR, 0 if not a rookie
 	// Last is last season's actuals, for reason strings. nil if the player had none.
 	Last *SeasonStats `json:"last,omitempty"`
 	Tier int          `json:"tier,omitempty"`

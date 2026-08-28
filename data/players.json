@@ -26,6 +26,8 @@
   "ecr": 2,
   "ecr_pos": 1,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 5,
   "last": {
    "season": 2025,
    "points": 366.9,
@@ -59,6 +61,8 @@
   "ecr": 4,
   "ecr_pos": 2,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 4,
   "last": {
    "season": 2025,
    "points": 368.8,
@@ -92,6 +96,8 @@
   "ecr": 1,
   "ecr_pos": 1,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 1,
   "last": {
    "season": 2025,
    "points": 313.6,
@@ -126,6 +132,8 @@
   "ecr": 3,
   "ecr_pos": 2,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 3,
   "last": {
    "season": 2025,
    "points": 375,
@@ -160,6 +168,8 @@
   "ecr": 5,
   "ecr_pos": 3,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 2,
   "last": {
    "season": 2025,
    "points": 359.9,
@@ -194,6 +204,8 @@
   "ecr": 8,
   "ecr_pos": 3,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 49,
   "last": {
    "season": 2025,
    "points": 416.6,
@@ -227,6 +239,8 @@
   "ecr": 6,
   "ecr_pos": 4,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 6,
   "last": {
    "season": 2025,
    "points": 324,
@@ -261,6 +275,8 @@
   "ecr": 10,
   "ecr_pos": 4,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 18,
   "last": {
    "season": 2025,
    "points": 360.3,
@@ -294,6 +310,8 @@
   "ecr": 13,
   "ecr_pos": 5,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 13,
   "last": {
    "season": 2025,
    "points": 302.2,
@@ -327,6 +345,8 @@
   "ecr": 7,
   "ecr_pos": 5,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 8,
   "last": {
    "season": 2025,
    "points": 200.9,
@@ -361,6 +381,8 @@
   "ecr": 9,
   "ecr_pos": 6,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 7,
   "last": {
    "season": 2025,
    "points": 201.5,
@@ -395,6 +417,8 @@
   "ecr": 15,
   "ecr_pos": 6,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 39,
   "last": {
    "season": 2025,
    "points": 280.6,
@@ -428,6 +452,8 @@
   "ecr": 19,
   "ecr_pos": 7,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 14,
   "last": {
    "season": 2025,
    "points": 322.8,
@@ -461,6 +487,8 @@
   "ecr": 22,
   "ecr_pos": 8,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 53,
   "last": {
    "season": 2025,
    "points": 230.3,
@@ -494,6 +522,8 @@
   "ecr": 28,
   "ecr_pos": 11,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 9,
   "last": {
    "season": 2025,
    "points": 245.1,
@@ -527,6 +557,8 @@
   "ecr": 25,
   "ecr_pos": 9,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 19,
   "last": {
    "season": 2025,
    "points": 135.7,
@@ -560,6 +592,8 @@
   "ecr": 27,
   "ecr_pos": 10,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 26,
   "last": {
    "season": 2025,
    "points": 191.9,
@@ -593,6 +627,8 @@
   "ecr": 37,
   "ecr_pos": 12,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 78,
   "last": {
    "season": 2025,
    "points": 279.5,
@@ -626,6 +662,8 @@
   "ecr": 11,
   "ecr_pos": 7,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 11,
   "last": {
    "season": 2025,
    "points": 199.9,
@@ -660,6 +698,8 @@
   "ecr": 17,
   "ecr_pos": 1,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 15,
   "last": {
    "season": 2025,
    "points": 174.2,
@@ -694,6 +734,8 @@
   "ecr": 12,
   "ecr_pos": 8,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 33,
   "last": {
    "season": 2025,
    "points": 220.3,
@@ -728,6 +770,8 @@
   "ecr": 20,
   "ecr_pos": 2,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 23,
   "last": {
    "season": 2025,
    "points": 315.9,
@@ -762,6 +806,8 @@
   "ecr": 18,
   "ecr_pos": 11,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 20,
   "last": {
    "season": 2025,
    "points": 289.9,
@@ -796,6 +842,8 @@
   "ecr": 14,
   "ecr_pos": 9,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 17,
   "last": {
    "season": 2025,
    "points": 224.2,
@@ -830,6 +878,8 @@
   "ecr": 16,
   "ecr_pos": 10,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 24,
   "last": {
    "season": 2025,
    "points": 270,
@@ -864,6 +914,8 @@
   "ecr": 23,
   "ecr_pos": 13,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 44,
   "last": {
    "season": 2025,
    "points": 148.1,
@@ -898,6 +950,8 @@
   "ecr": 26,
   "ecr_pos": 1,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 21,
   "last": {
    "season": 2025,
    "points": 374.5,
@@ -931,6 +985,8 @@
   "ecr": 24,
   "ecr_pos": 14,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 10,
   "last": {
    "season": 2025,
    "points": 57.1,
@@ -964,7 +1020,10 @@
   "proj_points": 256,
   "ecr": 41,
   "ecr_pos": 14,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 21,
+  "dynasty_rank": 12,
+  "rookie_rank": 1
  },
  {
   "id": "kyren-williams-lar",
@@ -993,6 +1052,8 @@
   "ecr": 42,
   "ecr_pos": 15,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 58,
   "last": {
    "season": 2025,
    "points": 263.3,
@@ -1026,6 +1087,8 @@
   "ecr": 21,
   "ecr_pos": 12,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 31,
   "last": {
    "season": 2025,
    "points": 201.8,
@@ -1060,6 +1123,8 @@
   "ecr": 43,
   "ecr_pos": 16,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 69,
   "last": {
    "season": 2025,
    "points": 242.8,
@@ -1093,6 +1158,8 @@
   "ecr": 30,
   "ecr_pos": 16,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 29,
   "last": {
    "season": 2025,
    "points": 243.3,
@@ -1127,6 +1194,8 @@
   "ecr": 39,
   "ecr_pos": 13,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 36,
   "last": {
    "season": 2025,
    "points": 203.5,
@@ -1160,6 +1229,8 @@
   "ecr": 29,
   "ecr_pos": 15,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 27,
   "last": {
    "season": 2025,
    "points": 99.5,
@@ -1194,6 +1265,8 @@
   "ecr": 35,
   "ecr_pos": 20,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 38,
   "last": {
    "season": 2025,
    "points": 209.6,
@@ -1228,6 +1301,8 @@
   "ecr": 45,
   "ecr_pos": 17,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 79,
   "last": {
    "season": 2025,
    "points": 237.1,
@@ -1261,6 +1336,8 @@
   "ecr": 33,
   "ecr_pos": 18,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 32,
   "last": {
    "season": 2025,
    "points": 180.9,
@@ -1295,6 +1372,8 @@
   "ecr": 34,
   "ecr_pos": 19,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 16,
   "last": {
    "season": 2025,
    "points": 211.4,
@@ -1329,6 +1408,8 @@
   "ecr": 48,
   "ecr_pos": 18,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 70,
   "last": {
    "season": 2025,
    "points": 253.9,
@@ -1362,6 +1443,8 @@
   "ecr": 40,
   "ecr_pos": 21,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 22,
   "last": {
    "season": 2025,
    "points": 193.7,
@@ -1396,6 +1479,8 @@
   "ecr": 32,
   "ecr_pos": 17,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 42,
   "last": {
    "season": 2025,
    "points": 193.8,
@@ -1430,6 +1515,8 @@
   "ecr": 36,
   "ecr_pos": 3,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 35,
   "last": {
    "season": 2025,
    "points": 165.1,
@@ -1464,6 +1551,8 @@
   "ecr": 57,
   "ecr_pos": 20,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 72,
   "last": {
    "season": 2025,
    "points": 125.7,
@@ -1497,6 +1586,8 @@
   "ecr": 47,
   "ecr_pos": 23,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 34,
   "last": {
    "season": 2025,
    "points": 127.9,
@@ -1531,6 +1622,8 @@
   "ecr": 53,
   "ecr_pos": 19,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 87,
   "last": {
    "season": 2025,
    "points": 228.6,
@@ -1564,6 +1657,8 @@
   "ecr": 61,
   "ecr_pos": 22,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 102,
   "last": {
    "season": 2025,
    "points": 160.8,
@@ -1597,6 +1692,8 @@
   "ecr": 62,
   "ecr_pos": 23,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 55,
   "last": {
    "season": 2025,
    "points": 167.8,
@@ -1630,6 +1727,8 @@
   "ecr": 60,
   "ecr_pos": 21,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 64,
   "last": {
    "season": 2025,
    "points": 138.5,
@@ -1663,6 +1762,8 @@
   "ecr": 50,
   "ecr_pos": 25,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 76,
   "last": {
    "season": 2025,
    "points": 166.1,
@@ -1697,6 +1798,8 @@
   "ecr": 46,
   "ecr_pos": 22,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 71,
   "last": {
    "season": 2025,
    "points": 114.2,
@@ -1731,6 +1834,8 @@
   "ecr": 49,
   "ecr_pos": 24,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 88,
   "last": {
    "season": 2025,
    "points": 222.9,
@@ -1765,6 +1870,8 @@
   "ecr": 31,
   "ecr_pos": 2,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 30,
   "last": {
    "season": 2025,
    "points": 221.8,
@@ -1798,6 +1905,8 @@
   "ecr": 54,
   "ecr_pos": 26,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 52,
   "last": {
    "season": 2025,
    "points": 219.9,
@@ -1832,6 +1941,8 @@
   "ecr": 65,
   "ecr_pos": 24,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 81,
   "last": {
    "season": 2025,
    "points": 88.6,
@@ -1865,6 +1976,8 @@
   "ecr": 44,
   "ecr_pos": 4,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 41,
   "last": {
    "season": 2025,
    "points": 139.4,
@@ -1898,6 +2011,8 @@
   "ecr": 51,
   "ecr_pos": 4,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 40,
   "last": {
    "season": 2025,
    "points": 188.5,
@@ -1932,6 +2047,8 @@
   "ecr": 58,
   "ecr_pos": 28,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 48,
   "last": {
    "season": 2025,
    "points": 146.1,
@@ -1966,6 +2083,8 @@
   "ecr": 38,
   "ecr_pos": 3,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 25,
   "last": {
    "season": 2025,
    "points": 358.9,
@@ -1999,6 +2118,8 @@
   "ecr": 68,
   "ecr_pos": 25,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 56,
   "last": {
    "season": 2025,
    "points": 206.2,
@@ -2032,6 +2153,8 @@
   "ecr": 55,
   "ecr_pos": 27,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 96,
   "last": {
    "season": 2025,
    "points": 84.8,
@@ -2065,7 +2188,10 @@
   "proj_points": 190,
   "ecr": 70,
   "ecr_pos": 26,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 73,
+  "rookie_rank": 5
  },
  {
   "id": "parker-washington-jax",
@@ -2094,6 +2220,8 @@
   "ecr": 63,
   "ecr_pos": 30,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 77,
   "last": {
    "season": 2025,
    "points": 172.7,
@@ -2128,6 +2256,8 @@
   "ecr": 59,
   "ecr_pos": 29,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 63,
   "last": {
    "season": 2025,
    "points": 132.4,
@@ -2161,7 +2291,10 @@
   "proj_points": 178.4,
   "ecr": 66,
   "ecr_pos": 31,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 21,
+  "dynasty_rank": 28,
+  "rookie_rank": 2
  },
  {
   "id": "marvin-harrison-ari",
@@ -2190,6 +2323,8 @@
   "ecr": 67,
   "ecr_pos": 32,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 60,
   "last": {
    "season": 2025,
    "points": 125.8,
@@ -2224,6 +2359,8 @@
   "ecr": 74,
   "ecr_pos": 28,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 104,
   "last": {
    "season": 2025,
    "points": 217.1,
@@ -2257,6 +2394,8 @@
   "ecr": 52,
   "ecr_pos": 5,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 37,
   "last": {
    "season": 2025,
    "points": 117.1,
@@ -2290,6 +2429,8 @@
   "ecr": 64,
   "ecr_pos": 7,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 50,
   "last": {
    "season": 2025,
    "points": 323.3,
@@ -2323,6 +2464,8 @@
   "ecr": 56,
   "ecr_pos": 6,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 51,
   "last": {
    "season": 2025,
    "points": 305,
@@ -2356,6 +2499,8 @@
   "ecr": 73,
   "ecr_pos": 27,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 129,
   "last": {
    "season": 2025,
    "points": 174.8,
@@ -2389,6 +2534,8 @@
   "ecr": 79,
   "ecr_pos": 35,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 65,
   "last": {
    "season": 2025,
    "points": 138.8,
@@ -2423,6 +2570,8 @@
   "ecr": 81,
   "ecr_pos": 7,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 46,
   "last": {
    "season": 2025,
    "points": 117.2,
@@ -2457,6 +2606,8 @@
   "ecr": 78,
   "ecr_pos": 6,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 62,
   "last": {
    "season": 2025,
    "points": 210.8,
@@ -2491,6 +2642,8 @@
   "ecr": 82,
   "ecr_pos": 37,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 97,
   "last": {
    "season": 2025,
    "points": 217.7,
@@ -2525,6 +2678,8 @@
   "ecr": 77,
   "ecr_pos": 34,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 82,
   "last": {
    "season": 2025,
    "points": 187.2,
@@ -2559,6 +2714,8 @@
   "ecr": 71,
   "ecr_pos": 5,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 57,
   "last": {
    "season": 2025,
    "points": 186.4,
@@ -2593,6 +2750,8 @@
   "ecr": 76,
   "ecr_pos": 10,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 83,
   "last": {
    "season": 2025,
    "points": 323.8,
@@ -2626,6 +2785,8 @@
   "ecr": 83,
   "ecr_pos": 29,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 142,
   "last": {
    "season": 2025,
    "points": 185.8,
@@ -2658,7 +2819,9 @@
   "proj_points": 164.1,
   "ecr": 89,
   "ecr_pos": 31,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 128
  },
  {
   "id": "trevor-lawrence-jax",
@@ -2687,6 +2850,8 @@
   "ecr": 75,
   "ecr_pos": 9,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 59,
   "last": {
    "season": 2025,
    "points": 350.1,
@@ -2720,6 +2885,8 @@
   "ecr": 85,
   "ecr_pos": 8,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 61,
   "last": {
    "season": 2025,
    "points": 106.9,
@@ -2754,6 +2921,8 @@
   "ecr": 87,
   "ecr_pos": 40,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 90,
   "last": {
    "season": 2025,
    "points": 220.6,
@@ -2788,6 +2957,8 @@
   "ecr": 88,
   "ecr_pos": 30,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 132,
   "last": {
    "season": 2025,
    "points": 216.3,
@@ -2821,6 +2992,8 @@
   "ecr": 92,
   "ecr_pos": 32,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 118,
   "last": {
    "season": 2025,
    "points": 206.6,
@@ -2854,6 +3027,8 @@
   "ecr": 69,
   "ecr_pos": 8,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 47,
   "last": {
    "season": 2025,
    "points": 299.8,
@@ -2887,6 +3062,8 @@
   "ecr": 72,
   "ecr_pos": 33,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 108,
   "last": {
    "season": 2025,
    "points": 81,
@@ -2921,6 +3098,8 @@
   "ecr": 99,
   "ecr_pos": 42,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 74,
   "last": {
    "season": 2025,
    "points": 183.3,
@@ -2955,6 +3134,8 @@
   "ecr": 110,
   "ecr_pos": 37,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 114,
   "last": {
    "season": 2025,
    "points": 122.2,
@@ -2988,6 +3169,8 @@
   "ecr": 98,
   "ecr_pos": 34,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 143,
   "last": {
    "season": 2025,
    "points": 221.3,
@@ -3021,6 +3204,8 @@
   "ecr": 95,
   "ecr_pos": 10,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 92,
   "last": {
    "season": 2025,
    "points": 161.5,
@@ -3055,6 +3240,8 @@
   "ecr": 96,
   "ecr_pos": 33,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 130,
   "last": {
    "season": 2025,
    "points": 125.4,
@@ -3088,6 +3275,8 @@
   "ecr": 104,
   "ecr_pos": 15,
   "proj_source": "projection",
+  "age": 38,
+  "dynasty_rank": 138,
   "last": {
    "season": 2025,
    "points": 358.3,
@@ -3121,6 +3310,8 @@
   "ecr": 84,
   "ecr_pos": 38,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 93,
   "last": {
    "season": 2025,
    "points": 217.9,
@@ -3155,6 +3346,8 @@
   "ecr": 101,
   "ecr_pos": 14,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 54,
   "last": {
    "season": 2025,
    "points": 295.7,
@@ -3188,6 +3381,8 @@
   "ecr": 91,
   "ecr_pos": 11,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 67,
   "last": {
    "season": 2025,
    "points": 187.4,
@@ -3221,6 +3416,8 @@
   "ecr": 100,
   "ecr_pos": 35,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 154,
   "last": {
    "season": 2025,
    "points": 115.9,
@@ -3254,6 +3451,8 @@
   "ecr": 80,
   "ecr_pos": 36,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 99,
   "last": {
    "season": 2025,
    "points": 200.4,
@@ -3288,6 +3487,8 @@
   "ecr": 90,
   "ecr_pos": 41,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 101,
   "last": {
    "season": 2025,
    "points": 171.2,
@@ -3322,6 +3523,8 @@
   "ecr": 94,
   "ecr_pos": 9,
   "proj_source": "projection",
+  "age": 36,
+  "dynasty_rank": 151,
   "last": {
    "season": 2025,
    "points": 191.2,
@@ -3356,6 +3559,8 @@
   "ecr": 114,
   "ecr_pos": 39,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 161,
   "last": {
    "season": 2025,
    "points": 128.9,
@@ -3389,6 +3594,8 @@
   "ecr": 86,
   "ecr_pos": 39,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 100,
   "last": {
    "season": 2025,
    "points": 136.4,
@@ -3423,6 +3630,8 @@
   "ecr": 93,
   "ecr_pos": 12,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 68,
   "last": {
    "season": 2025,
    "points": 246.5,
@@ -3456,6 +3665,8 @@
   "ecr": 106,
   "ecr_pos": 46,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 85,
   "last": {
    "season": 2025,
    "points": 135.1,
@@ -3490,6 +3701,8 @@
   "ecr": 97,
   "ecr_pos": 13,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 75,
   "last": {
    "season": 2025,
    "points": 315.8,
@@ -3523,6 +3736,8 @@
   "ecr": 116,
   "ecr_pos": 41,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 112,
   "last": {
    "season": 2025,
    "points": 142.7,
@@ -3555,7 +3770,10 @@
   "proj_points": 150.9,
   "ecr": 108,
   "ecr_pos": 47,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 43,
+  "rookie_rank": 4
  },
  {
   "id": "stefon-diggs-was",
@@ -3584,6 +3802,8 @@
   "ecr": 102,
   "ecr_pos": 43,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 157,
   "last": {
    "season": 2025,
    "points": 210.3,
@@ -3618,6 +3838,8 @@
   "ecr": 103,
   "ecr_pos": 44,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 106,
   "last": {
    "season": 2025,
    "points": 48.5,
@@ -3652,6 +3874,8 @@
   "ecr": 113,
   "ecr_pos": 38,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 147,
   "last": {
    "season": 2025,
    "points": 140.3,
@@ -3685,6 +3909,8 @@
   "ecr": 127,
   "ecr_pos": 52,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 110,
   "last": {
    "season": 2025,
    "points": 70,
@@ -3719,6 +3945,8 @@
   "ecr": 107,
   "ecr_pos": 16,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 103,
   "last": {
    "season": 2025,
    "points": 305.1,
@@ -3752,6 +3980,8 @@
   "ecr": 128,
   "ecr_pos": 53,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 98,
   "last": {
    "season": 2025,
    "points": 109.9,
@@ -3785,7 +4015,10 @@
   "proj_points": 161.5,
   "ecr": 120,
   "ecr_pos": 48,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 21,
+  "dynasty_rank": 66,
+  "rookie_rank": 6
  },
  {
   "id": "isaiah-likely-nyg",
@@ -3814,6 +4047,8 @@
   "ecr": 122,
   "ecr_pos": 14,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 84,
   "last": {
    "season": 2025,
    "points": 61.7,
@@ -3848,6 +4083,8 @@
   "ecr": 111,
   "ecr_pos": 11,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 86,
   "last": {
    "season": 2025,
    "points": 126.1,
@@ -3881,7 +4118,10 @@
   "proj_points": 160.5,
   "ecr": 138,
   "ecr_pos": 55,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 136,
+  "rookie_rank": 13
  },
  {
   "id": "rachaad-white-was",
@@ -3910,6 +4150,8 @@
   "ecr": 109,
   "ecr_pos": 36,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 158,
   "last": {
    "season": 2025,
    "points": 143,
@@ -3943,6 +4185,8 @@
   "ecr": 105,
   "ecr_pos": 45,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 107,
   "last": {
    "season": 2025,
    "points": 175.8,
@@ -3977,6 +4221,8 @@
   "ecr": 119,
   "ecr_pos": 13,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 109,
   "last": {
    "season": 2025,
    "points": 186.1,
@@ -4011,6 +4257,8 @@
   "ecr": 117,
   "ecr_pos": 12,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 120,
   "last": {
    "season": 2025,
    "points": 185.1,
@@ -4044,7 +4292,10 @@
   "proj_points": 106.8,
   "ecr": 132,
   "ecr_pos": 54,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 45,
+  "rookie_rank": 3
  },
  {
   "id": "aaron-jones-min",
@@ -4073,6 +4324,8 @@
   "ecr": 115,
   "ecr_pos": 40,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 185,
   "last": {
    "season": 2025,
    "points": 118.7,
@@ -4104,6 +4357,8 @@
   ],
   "proj_points": 14.9,
   "proj_source": "finish-curve",
+  "age": 23,
+  "dynasty_rank": 94,
   "last": {
    "season": 2025,
    "points": 129.5,
@@ -4138,6 +4393,8 @@
   "ecr": 126,
   "ecr_pos": 51,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 117,
   "last": {
    "season": 2025,
    "points": 163.4,
@@ -4171,7 +4428,8 @@
   "proj_points": 120,
   "ecr": 158,
   "ecr_pos": 1,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 248
  },
  {
   "id": "mark-andrews-bal",
@@ -4200,6 +4458,8 @@
   "ecr": 130,
   "ecr_pos": 15,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 121,
   "last": {
    "season": 2025,
    "points": 131,
@@ -4234,6 +4494,8 @@
   "ecr": 125,
   "ecr_pos": 50,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 122,
   "last": {
    "season": 2025,
    "points": 88.4,
@@ -4268,6 +4530,8 @@
   "ecr": 112,
   "ecr_pos": 17,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 133,
   "last": {
    "season": 2025,
    "points": 80.8,
@@ -4301,6 +4565,8 @@
   "ecr": 137,
   "ecr_pos": 45,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 175,
   "last": {
    "season": 2025,
    "points": 92,
@@ -4334,6 +4600,8 @@
   "ecr": 133,
   "ecr_pos": 42,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 165,
   "last": {
    "season": 2025,
    "points": 145.1,
@@ -4367,6 +4635,8 @@
   "ecr": 123,
   "ecr_pos": 49,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 119,
   "last": {
    "season": 2025,
    "points": 166.4,
@@ -4401,6 +4671,8 @@
   "ecr": 140,
   "ecr_pos": 56,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 170,
   "last": {
    "season": 2025,
    "points": 188.2,
@@ -4435,6 +4707,8 @@
   "ecr": 134,
   "ecr_pos": 43,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 167,
   "last": {
    "season": 2025,
    "points": 123,
@@ -4468,6 +4742,8 @@
   "ecr": 145,
   "ecr_pos": 47,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 181,
   "last": {
    "season": 2025,
    "points": 55.4,
@@ -4501,6 +4777,8 @@
   "ecr": 154,
   "ecr_pos": 51,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 166,
   "last": {
    "season": 2025,
    "points": 160.8,
@@ -4533,7 +4811,10 @@
   "proj_points": 100.9,
   "ecr": 162,
   "ecr_pos": 54,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 183,
+  "rookie_rank": 24
  },
  {
   "id": "los-angeles-rams-lar",
@@ -4561,7 +4842,8 @@
   "proj_points": 107.3,
   "ecr": 170,
   "ecr_pos": 4,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 254
  },
  {
   "id": "rashid-shaheed-sea",
@@ -4590,6 +4872,8 @@
   "ecr": 144,
   "ecr_pos": 58,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 144,
   "last": {
    "season": 2025,
    "points": 144.6,
@@ -4624,6 +4908,8 @@
   "ecr": 118,
   "ecr_pos": 18,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 115,
   "last": {
    "season": 2025,
    "points": 282.9,
@@ -4656,7 +4942,10 @@
   "proj_points": 49.4,
   "ecr": 148,
   "ecr_pos": 49,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 134,
+  "rookie_rank": 12
  },
  {
   "id": "denver-broncos-den",
@@ -4684,7 +4973,8 @@
   "proj_points": 118.2,
   "ecr": 166,
   "ecr_pos": 2,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 236
  },
  {
   "id": "seattle-seahawks-sea",
@@ -4712,7 +5002,8 @@
   "proj_points": 110.7,
   "ecr": 169,
   "ecr_pos": 3,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 261
  },
  {
   "id": "sam-darnold-sea",
@@ -4741,6 +5032,8 @@
   "ecr": 136,
   "ecr_pos": 22,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 139,
   "last": {
    "season": 2025,
    "points": 249.4,
@@ -4773,7 +5066,10 @@
   "proj_points": 152.2,
   "ecr": 143,
   "ecr_pos": 57,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 91,
+  "rookie_rank": 8
  },
  {
   "id": "zachary-charbonnet-sea",
@@ -4802,6 +5098,8 @@
   "ecr": 147,
   "ecr_pos": 48,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 127,
   "last": {
    "season": 2025,
    "points": 179.4,
@@ -4835,6 +5133,8 @@
   "ecr": 131,
   "ecr_pos": 16,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 156,
   "last": {
    "season": 2025,
    "points": 179.9,
@@ -4869,6 +5169,8 @@
   "ecr": 121,
   "ecr_pos": 19,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 89,
   "last": {
    "season": 2025,
    "points": 241.3,
@@ -4902,6 +5204,8 @@
   "ecr": 135,
   "ecr_pos": 44,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 188,
   "last": {
    "season": 2025,
    "points": 111.7,
@@ -4935,6 +5239,8 @@
   "ecr": 124,
   "ecr_pos": 20,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 126,
   "last": {
    "season": 2025,
    "points": 164,
@@ -4968,6 +5274,8 @@
   "ecr": 150,
   "ecr_pos": 18,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 148,
   "last": {
    "season": 2025,
    "points": 124,
@@ -5002,6 +5310,8 @@
   "ecr": 142,
   "ecr_pos": 46,
   "proj_source": "projection",
+  "age": 21,
+  "dynasty_rank": 178,
   "last": {
    "season": 2025,
    "points": 87.6,
@@ -5035,6 +5345,8 @@
   "ecr": 199,
   "ecr_pos": 23,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 116,
   "last": {
    "season": 2025,
    "points": 131.4,
@@ -5068,7 +5380,8 @@
   "proj_points": 102.5,
   "ecr": 176,
   "ecr_pos": 5,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 247
  },
  {
   "id": "marshawn-lloyd-gb",
@@ -5096,7 +5409,9 @@
   "proj_points": 89.5,
   "ecr": 167,
   "ecr_pos": 56,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 226
  },
  {
   "id": "cameron-ward-ten",
@@ -5125,6 +5440,8 @@
   "ecr": 146,
   "ecr_pos": 25,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 124,
   "last": {
    "season": 2025,
    "points": 193.7,
@@ -5158,6 +5475,8 @@
   "ecr": 141,
   "ecr_pos": 24,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 141,
   "last": {
    "season": 2025,
    "points": 234.4,
@@ -5191,6 +5510,8 @@
   "ecr": 149,
   "ecr_pos": 17,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 111,
   "last": {
    "season": 2025,
    "points": 118,
@@ -5225,6 +5546,8 @@
   "ecr": 129,
   "ecr_pos": 21,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 135,
   "last": {
    "season": 2025,
    "points": 51.1,
@@ -5258,6 +5581,8 @@
   "ecr": 152,
   "ecr_pos": 50,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 200,
   "last": {
    "season": 2025,
    "points": 87.3,
@@ -5289,6 +5614,8 @@
   ],
   "proj_points": 14.6,
   "proj_source": "finish-curve",
+  "age": 25,
+  "dynasty_rank": 123,
   "last": {
    "season": 2025,
    "points": 88.6,
@@ -5323,6 +5650,8 @@
   "ecr": 153,
   "ecr_pos": 20,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 171,
   "last": {
    "season": 2025,
    "points": 178.8,
@@ -5356,7 +5685,10 @@
   "proj_points": 46.4,
   "ecr": 182,
   "ecr_pos": 58,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 169,
+  "rookie_rank": 14
  },
  {
   "id": "alvin-kamara-no",
@@ -5385,6 +5717,8 @@
   "ecr": 156,
   "ecr_pos": 52,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 204,
   "last": {
    "season": 2025,
    "points": 100.7,
@@ -5418,6 +5752,8 @@
   "ecr": 139,
   "ecr_pos": 23,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 125,
   "last": {
    "season": 2025,
    "points": 216.7,
@@ -5451,6 +5787,8 @@
   "ecr": 171,
   "ecr_pos": 64,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 140,
   "last": {
    "season": 2025,
    "points": 69.4,
@@ -5485,6 +5823,8 @@
   "ecr": 159,
   "ecr_pos": 53,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 191,
   "last": {
    "season": 2025,
    "points": 53.8,
@@ -5517,7 +5857,10 @@
   "proj_points": 125.7,
   "ecr": 235,
   "ecr_pos": 83,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 168,
+  "rookie_rank": 15
  },
  {
   "id": "brian-robinson-atl",
@@ -5546,6 +5889,8 @@
   "ecr": 168,
   "ecr_pos": 57,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 210,
   "last": {
    "season": 2025,
    "points": 62.5,
@@ -5579,6 +5924,8 @@
   "ecr": 160,
   "ecr_pos": 26,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 152,
   "last": {
    "season": 2025,
    "points": 229,
@@ -5612,6 +5959,8 @@
   "ecr": 163,
   "ecr_pos": 55,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 194,
   "last": {
    "season": 2025,
    "points": 15.3,
@@ -5645,6 +5994,8 @@
   "ecr": 151,
   "ecr_pos": 19,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 180,
   "last": {
    "season": 2025,
    "points": 177.7,
@@ -5679,6 +6030,8 @@
   "ecr": 179,
   "ecr_pos": 69,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 162,
   "last": {
    "season": 2025,
    "points": 74.8,
@@ -5713,6 +6066,8 @@
   "ecr": 174,
   "ecr_pos": 21,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 163,
   "last": {
    "season": 2025,
    "points": 112.8,
@@ -5747,6 +6102,8 @@
   "ecr": 165,
   "ecr_pos": 63,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 149,
   "last": {
    "season": 2025,
    "points": 29.9,
@@ -5780,7 +6137,8 @@
   "proj_points": 99.4,
   "ecr": 186,
   "ecr_pos": 7,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 297
  },
  {
   "id": "travis-hunter-jax",
@@ -5809,6 +6167,8 @@
   "ecr": 192,
   "ecr_pos": 73,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 146,
   "last": {
    "season": 2025,
    "points": 63.8,
@@ -5843,6 +6203,8 @@
   "ecr": 161,
   "ecr_pos": 61,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 164,
   "last": {
    "season": 2025,
    "points": 120.7,
@@ -5877,6 +6239,8 @@
   "ecr": 223,
   "ecr_pos": 64,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 267,
   "last": {
    "season": 2025,
    "points": 20.4,
@@ -5910,6 +6274,8 @@
   "ecr": 177,
   "ecr_pos": 68,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 217,
   "last": {
    "season": 2025,
    "points": 114,
@@ -5944,6 +6310,8 @@
   "ecr": 164,
   "ecr_pos": 62,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 160,
   "last": {
    "season": 2025,
    "points": 171.3,
@@ -5978,6 +6346,8 @@
   "ecr": 183,
   "ecr_pos": 71,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 207,
   "last": {
    "season": 2025,
    "points": 98.7,
@@ -6012,6 +6382,8 @@
   "ecr": 188,
   "ecr_pos": 72,
   "proj_source": "projection",
+  "age": 34,
+  "dynasty_rank": 241,
   "last": {
    "season": 2025,
    "points": 182.7,
@@ -6046,6 +6418,8 @@
   "ecr": 205,
   "ecr_pos": 28,
   "proj_source": "projection",
+  "age": 42,
+  "dynasty_rank": 224,
   "last": {
    "season": 2025,
    "points": 233.2,
@@ -6079,6 +6453,8 @@
   "ecr": 181,
   "ecr_pos": 70,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 229,
   "last": {
    "season": 2025,
    "points": 110.7,
@@ -6113,6 +6489,8 @@
   "ecr": 175,
   "ecr_pos": 67,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 190,
   "last": {
    "season": 2025,
    "points": 75.8,
@@ -6146,7 +6524,10 @@
   "proj_points": 88.7,
   "ecr": 242,
   "ecr_pos": 70,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 249,
+  "rookie_rank": 23
  },
  {
   "id": "adonai-mitchell-nyj",
@@ -6175,6 +6556,8 @@
   "ecr": 157,
   "ecr_pos": 60,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 155,
   "last": {
    "season": 2025,
    "points": 87.9,
@@ -6208,7 +6591,10 @@
   "proj_points": 104.9,
   "ecr": 246,
   "ecr_pos": 87,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 243,
+  "rookie_rank": 31
  },
  {
   "id": "tre-tucker-lv",
@@ -6237,6 +6623,8 @@
   "ecr": 155,
   "ecr_pos": 59,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 209,
   "last": {
    "season": 2025,
    "points": 161.7,
@@ -6271,6 +6659,8 @@
   "ecr": 203,
   "ecr_pos": 24,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 131,
   "last": {
    "season": 2025,
    "points": 52.1,
@@ -6304,7 +6694,10 @@
   "proj_points": 125.3,
   "ecr": 212,
   "ecr_pos": 26,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 21,
+  "dynasty_rank": 80,
+  "rookie_rank": 10
  },
  {
   "id": "jacksonville-jaguars-jax",
@@ -6332,7 +6725,8 @@
   "proj_points": 99.9,
   "ecr": 190,
   "ecr_pos": 9,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 294
  },
  {
   "id": "fernando-mendoza-lv",
@@ -6360,7 +6754,10 @@
   "proj_points": 191.8,
   "ecr": 252,
   "ecr_pos": 30,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 113,
+  "rookie_rank": 11
  },
  {
   "id": "ray-davis-buf",
@@ -6389,6 +6786,8 @@
   "ecr": 184,
   "ecr_pos": 59,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 233,
   "last": {
    "season": 2025,
    "points": 58.1,
@@ -6422,6 +6821,8 @@
   "ecr": 194,
   "ecr_pos": 22,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 150,
   "last": {
    "season": 2025,
    "points": 147.3,
@@ -6455,7 +6856,10 @@
   "proj_points": 52.9,
   "ecr": 267,
   "ecr_pos": 96,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 225,
+  "rookie_rank": 32
  },
  {
   "id": "minnesota-vikings-min",
@@ -6483,7 +6887,8 @@
   "proj_points": 112.8,
   "ecr": 187,
   "ecr_pos": 8,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 268
  },
  {
   "id": "tank-dell-hou",
@@ -6511,7 +6916,9 @@
   "proj_points": 119.3,
   "ecr": 210,
   "ecr_pos": 76,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 223
  },
  {
   "id": "kaytron-allen-was",
@@ -6539,7 +6946,10 @@
   "proj_points": 21.5,
   "ecr": 228,
   "ecr_pos": 65,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 195,
+  "rookie_rank": 26
  },
  {
   "id": "omar-cooper-nyj",
@@ -6567,7 +6977,10 @@
   "proj_points": 103.1,
   "ecr": 173,
   "ecr_pos": 66,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 95,
+  "rookie_rank": 7
  },
  {
   "id": "los-angeles-chargers-lac",
@@ -6595,7 +7008,8 @@
   "proj_points": 108.6,
   "ecr": 196,
   "ecr_pos": 10,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 303
  },
  {
   "id": "pittsburgh-steelers-pit",
@@ -6623,7 +7037,8 @@
   "proj_points": 111.7,
   "ecr": 185,
   "ecr_pos": 6,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 266
  },
  {
   "id": "kayshon-boutte-hou",
@@ -6652,6 +7067,8 @@
   "ecr": 172,
   "ecr_pos": 65,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 176,
   "last": {
    "season": 2025,
    "points": 124.1,
@@ -6686,6 +7103,8 @@
   "ecr": 220,
   "ecr_pos": 80,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 177,
   "last": {
    "season": 2025,
    "points": 75.9,
@@ -6720,6 +7139,8 @@
   "ecr": 195,
   "ecr_pos": 60,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 216,
   "last": {
    "season": 2025,
    "points": 117.9,
@@ -6780,7 +7201,10 @@
   "proj_points": 80.3,
   "ecr": 236,
   "ecr_pos": 84,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 189,
+  "rookie_rank": 28
  },
  {
   "id": "geno-smith-nyj",
@@ -6809,6 +7233,8 @@
   "ecr": 209,
   "ecr_pos": 29,
   "proj_source": "projection",
+  "age": 35,
+  "dynasty_rank": 227,
   "last": {
    "season": 2025,
    "points": 190.9,
@@ -6842,6 +7268,8 @@
   "ecr": 225,
   "ecr_pos": 27,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 212,
   "last": {
    "season": 2025,
    "points": 113.6,
@@ -6876,6 +7304,8 @@
   "ecr": 237,
   "ecr_pos": 29,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 221,
   "last": {
    "season": 2025,
    "points": 62.8,
@@ -6910,6 +7340,8 @@
   "ecr": 206,
   "ecr_pos": 25,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 182,
   "last": {
    "season": 2025,
    "points": 91.7,
@@ -6944,6 +7376,8 @@
   "ecr": 241,
   "ecr_pos": 69,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 328,
   "last": {
    "season": 2025,
    "points": 14.8,
@@ -6976,7 +7410,8 @@
   "proj_points": 101.3,
   "ecr": 202,
   "ecr_pos": 11,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 287
  },
  {
   "id": "sean-tucker-tb",
@@ -7005,6 +7440,8 @@
   "ecr": 197,
   "ecr_pos": 61,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 244,
   "last": {
    "season": 2025,
    "points": 91.4,
@@ -7037,7 +7474,8 @@
   "proj_points": 100.9,
   "ecr": 230,
   "ecr_pos": 15,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 316
  },
  {
   "id": "chicago-bears-chi",
@@ -7065,7 +7503,8 @@
   "proj_points": 100.9,
   "ecr": 308,
   "ecr_pos": 21,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 355
  },
  {
   "id": "buffalo-bills-buf",
@@ -7093,7 +7532,8 @@
   "proj_points": 106.7,
   "ecr": 232,
   "ecr_pos": 16,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 315
  },
  {
   "id": "cade-otton-tb",
@@ -7122,6 +7562,8 @@
   "ecr": 234,
   "ecr_pos": 28,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 197,
   "last": {
    "season": 2025,
    "points": 122.2,
@@ -7156,6 +7598,8 @@
   "ecr": 193,
   "ecr_pos": 74,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 205,
   "last": {
    "season": 2025,
    "points": 47.3,
@@ -7189,7 +7633,10 @@
   "proj_points": 68.4,
   "ecr": 248,
   "ecr_pos": 88,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 187,
+  "rookie_rank": 25
  },
  {
   "id": "dallas-cowboys-dal",
@@ -7246,6 +7693,8 @@
   "ecr": 214,
   "ecr_pos": 63,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 234,
   "last": {
    "season": 2025,
    "points": 33.3,
@@ -7278,7 +7727,10 @@
   "proj_points": 20,
   "ecr": 258,
   "ecr_pos": 73,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 222,
+  "rookie_rank": 33
  },
  {
   "id": "david-njoku-lac",
@@ -7307,6 +7759,8 @@
   "ecr": 245,
   "ecr_pos": 31,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 198,
   "last": {
    "season": 2025,
    "points": 86.3,
@@ -7340,7 +7794,10 @@
   "proj_points": 19.8,
   "ecr": 208,
   "ecr_pos": 62,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 174,
+  "rookie_rank": 18
  },
  {
   "id": "najee-harris-nyg",
@@ -7369,6 +7826,8 @@
   "ecr": 260,
   "ecr_pos": 74,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 308,
   "last": {
    "season": 2025,
    "points": 11.6,
@@ -7402,6 +7861,8 @@
   "ecr": 178,
   "ecr_pos": 27,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 246,
   "last": {
    "season": 2025,
    "points": 235.4,
@@ -7435,6 +7896,8 @@
   "ecr": 217,
   "ecr_pos": 77,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 251,
   "last": {
    "season": 2025,
    "points": 116.3,
@@ -7469,6 +7932,8 @@
   "ecr": 222,
   "ecr_pos": 81,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 172,
   "last": {
    "season": 2025,
    "points": 171.1,
@@ -7503,6 +7968,8 @@
   "ecr": 263,
   "ecr_pos": 31,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 208,
   "last": {
    "season": 2025,
    "points": 175.6,
@@ -7535,7 +8002,8 @@
   "proj_points": 95.1,
   "ecr": 213,
   "ecr_pos": 13,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 280
  },
  {
   "id": "detroit-lions-det",
@@ -7563,7 +8031,8 @@
   "proj_points": 107.4,
   "ecr": 224,
   "ecr_pos": 14,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 295
  },
  {
   "id": "colby-parkinson-lar",
@@ -7592,6 +8061,8 @@
   "ecr": 262,
   "ecr_pos": 32,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 309,
   "last": {
    "season": 2025,
    "points": 129.8,
@@ -7625,7 +8096,10 @@
   "proj_points": 104.2,
   "ecr": 238,
   "ecr_pos": 85,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 137,
+  "rookie_rank": 16
  },
  {
   "id": "emanuel-wilson-sea",
@@ -7654,6 +8128,8 @@
   "ecr": 231,
   "ecr_pos": 66,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 250,
   "last": {
    "season": 2025,
    "points": 92.5,
@@ -7687,6 +8163,8 @@
   "ecr": 240,
   "ecr_pos": 68,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 344,
   "last": {
    "season": 2025,
    "points": 65.2,
@@ -7720,6 +8198,8 @@
   "ecr": 219,
   "ecr_pos": 79,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 215,
   "last": {
    "season": 2025,
    "points": 82.3,
@@ -7754,6 +8234,8 @@
   "ecr": 282,
   "ecr_pos": 32,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 173,
   "last": {
    "season": 2025,
    "points": 123.2,
@@ -7786,7 +8268,10 @@
   "proj_points": 99.4,
   "ecr": 254,
   "ecr_pos": 92,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 145,
+  "rookie_rank": 17
  },
  {
   "id": "jordan-james-sf",
@@ -7815,6 +8300,8 @@
   "ecr": 268,
   "ecr_pos": 78,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 272,
   "last": {
    "season": 2025,
    "points": 0,
@@ -7847,7 +8334,10 @@
   "proj_points": 109.2,
   "ecr": 233,
   "ecr_pos": 82,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 153,
+  "rookie_rank": 19
  },
  {
   "id": "ted-hurst-tb",
@@ -7875,7 +8365,10 @@
   "proj_points": 82.7,
   "ecr": 253,
   "ecr_pos": 91,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 179,
+  "rookie_rank": 22
  },
  {
   "id": "kansas-city-chiefs-kc",
@@ -7903,7 +8396,8 @@
   "proj_points": 92.5,
   "ecr": 211,
   "ecr_pos": 12,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 277
  },
  {
   "id": "shedeur-sanders-cle",
@@ -7932,6 +8426,8 @@
   "ecr": 291,
   "ecr_pos": 35,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 196,
   "last": {
    "season": 2025,
    "points": 95,
@@ -7965,6 +8461,8 @@
   "ecr": 250,
   "ecr_pos": 90,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 264,
   "last": {
    "season": 2025,
    "points": 66.3,
@@ -7999,6 +8497,8 @@
   "ecr": 200,
   "ecr_pos": 75,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 159,
   "last": {
    "season": 2025,
    "points": 68.4,
@@ -8032,7 +8532,8 @@
   "proj_points": 100.5,
   "ecr": 290,
   "ecr_pos": 19,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 362
  },
  {
   "id": "brandon-aiyuk-sf",
@@ -8060,7 +8561,9 @@
   "proj_points": 50.5,
   "ecr": 309,
   "ecr_pos": 108,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 28,
+  "dynasty_rank": 253
  },
  {
   "id": "jaylen-wright-mia",
@@ -8089,6 +8592,8 @@
   "ecr": 239,
   "ecr_pos": 67,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 231,
   "last": {
    "season": 2025,
    "points": 48.2,
@@ -8150,6 +8655,8 @@
   "ecr": 329,
   "ecr_pos": 43,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 361,
   "last": {
    "season": 2025,
    "points": 36.2,
@@ -8184,6 +8691,8 @@
   "ecr": 310,
   "ecr_pos": 38,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 321,
   "last": {
    "season": 2025,
    "points": 93.3,
@@ -8218,6 +8727,8 @@
   "ecr": 261,
   "ecr_pos": 75,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 396,
   "last": {
    "season": 2025,
    "points": 77.9,
@@ -8251,6 +8762,8 @@
   "ecr": 320,
   "ecr_pos": 110,
   "proj_source": "finish-curve",
+  "age": 32,
+  "dynasty_rank": 235,
   "last": {
    "season": 2025,
    "points": 53.5,
@@ -8284,7 +8797,8 @@
   "proj_points": 88.1,
   "ecr": 280,
   "ecr_pos": 17,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 350
  },
  {
   "id": "keon-coleman-buf",
@@ -8313,6 +8827,8 @@
   "ecr": 249,
   "ecr_pos": 89,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 218,
   "last": {
    "season": 2025,
    "points": 100.4,
@@ -8347,6 +8863,8 @@
   "ecr": 276,
   "ecr_pos": 100,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 232,
   "last": {
    "season": 2025,
    "points": 57.9,
@@ -8380,7 +8898,10 @@
   "proj_points": 23.2,
   "ecr": 288,
   "ecr_pos": 83,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 301,
+  "rookie_rank": 42
  },
  {
   "id": "adam-randall-bal",
@@ -8408,7 +8929,10 @@
   "proj_points": 67.1,
   "ecr": 295,
   "ecr_pos": 86,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 265,
+  "rookie_rank": 38
  },
  {
   "id": "malik-davis-dal",
@@ -8437,6 +8961,8 @@
   "ecr": 281,
   "ecr_pos": 80,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 337,
   "last": {
    "season": 2025,
    "points": 40.6,
@@ -8470,6 +8996,8 @@
   "ecr": 283,
   "ecr_pos": 33,
   "proj_source": "projection",
+  "age": 38,
+  "dynasty_rank": 274,
   "last": {
    "season": 2025,
    "points": 108.6,
@@ -8503,6 +9031,8 @@
   "ecr": 266,
   "ecr_pos": 95,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 201,
   "last": {
    "season": 2025,
    "points": 59.1,
@@ -8565,6 +9095,8 @@
   "ecr": 218,
   "ecr_pos": 78,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 219,
   "last": {
    "season": 2025,
    "points": 53.4,
@@ -8599,6 +9131,8 @@
   "ecr": 255,
   "ecr_pos": 71,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 228,
   "last": {
    "season": 2025,
    "points": 54.1,
@@ -8631,7 +9165,9 @@
   "proj_points": 135.2,
   "ecr": 285,
   "ecr_pos": 34,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 269
  },
  {
   "id": "evan-engram-den",
@@ -8660,6 +9196,8 @@
   "ecr": 243,
   "ecr_pos": 30,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 271,
   "last": {
    "season": 2025,
    "points": 102.8,
@@ -8693,7 +9231,10 @@
   "proj_points": 23.2,
   "ecr": 332,
   "ecr_pos": 36,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 276,
+  "rookie_rank": 36
  },
  {
   "id": "tampa-bay-buccaneers-tb",
@@ -8750,6 +9291,8 @@
   "ecr": 244,
   "ecr_pos": 86,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 203,
   "last": {
    "season": 2025,
    "points": 42.4,
@@ -8783,7 +9326,10 @@
   "proj_points": 49.6,
   "ecr": 289,
   "ecr_pos": 35,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 105,
+  "rookie_rank": 9
  },
  {
   "id": "kyle-williams-ne",
@@ -8812,6 +9358,8 @@
   "ecr": 294,
   "ecr_pos": 103,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 202,
   "last": {
    "season": 2025,
    "points": 49.2,
@@ -8878,6 +9426,8 @@
   "ecr": 297,
   "ecr_pos": 87,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 395,
   "last": {
    "season": 2025,
    "points": 58.3,
@@ -8945,6 +9495,8 @@
   "ecr": 256,
   "ecr_pos": 93,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 206,
   "last": {
    "season": 2025,
    "points": 114.1,
@@ -9007,6 +9559,8 @@
   "ecr": 277,
   "ecr_pos": 101,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 252,
   "last": {
    "season": 2025,
    "points": 89.3,
@@ -9069,6 +9623,8 @@
   "ecr": 326,
   "ecr_pos": 42,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 238,
   "last": {
    "season": 2025,
    "points": 36.9,
@@ -9164,6 +9720,8 @@
   "ecr": 298,
   "ecr_pos": 88,
   "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 260,
   "last": {
    "season": 2025,
    "points": 35.4,
@@ -9197,6 +9755,8 @@
   "ecr": 264,
   "ecr_pos": 76,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 313,
   "last": {
    "season": 2025,
    "points": 24.8,
@@ -9258,6 +9818,8 @@
   "ecr": 331,
   "ecr_pos": 115,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 389,
   "last": {
    "season": 2025,
    "points": 98,
@@ -9292,6 +9854,8 @@
   "ecr": 299,
   "ecr_pos": 36,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 319,
   "last": {
    "season": 2025,
    "points": 70.7,
@@ -9326,6 +9890,8 @@
   "ecr": 275,
   "ecr_pos": 33,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 211,
   "last": {
    "season": 2025,
    "points": 86.9,
@@ -9360,6 +9926,8 @@
   "ecr": 293,
   "ecr_pos": 85,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 279,
   "last": {
    "season": 2025,
    "points": 63.3,
@@ -9391,6 +9959,8 @@
   ],
   "proj_points": 19.3,
   "proj_source": "finish-curve",
+  "age": 25,
+  "dynasty_rank": 406,
   "last": {
    "season": 2025,
    "points": 72,
@@ -9455,7 +10025,10 @@
   "proj_points": 64.9,
   "ecr": 392,
   "ecr_pos": 138,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 385,
+  "rookie_rank": 55
  },
  {
   "id": "jalin-hyatt-nyg",
@@ -9515,7 +10088,10 @@
   "proj_points": 10.7,
   "ecr": 403,
   "ecr_pos": 109,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 375,
+  "rookie_rank": 50
  },
  {
   "id": "elic-ayomanor-ten",
@@ -9544,6 +10120,8 @@
   "ecr": 259,
   "ecr_pos": 94,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 193,
   "last": {
    "season": 2025,
    "points": 116.5,
@@ -9611,7 +10189,10 @@
   "proj_points": 39.4,
   "ecr": 328,
   "ecr_pos": 114,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 242,
+  "rookie_rank": 35
  },
  {
   "id": "jared-wiley-kc",
@@ -9672,6 +10253,8 @@
   "ecr": 284,
   "ecr_pos": 81,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 282,
   "last": {
    "season": 2025,
    "points": 9.6,
@@ -9704,7 +10287,10 @@
   "proj_points": 46.5,
   "ecr": 346,
   "ecr_pos": 47,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 220,
+  "rookie_rank": 27
  },
  {
   "id": "indianapolis-colts-ind",
@@ -9759,6 +10345,8 @@
   ],
   "proj_points": 9.1,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 320,
   "last": {
    "season": 2025,
    "points": -1.6,
@@ -9823,6 +10411,8 @@
   "ecr": 325,
   "ecr_pos": 41,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 245,
   "last": {
    "season": 2025,
    "points": 73.8,
@@ -9857,6 +10447,8 @@
   "ecr": 296,
   "ecr_pos": 104,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 270,
   "last": {
    "season": 2025,
    "points": 137.7,
@@ -9948,7 +10540,10 @@
   "proj_points": 33.3,
   "ecr": 450,
   "ecr_pos": 65,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 326,
+  "rookie_rank": 61
  },
  {
   "id": "kareem-hunt-fa",
@@ -9977,6 +10572,8 @@
   "ecr": 337,
   "ecr_pos": 99,
   "proj_source": "finish-curve",
+  "age": 31,
+  "dynasty_rank": 407,
   "last": {
    "season": 2025,
    "points": 145.4,
@@ -10072,7 +10669,10 @@
   "proj_points": 27.5,
   "ecr": 352,
   "ecr_pos": 125,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 286,
+  "rookie_rank": 47
  },
  {
   "id": "elijah-sarratt-bal",
@@ -10100,7 +10700,10 @@
   "proj_points": 33.6,
   "ecr": 273,
   "ecr_pos": 99,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 186,
+  "rookie_rank": 21
  },
  {
   "id": "luke-farrell-sf",
@@ -10193,6 +10796,8 @@
   "ecr": 279,
   "ecr_pos": 34,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 239,
   "last": {
    "season": 2025,
    "points": 127.8,
@@ -10317,7 +10922,9 @@
    0
   ],
   "proj_points": 11.3,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 418
  },
  {
   "id": "marvin-mims-den",
@@ -10346,6 +10953,8 @@
   "ecr": 278,
   "ecr_pos": 102,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 230,
   "last": {
    "season": 2025,
    "points": 87,
@@ -10379,7 +10988,10 @@
   "proj_points": 28.4,
   "ecr": 304,
   "ecr_pos": 107,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 213,
+  "rookie_rank": 34
  },
  {
   "id": "nathan-carter-atl",
@@ -10535,7 +11147,10 @@
    0
   ],
   "proj_points": 1.6,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 438,
+  "rookie_rank": 81
  },
  {
   "id": "joshua-whyle-gb",
@@ -10625,7 +11240,10 @@
    0
   ],
   "proj_points": 9.2,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 376,
+  "rookie_rank": 54
  },
  {
   "id": "kevin-coleman-mia",
@@ -10653,7 +11271,10 @@
   "proj_points": 31.1,
   "ecr": 377,
   "ecr_pos": 130,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 289,
+  "rookie_rank": 45
  },
  {
   "id": "jam-miller-ne",
@@ -10681,7 +11302,9 @@
   "proj_points": 25,
   "ecr": 414,
   "ecr_pos": 110,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "rookie_rank": 53
  },
  {
   "id": "devin-duvernay-ari",
@@ -10775,6 +11398,8 @@
   "ecr": 257,
   "ecr_pos": 72,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 262,
   "last": {
    "season": 2025,
    "points": 69.2,
@@ -10805,7 +11430,10 @@
    0
   ],
   "proj_points": 10.4,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 23,
+  "dynasty_rank": 341,
+  "rookie_rank": 57
  },
  {
   "id": "trevor-etienne-car",
@@ -10834,6 +11462,8 @@
   "ecr": 306,
   "ecr_pos": 91,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 330,
   "last": {
    "season": 2025,
    "points": 11.7,
@@ -10897,7 +11527,10 @@
   "proj_points": 39.4,
   "ecr": 388,
   "ecr_pos": 136,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 436,
+  "rookie_rank": 77
  },
  {
   "id": "salvon-ahmed-chi",
@@ -10952,6 +11585,8 @@
   "ecr": 321,
   "ecr_pos": 111,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 377,
   "last": {
    "season": 2025,
    "points": 50.2,
@@ -11053,6 +11688,8 @@
   "ecr": 342,
   "ecr_pos": 119,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 310,
   "last": {
    "season": 2025,
    "points": 2.4,
@@ -11118,7 +11755,10 @@
   "proj_points": 83.6,
   "ecr": 363,
   "ecr_pos": 127,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 365,
+  "rookie_rank": 64
  },
  {
   "id": "arian-smith-nyj",
@@ -11179,6 +11819,8 @@
   "ecr": 327,
   "ecr_pos": 113,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 335,
   "last": {
    "season": 2025,
    "points": 44.3,
@@ -11278,6 +11920,8 @@
   "ecr": 343,
   "ecr_pos": 120,
   "proj_source": "finish-curve",
+  "age": 26,
+  "dynasty_rank": 285,
   "last": {
    "season": 2025,
    "points": 60,
@@ -11372,6 +12016,8 @@
   "ecr": 323,
   "ecr_pos": 112,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 283,
   "last": {
    "season": 2025,
    "points": 95.8,
@@ -11472,6 +12118,8 @@
   "ecr": 292,
   "ecr_pos": 84,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 307,
   "last": {
    "season": 2025,
    "points": 33.3,
@@ -11658,6 +12306,8 @@
   "ecr": 287,
   "ecr_pos": 82,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 256,
   "last": {
    "season": 2025,
    "points": 60,
@@ -11753,7 +12403,10 @@
   "proj_points": 15.5,
   "ecr": 512,
   "ecr_pos": 171,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 23,
+  "dynasty_rank": 433,
+  "rookie_rank": 70
  },
  {
   "id": "bam-knight-ari",
@@ -11847,7 +12500,10 @@
   "proj_points": 61.8,
   "ecr": 458,
   "ecr_pos": 66,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 431,
+  "rookie_rank": 102
  },
  {
   "id": "zamir-white-no",
@@ -11904,7 +12560,10 @@
    0
   ],
   "proj_points": 17.2,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 382,
+  "rookie_rank": 68
  },
  {
   "id": "michael-carter-ten",
@@ -11965,7 +12624,10 @@
   "proj_points": 23.4,
   "ecr": 368,
   "ecr_pos": 40,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 184,
+  "rookie_rank": 20
  },
  {
   "id": "darnell-washington-pit",
@@ -11994,6 +12656,8 @@
   "ecr": 322,
   "ecr_pos": 40,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 312,
   "last": {
    "season": 2025,
    "points": 71.4,
@@ -12091,6 +12755,8 @@
   "ecr": 271,
   "ecr_pos": 97,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 329,
   "last": {
    "season": 2025,
    "points": 80.8,
@@ -12216,6 +12882,8 @@
   "ecr": 396,
   "ecr_pos": 140,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 370,
   "last": {
    "season": 2025,
    "points": 37.2,
@@ -12250,6 +12918,8 @@
   "ecr": 317,
   "ecr_pos": 96,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 304,
   "last": {
    "season": 2025,
    "points": 6.4,
@@ -12341,6 +13011,8 @@
   "ecr": 422,
   "ecr_pos": 58,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 440,
   "last": {
    "season": 2025,
    "points": 59.3,
@@ -12440,6 +13112,8 @@
   "ecr": 349,
   "ecr_pos": 123,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 333,
   "last": {
    "season": 2025,
    "points": 52.3,
@@ -12472,6 +13146,8 @@
   ],
   "proj_points": 10.3,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 404,
   "last": {
    "season": 2025,
    "points": 14.7,
@@ -12535,7 +13211,10 @@
   "proj_points": 11.8,
   "ecr": 412,
   "ecr_pos": 144,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 390,
+  "rookie_rank": 66
  },
  {
   "id": "mitchell-evans-car",
@@ -12564,6 +13243,8 @@
   "ecr": 423,
   "ecr_pos": 59,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 384,
   "last": {
    "season": 2025,
    "points": 48.2,
@@ -12598,6 +13279,8 @@
   "ecr": 300,
   "ecr_pos": 89,
   "proj_source": "finish-curve",
+  "age": 29,
+  "dynasty_rank": 351,
   "last": {
    "season": 2025,
    "points": 106.8,
@@ -12689,7 +13372,10 @@
   "proj_points": 18.2,
   "ecr": 475,
   "ecr_pos": 69,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 343,
+  "rookie_rank": 41
  },
  {
   "id": "jordan-watkins-sf",
@@ -12752,6 +13438,8 @@
   "ecr": 478,
   "ecr_pos": 47,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 359,
   "last": {
    "season": 2025,
    "points": 32,
@@ -12848,7 +13536,9 @@
   "proj_points": 23.2,
   "ecr": 314,
   "ecr_pos": 93,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 299
  },
  {
   "id": "justin-joly-den",
@@ -12876,7 +13566,10 @@
   "proj_points": 9.5,
   "ecr": 367,
   "ecr_pos": 52,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 255,
+  "rookie_rank": 37
  },
  {
   "id": "skyy-moore-gb",
@@ -12937,6 +13630,8 @@
   "ecr": 272,
   "ecr_pos": 98,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 305,
   "last": {
    "season": 2025,
    "points": 94.8,
@@ -12968,7 +13663,10 @@
    0
   ],
   "proj_points": 31.3,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 401,
+  "rookie_rank": 52
  },
  {
   "id": "keandre-lambert-smith-lac",
@@ -12997,6 +13695,8 @@
   "ecr": 508,
   "ecr_pos": 170,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 423,
   "last": {
    "season": 2025,
    "points": 16.1,
@@ -13057,6 +13757,8 @@
   "ecr": 380,
   "ecr_pos": 133,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 392,
   "last": {
    "season": 2025,
    "points": 23.5,
@@ -13250,7 +13952,10 @@
   "proj_points": 6,
   "ecr": 463,
   "ecr_pos": 129,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 400,
+  "rookie_rank": 51
  },
  {
   "id": "phil-mafah-dal",
@@ -13403,6 +14108,8 @@
   "ecr": 384,
   "ecr_pos": 106,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 403,
   "last": {
    "season": 2025,
    "points": 1.7,
@@ -13436,6 +14143,8 @@
   "ecr": 434,
   "ecr_pos": 148,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 412,
   "last": {
    "season": 2025,
    "points": 49.7,
@@ -13563,7 +14272,10 @@
   "proj_points": 21.7,
   "ecr": 438,
   "ecr_pos": 151,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 23,
+  "dynasty_rank": 373,
+  "rookie_rank": 58
  },
  {
   "id": "j-j-mccarthy-min",
@@ -13592,6 +14304,8 @@
   "ecr": 334,
   "ecr_pos": 37,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 237,
   "last": {
    "season": 2025,
    "points": 137.3,
@@ -13757,7 +14471,10 @@
   "proj_points": 37.3,
   "ecr": 506,
   "ecr_pos": 76,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 419,
+  "rookie_rank": 69
  },
  {
   "id": "justin-fields-kc",
@@ -13786,6 +14503,8 @@
   "ecr": 365,
   "ecr_pos": 39,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 323,
   "last": {
    "season": 2025,
    "points": 143.6,
@@ -13819,6 +14538,8 @@
   "ecr": 315,
   "ecr_pos": 94,
   "proj_source": "finish-curve",
+  "age": 25,
+  "dynasty_rank": 417,
   "last": {
    "season": 2025,
    "points": 31.4,
@@ -13883,6 +14604,8 @@
   "ecr": 302,
   "ecr_pos": 106,
   "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 284,
   "last": {
    "season": 2025,
    "points": 54.7,
@@ -13950,6 +14673,8 @@
   "ecr": 353,
   "ecr_pos": 38,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 258,
   "last": {
    "season": 2025,
    "points": 136.2,
@@ -14013,6 +14738,8 @@
   ],
   "proj_points": 10.3,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 434,
   "last": {
    "season": 2025,
    "points": 9.7,
@@ -14046,6 +14773,8 @@
   "ecr": 433,
   "ecr_pos": 62,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 428,
   "last": {
    "season": 2025,
    "points": 58.1,
@@ -14080,6 +14809,8 @@
   "ecr": 339,
   "ecr_pos": 117,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 368,
   "last": {
    "season": 2025,
    "points": 25.2,
@@ -14114,6 +14845,8 @@
   "ecr": 324,
   "ecr_pos": 98,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 342,
   "last": {
    "season": 2025,
    "points": 17.5,
@@ -14147,6 +14880,8 @@
   "ecr": 307,
   "ecr_pos": 37,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 411,
   "last": {
    "season": 2025,
    "points": 88.7,
@@ -14208,7 +14943,10 @@
   "proj_points": 20.3,
   "ecr": 350,
   "ecr_pos": 49,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 192,
+  "rookie_rank": 30
  },
  {
   "id": "sione-vaki-det",
@@ -14270,6 +15008,8 @@
   "ecr": 333,
   "ecr_pos": 44,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 317,
   "last": {
    "season": 2025,
    "points": 76.7,
@@ -14336,6 +15076,8 @@
   "ecr": 265,
   "ecr_pos": 77,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 381,
   "last": {
    "season": 2025,
    "points": 100.3,
@@ -14369,6 +15111,8 @@
   "ecr": 386,
   "ecr_pos": 135,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 410,
   "last": {
    "season": 2025,
    "points": 31.2,
@@ -14403,6 +15147,8 @@
   "ecr": 344,
   "ecr_pos": 121,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 336,
   "last": {
    "season": 2025,
    "points": 49.3,
@@ -14437,6 +15183,8 @@
   "ecr": 383,
   "ecr_pos": 134,
   "proj_source": "finish-curve",
+  "age": 26,
+  "dynasty_rank": 372,
   "last": {
    "season": 2025,
    "points": 71.9,
@@ -14471,6 +15219,8 @@
   "ecr": 431,
   "ecr_pos": 147,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 394,
   "last": {
    "season": 2025,
    "points": 5.5,
@@ -14570,6 +15320,8 @@
   "ecr": 400,
   "ecr_pos": 54,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 399,
   "last": {
    "season": 2025,
    "points": 49.2,
@@ -14638,6 +15390,8 @@
   "ecr": 311,
   "ecr_pos": 109,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 311,
   "last": {
    "season": 2025,
    "points": 89.9,
@@ -14672,6 +15426,8 @@
   "ecr": 336,
   "ecr_pos": 46,
   "proj_source": "projection",
+  "age": 33,
+  "dynasty_rank": 371,
   "last": {
    "season": 2025,
    "points": 71.1,
@@ -14737,6 +15493,8 @@
   "ecr": 274,
   "ecr_pos": 79,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 302,
   "last": {
    "season": 2025,
    "points": 32.7,
@@ -14769,7 +15527,10 @@
   "proj_points": 9.4,
   "ecr": 416,
   "ecr_pos": 45,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 324,
+  "rookie_rank": 46
  },
  {
   "id": "spencer-rattler-no",
@@ -14796,6 +15557,8 @@
   ],
   "proj_points": 10.2,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 357,
   "last": {
    "season": 2025,
    "points": 103.1,
@@ -14829,6 +15592,8 @@
   "ecr": 301,
   "ecr_pos": 105,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 378,
   "last": {
    "season": 2025,
    "points": 113.4,
@@ -14863,6 +15628,8 @@
   "ecr": 480,
   "ecr_pos": 48,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 338,
   "last": {
    "season": 2025,
    "points": 35.2,
@@ -14896,6 +15663,8 @@
   "ecr": 379,
   "ecr_pos": 132,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 421,
   "last": {
    "season": 2025,
    "points": 84.5,
@@ -14930,6 +15699,8 @@
   "ecr": 303,
   "ecr_pos": 90,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 240,
   "last": {
    "season": 2025,
    "points": 8.8,
@@ -14963,6 +15734,8 @@
   "ecr": 359,
   "ecr_pos": 126,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 409,
   "last": {
    "season": 2025,
    "points": 29,
@@ -14996,7 +15769,10 @@
   "proj_points": 44.4,
   "ecr": 437,
   "ecr_pos": 63,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 379,
+  "rookie_rank": 62
  },
  {
   "id": "rasheen-ali-bal",
@@ -15089,7 +15865,9 @@
    0
   ],
   "proj_points": 6.7,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 346
  },
  {
   "id": "andy-dalton-phi",
@@ -15146,7 +15924,10 @@
    0
   ],
   "proj_points": 17.9,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 22,
+  "dynasty_rank": 345,
+  "rookie_rank": 48
  },
  {
   "id": "jordan-whittington-lar",
@@ -15175,6 +15956,8 @@
   "ecr": 413,
   "ecr_pos": 145,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 387,
   "last": {
    "season": 2025,
    "points": 36.3,
@@ -15208,7 +15991,10 @@
   "proj_points": 9.6,
   "ecr": 393,
   "ecr_pos": 139,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 383,
+  "rookie_rank": 60
  },
  {
   "id": "zay-jones-hou",
@@ -15266,7 +16052,10 @@
    0
   ],
   "proj_points": 12.8,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 24,
+  "dynasty_rank": 426,
+  "rookie_rank": 90
  },
  {
   "id": "austin-ekeler-fa",
@@ -15326,6 +16115,8 @@
   ],
   "proj_points": 6.9,
   "proj_source": "finish-curve",
+  "age": 27,
+  "dynasty_rank": 358,
   "last": {
    "season": 2025,
    "points": 86.2,
@@ -15394,6 +16185,8 @@
   "ecr": 420,
   "ecr_pos": 46,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 356,
   "last": {
    "season": 2025,
    "points": 12.2,
@@ -15427,6 +16220,8 @@
   "ecr": 499,
   "ecr_pos": 52,
   "proj_source": "projection",
+  "age": 30,
+  "dynasty_rank": 430,
   "last": {
    "season": 2025,
    "points": 0.7,
@@ -15460,6 +16255,8 @@
   "ecr": 338,
   "ecr_pos": 116,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 275,
   "last": {
    "season": 2025,
    "points": 92.6,
@@ -15494,6 +16291,8 @@
   "ecr": 347,
   "ecr_pos": 122,
   "proj_source": "projection",
+  "age": 31,
+  "dynasty_rank": 398,
   "last": {
    "season": 2025,
    "points": 92.1,
@@ -15527,7 +16326,8 @@
   "proj_points": 94.3,
   "ecr": 387,
   "ecr_pos": 28,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 364
  },
  {
   "id": "elijah-moore-phi",
@@ -15613,7 +16413,10 @@
    0
   ],
   "proj_points": 21,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 405,
+  "rookie_rank": 73
  },
  {
   "id": "jacob-browning-tb",
@@ -15675,6 +16478,8 @@
   "ecr": 417,
   "ecr_pos": 56,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 314,
   "last": {
    "season": 2025,
    "points": 28.4,
@@ -15709,6 +16514,8 @@
   "ecr": 466,
   "ecr_pos": 157,
   "proj_source": "finish-curve",
+  "age": 34,
+  "dynasty_rank": 425,
   "last": {
    "season": 2025,
    "points": 67,
@@ -15743,6 +16550,8 @@
   "ecr": 514,
   "ecr_pos": 54,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 397,
   "last": {
    "season": 2025,
    "points": 14.6,
@@ -15836,6 +16645,8 @@
   "ecr": 382,
   "ecr_pos": 42,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 292,
   "last": {
    "season": 2025,
    "points": 1.2,
@@ -15958,6 +16769,8 @@
   "ecr": 373,
   "ecr_pos": 128,
   "proj_source": "projection",
+  "age": 24,
+  "dynasty_rank": 374,
   "last": {
    "season": 2025,
    "points": 25.5,
@@ -16058,6 +16871,8 @@
   "ecr": 354,
   "ecr_pos": 50,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 402,
   "last": {
    "season": 2025,
    "points": 38.8,
@@ -16189,6 +17004,8 @@
   "ecr": 505,
   "ecr_pos": 53,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 360,
   "last": {
    "season": 2025,
    "points": 2.6,
@@ -16222,6 +17039,8 @@
   "ecr": 348,
   "ecr_pos": 48,
   "proj_source": "projection",
+  "age": 29,
+  "dynasty_rank": 386,
   "last": {
    "season": 2025,
    "points": 101.7,
@@ -16287,6 +17106,8 @@
   "ecr": 385,
   "ecr_pos": 53,
   "proj_source": "projection",
+  "age": 28,
+  "dynasty_rank": 380,
   "last": {
    "season": 2025,
    "points": 74.8,
@@ -16321,6 +17142,8 @@
   "ecr": 381,
   "ecr_pos": 41,
   "proj_source": "projection",
+  "age": 41,
+  "dynasty_rank": 363,
   "last": {
    "season": 2025,
    "points": 156.9,
@@ -16443,6 +17266,8 @@
   ],
   "proj_points": 11.1,
   "proj_source": "projection",
+  "age": 27,
+  "dynasty_rank": 435,
   "last": {
    "season": 2025,
    "points": 69.6,
@@ -16476,6 +17301,8 @@
   "ecr": 473,
   "ecr_pos": 68,
   "proj_source": "finish-curve",
+  "age": 35,
+  "dynasty_rank": 413,
   "last": {
    "season": 2025,
    "points": 124.4,
@@ -16510,6 +17337,8 @@
   "ecr": 406,
   "ecr_pos": 142,
   "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 427,
   "last": {
    "season": 2025,
    "points": 37.6,
@@ -16612,6 +17441,8 @@
   "ecr": 409,
   "ecr_pos": 43,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 340,
   "last": {
    "season": 2025,
    "points": 132.4,
@@ -16644,7 +17475,10 @@
   "proj_points": 18,
   "ecr": 318,
   "ecr_pos": 39,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 214,
+  "rookie_rank": 29
  },
  {
   "id": "erick-all-cin",
@@ -16672,7 +17506,9 @@
   "proj_points": 68.8,
   "ecr": 335,
   "ecr_pos": 45,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "age": 25,
+  "dynasty_rank": 349
  },
  {
   "id": "isaac-guerendo-sf",
@@ -16701,6 +17537,8 @@
   "ecr": 316,
   "ecr_pos": 95,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 325,
   "last": {
    "season": 2025,
    "points": 0,
@@ -16796,6 +17634,8 @@
   "ecr": 410,
   "ecr_pos": 44,
   "proj_source": "projection",
+  "age": 32,
+  "dynasty_rank": 347,
   "last": {
    "season": 2025,
    "points": 44.2,
@@ -16829,6 +17669,8 @@
   "ecr": 360,
   "ecr_pos": 51,
   "proj_source": "projection",
+  "age": 23,
+  "dynasty_rank": 327,
   "last": {
    "season": 2025,
    "points": 54,
@@ -16863,6 +17705,8 @@
   "ecr": 313,
   "ecr_pos": 92,
   "proj_source": "projection",
+  "age": 26,
+  "dynasty_rank": 318,
   "last": {
    "season": 2025,
    "points": 43.6,
@@ -16895,7 +17739,10 @@
   "proj_points": 37.5,
   "ecr": 351,
   "ecr_pos": 124,
-  "proj_source": "finish-curve"
+  "proj_source": "finish-curve",
+  "age": 22,
+  "dynasty_rank": 199,
+  "rookie_rank": 40
  },
  {
   "id": "arizona-cardinals-ari",
@@ -16923,6 +17770,7 @@
   "proj_points": 90.2,
   "ecr": 457,
   "ecr_pos": 32,
-  "proj_source": "projection"
+  "proj_source": "projection",
+  "dynasty_rank": 415
  }
 ]

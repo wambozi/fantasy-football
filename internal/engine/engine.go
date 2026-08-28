@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/wambozi/draft-copilot/internal/league"
@@ -357,6 +358,21 @@ func (e *Engine) reasons(r Recommendation, ad *Advice, rc *rosterCounts, me stri
 			s += fmt.Sprintf(" · %.0f%% tgt", l.TgtPct)
 		}
 		out = append(out, s)
+	}
+	// Keeper zone (round >= cost floor): the 2027 view matters, so show age and
+	// dynasty/rookie standing. Before the floor it is noise on a 60-second clock.
+	if p := r.Player; ad.Round >= 8 && (p.Age > 0 || p.RookieRank > 0) {
+		var bits []string
+		if p.Age > 0 {
+			bits = append(bits, fmt.Sprintf("age %d", p.Age))
+		}
+		if p.RookieRank > 0 {
+			bits = append(bits, fmt.Sprintf("rookie #%d", p.RookieRank))
+		}
+		if p.DynastyRank > 0 {
+			bits = append(bits, fmt.Sprintf("dyn #%d", p.DynastyRank))
+		}
+		out = append(out, strings.Join(bits, " "))
 	}
 	// ECR vs ADP gap: experts rank them well ahead of where the room drafts them (or
 	// the reverse). No modelling — the gap itself is the signal.
