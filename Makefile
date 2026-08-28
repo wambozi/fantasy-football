@@ -1,6 +1,6 @@
 # Draft Copilot — one binary, no build step for the UI.
 DATA ?= ./data
-PORT ?= 8080
+PORT ?= 8090
 
 .PHONY: build ingest sim test run keepers brief-test clean
 

@@ -12,7 +12,7 @@
 
 // CONFIG — the only part that changes after §9.1 recon. Everything below it is generic.
 const CONFIG = {
-  server: 'http://localhost:8080',
+  server: 'http://localhost:8090',
 
   // WebSocket path. Return {overall|round+pick, player, team} or null for a frame that is
   // not a pick (chat, clock ticks). `msg` is the parsed JSON when the frame was JSON,

@@ -18,7 +18,7 @@
 //    back into the chat; the ingest script's extractPick() gets written from them.
 (() => {
   'use strict';
-  const SERVER = 'http://localhost:8080';
+  const SERVER = 'http://localhost:8090';
   const post = (kind, payload) => {
     try {
       GM_xmlhttpRequest({

@@ -10,7 +10,7 @@ one 12-team full-PPR keeper league (spec: [docs/draft-copilot-spec.md](docs/draf
 make build
 rm -f data/events.jsonl            # clean board (keep the file if resuming a draft)
 export FANTASY_ANTHROPIC_API_KEY=… # optional: Claude briefs
-./server                           # http://<laptop-ip>:8080 on the phone
+./server                           # http://<laptop-ip>:8090 on the phone
 ```
 
 - Type a name, `Enter` marks the pick for the team on the clock. `↑/↓` to choose.
@@ -34,7 +34,7 @@ export FANTASY_ANTHROPIC_API_KEY=… # optional: Claude briefs
 Manual entry is the source of truth; automation is an accelerator.
 
 1. Install Tampermonkey, add `userscripts/fandraft-recon.user.js`, run a FanDraft mock
-   with `./server` up. Frames land in `data/fandraft-frames.jsonl`.
+   with `./server` up (port 8090). Frames land in `data/fandraft-frames.jsonl`.
 2. From those frames, fill in `extractPickFromFrame` (or the DOM `cellSelector`/`extract`)
    in `userscripts/fandraft-ingest.user.js`, install it, disable the recon script.
 3. The status bar shows `auto Ns ago`; it turns red after 90 s of silence. If the board
