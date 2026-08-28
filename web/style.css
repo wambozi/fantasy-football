@@ -53,6 +53,8 @@ body { overflow-x: hidden; }
 
 /* claude brief */
 .brief { padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: 16px; color: #d6dbe3; }
+.brief { white-space: pre-line; }
+.brief.projected::before { content: "Claude ≈ projected"; }
 .brief::before { content: "Claude"; color: var(--accent); font-weight: 700; margin-right: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
 
 /* best by position */

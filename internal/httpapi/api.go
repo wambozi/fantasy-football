@@ -23,12 +23,20 @@ type Advisor interface {
 	Advise(snap state.Snapshot) any
 }
 
-// Briefer serves the latest Claude brief. Nil when ANTHROPIC_API_KEY is absent.
+// Briefer serves the latest Claude brief. Nil when no API key is configured.
 type Briefer interface {
-	// Brief returns (text, ready). ready=false means still generating or unavailable.
-	Brief(version int) (string, bool)
+	// Brief returns the best brief for the snapshot's live pick and whether one exists.
+	Brief(snap state.Snapshot) (Brief, bool)
 	// OnPick is invoked after every state change for speculative prefetch.
 	OnPick(snap state.Snapshot)
+}
+
+// Brief is one rendered commentary.
+type Brief struct {
+	Text      string `json:"text"`
+	LivePick  int    `json:"live_pick"`
+	Projected bool   `json:"projected"` // generated from a predicted board, not the actual one
+	Version   int    `json:"version"`   // state version it was generated from
 }
 
 // Server wires handlers to state.
@@ -100,10 +108,7 @@ type StatePayload struct {
 }
 
 // BriefPayload is the Claude commentary, if any.
-type BriefPayload struct {
-	Version int    `json:"version"`
-	Text    string `json:"text"`
-}
+type BriefPayload = Brief
 
 func (s *Server) payload() StatePayload {
 	snap := s.st.Snapshot()
@@ -112,8 +117,8 @@ func (s *Server) payload() StatePayload {
 		p.Advice = s.advisor.Advise(snap)
 	}
 	if s.briefer != nil {
-		if txt, ok := s.briefer.Brief(snap.Version); ok {
-			p.Brief = &BriefPayload{Version: snap.Version, Text: txt}
+		if b, ok := s.briefer.Brief(snap); ok {
+			p.Brief = &b
 		}
 	}
 	return p
@@ -204,13 +209,13 @@ func (s *Server) handleBrief(w http.ResponseWriter, _ *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]any{"enabled": false})
 		return
 	}
-	v := s.st.Version()
-	txt, ok := s.briefer.Brief(v)
+	snap := s.st.Snapshot()
+	b, ok := s.briefer.Brief(snap)
 	if !ok {
-		writeJSON(w, http.StatusAccepted, map[string]any{"enabled": true, "version": v})
+		writeJSON(w, http.StatusAccepted, map[string]any{"enabled": true, "version": snap.Version})
 		return
 	}
-	writeJSON(w, http.StatusOK, BriefPayload{Version: v, Text: txt})
+	writeJSON(w, http.StatusOK, b)
 }
 
 // handleStream pushes the full payload on every version bump, plus a keepalive.

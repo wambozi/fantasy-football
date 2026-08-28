@@ -368,6 +368,14 @@ func (s *DraftState) Subscribe() (<-chan int, func()) {
 	}
 }
 
+// Poke re-sends the current version to subscribers without a mutation — used when
+// something derived (a Claude brief) becomes available for the same state.
+func (s *DraftState) Poke() {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	s.notify()
+}
+
 // notify is called with s.mu held.
 func (s *DraftState) notify() {
 	v := s.version

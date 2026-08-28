@@ -92,7 +92,8 @@
 
     // Brief.
     if (p.brief && p.brief.text) {
-      el.brief.textContent = p.brief.text;
+      el.brief.textContent = p.brief.text.replace(/^\s*-\s*/gm, "• ");
+      el.brief.classList.toggle("projected", !!p.brief.projected);
       el.brief.classList.remove("hidden");
     } else {
       el.brief.classList.add("hidden");
