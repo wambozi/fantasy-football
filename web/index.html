@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#0b0d10">
+<title>Draft Copilot</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app" class="app">
+  <header id="status" class="status">
+    <div class="status-main">
+      <span id="st-pick">LIVE PICK —</span>
+      <span class="sep">·</span>
+      <span id="st-turn">connecting…</span>
+    </div>
+    <div id="st-gate" class="status-gate hidden"></div>
+    <div id="st-auto" class="status-auto hidden"></div>
+  </header>
+  <div id="conflict" class="conflict hidden"><span id="conflict-text"></span><button id="conflict-ok" type="button">dismiss</button></div>
+
+  <section id="recs" class="recs"></section>
+
+  <section id="brief" class="brief hidden"></section>
+
+  <section id="bypos" class="bypos"></section>
+
+  <section class="entry">
+    <div class="entry-row">
+      <input id="search" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+             placeholder="type a name, enter to mark taken" aria-label="player search">
+      <button id="undo" type="button" title="Cmd/Ctrl+Z">⌫ undo</button>
+    </div>
+    <ul id="results" class="results"></ul>
+    <div id="recent" class="recent"></div>
+  </section>
+
+  <footer id="roster" class="roster"></footer>
+  <div id="toast" class="toast hidden"></div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>
