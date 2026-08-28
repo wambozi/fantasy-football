@@ -582,10 +582,27 @@
     const row = e.target.closest(".dc-hit[data-i]");
     if (row) pick(hits[+row.dataset.i].id);
   });
+  // Clicking a card stages its player in the search field, pre-selected, so Enter
+  // confirms the pick — no typing, no dropdown. The Draft button still picks outright.
   el.cards.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-draft]");
-    if (btn && cur && cur.advice && cur.advice.on_clock) pick(btn.dataset.draft);
+    if (btn) {
+      if (cur && cur.advice && cur.advice.on_clock) pick(btn.dataset.draft);
+      return;
+    }
+    const card = e.target.closest(".dc-card[data-id]");
+    if (card) stage(card.dataset.id);
   });
+  function stage(playerId) {
+    const p = byId.get(playerId);
+    if (!p) return;
+    searchSeq++; // invalidate any in-flight search so it cannot overwrite the staged hit
+    el.search.value = p.name;
+    hits = [p];
+    sel = 0;
+    renderHits();
+    focus();
+  }
   el.undo.addEventListener("click", (e) => { e.preventDefault(); undo(); });
   el.conflictOk.addEventListener("click", async (e) => { e.preventDefault(); try { await api("/api/fandraft/resolve", {}); } catch (err) { toast(err.message, "err"); } focus(); });
   for (const t of el.tabs) t.addEventListener("click", () => { setView(t.dataset.view); focus(); });

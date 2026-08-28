@@ -615,3 +615,7 @@
    first character is never under the marker: marker width + a 5px gap. */
 .dc-needs-head, .dc-needs-row { padding-left: calc(var(--dc-marker) + 5px); }
 .dc-pick { padding-left: calc(var(--dc-marker) + 5px); }
+
+/* A card is clickable: it stages its player in the search field for Enter to confirm. */
+.dc-card { cursor: pointer; }
+.dc-card .btn { cursor: pointer; }
