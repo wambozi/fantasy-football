@@ -281,7 +281,7 @@ func TestAdviseNeverRecommendsKickerAndCaches(t *testing.T) {
 			t.Fatal("kicker recommended")
 		}
 	}
-	if len(ad.Top) != 3 || (ad.ProjMode != players.ProjReal && ad.ProjMode != players.ProjCurve) {
+	if len(ad.Top) != TopN || (ad.ProjMode != players.ProjReal && ad.ProjMode != players.ProjCurve) {
 		t.Errorf("top=%d mode=%s", len(ad.Top), ad.ProjMode)
 	}
 	if e.Advise(snap) != ad {

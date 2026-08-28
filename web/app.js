@@ -262,7 +262,7 @@
       el.cards.innerHTML = `<p class="dc-card-why">${cur && cur.state && cur.state.complete ? "Nothing left to draft." : "No recommendations yet."}</p>`;
       return;
     }
-    el.cards.innerHTML = top.slice(0, 3).map((r, i) => {
+    el.cards.innerHTML = top.slice(0, 6).map((r, i) => {
       const pl = r.player;
       const gone = pct(1 - r.p_survive);
       const risk = gone >= 45 ? "dc-risk-high" : gone >= 20 ? "dc-risk-mid" : "dc-risk-low";
@@ -596,9 +596,9 @@
     const tag = (e.target.tagName || "").toLowerCase();
     const inField = tag === "input" || tag === "textarea";
     if (e.key.toLowerCase() === "g" && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); setView(view === "shortlist" ? "league" : "shortlist"); return; }
-    // 1/2/3 draft a card, but only when I'm on the clock and the search field is empty —
+    // 1–6 draft a card, but only when I'm on the clock and the search field is empty —
     // typing a jersey number into a name search must never fire a pick.
-    if (/^[1-3]$/.test(e.key) && el.search.value === "" && cur && cur.advice && cur.advice.on_clock) {
+    if (/^[1-6]$/.test(e.key) && el.search.value === "" && cur && cur.advice && cur.advice.on_clock) {
       const r = (cur.advice.top || [])[+e.key - 1];
       if (r) { e.preventDefault(); pick(r.player.id); }
     }

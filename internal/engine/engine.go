@@ -70,6 +70,10 @@ type Advice struct {
 	} `json:"params"`
 }
 
+// TopN is how many ranked candidates Advice.Top carries: the shortlist the UI shows
+// and the 1..N hotkeys draft.
+const TopN = 6
+
 // Engine is safe for concurrent use.
 type Engine struct {
 	lg   *league.League
@@ -235,8 +239,8 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 			top = forced
 		}
 	}
-	if len(top) > 3 {
-		top = top[:3]
+	if len(top) > TopN {
+		top = top[:TopN]
 	}
 	for i := range top {
 		top[i].Reasons = e.reasons(top[i], ad, rc, me)

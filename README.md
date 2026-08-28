@@ -17,7 +17,7 @@ The UI is a two-column laptop layout (minimum 1013px wide; no phone layout) buil
 design handoff in [docs/design_handoff_draft_copilot/](docs/design_handoff_draft_copilot/).
 
 - Type a name, `Enter` marks the pick for the team on the clock. `↑/↓` to choose, `Esc` clears.
-- `1` / `2` / `3` drafts that card when you're on the clock (search field empty).
+- `1`–`6` drafts that shortlist card when you're on the clock (search field empty).
 - `G` flips between the shortlist and the league view (needs & likely next moves).
 - `Cmd/Ctrl+Z` or the masthead `⌫ Undo` reverts the last pick. The event log replays on restart.
 - Magenta = urgency: your turn, a binding gate, an open starter slot, a seat picking before you.

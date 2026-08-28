@@ -239,7 +239,7 @@ A deterministic engine has ALREADY ranked the candidates (VOR = projected points
 
 Your job: explain the SHAPE of this decision in at most 3 bullets, each under 15 words, no preamble, no headings. Prefer:
 - what the numbers miss: bye-week collisions with the manager's roster, handcuff logic, positional runs visible in the recent picks, a player the room is drafting far from expert consensus
-- which of the top candidates is the safe vs the upside choice, and why
+- which of the shortlist candidates is the safe vs the upside choice, and why
 - when a strategy gate is about to bind
 If on_clock is false the manager is NOT picking yet: frame everything as what to do at next_live_pick ("at #8, …"), never "now".
 If a brief is marked PROJECTED, the board is a prediction of the next few picks; say nothing about which specific players "just went".
@@ -295,7 +295,7 @@ func UserMessage(snap state.Snapshot, ad *engine.Advice, lg *league.League, pool
 			recent = append(recent, fmt.Sprintf("#%d %s: %s %s", pk.LivePick, pk.Team, p.Name, p.Pos))
 		}
 	}
-	top := make([]cand, 0, 3)
+	top := make([]cand, 0, len(ad.Top))
 	for _, r := range ad.Top {
 		top = append(top, mk(r))
 	}
@@ -315,7 +315,7 @@ func UserMessage(snap state.Snapshot, ad *engine.Advice, lg *league.League, pool
 		"next_live_pick":     ad.NextLivePick,
 		"picks_until_next":   ad.PicksUntil,
 		"my_roster":          roster,
-		"top3":               top,
+		"shortlist":          top,
 		"other_candidates":   others,
 		"best_by_position":   best,
 		"gate_band":          ad.GateBand,
