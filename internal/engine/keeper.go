@@ -81,11 +81,11 @@ func (e *Engine) annotateKeeper(recs []Recommendation, round int) {
 	for i := range recs {
 		r := &recs[i]
 		r.KeeperP = e.keeperP(r.Player)
+		// Only shown from the floor on: before it the cost is just the round, and the
+		// screen is for a 60-second read.
 		if round >= k.CostFloorRound {
 			r.KeeperCost = fmt.Sprintf("R%d", k.CostFloorRound)
 			r.KeeperSpec = r.KeeperP >= k.SpecThreshold
-		} else if round > 0 {
-			r.KeeperCost = fmt.Sprintf("R%d", round)
 		}
 	}
 }
