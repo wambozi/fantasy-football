@@ -609,3 +609,9 @@
 .dc-myteam tr.is-open .dc-slot-label { color: var(--dc-urgent); font-style: normal; }
 .dc-myteam td.is-name { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
 .dc-myteam td.is-bye-clash { color: var(--dc-urgent); }
+
+/* Row markers are an INSET box-shadow, so they paint over the row's own left edge.
+   Reserve that edge on every row (marked or not) so columns stay aligned and the
+   first character is never under the marker: marker width + a 5px gap. */
+.dc-needs-head, .dc-needs-row { padding-left: calc(var(--dc-marker) + 5px); }
+.dc-pick { padding-left: calc(var(--dc-marker) + 5px); }
