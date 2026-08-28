@@ -1,0 +1,83 @@
+# Draft Copilot tuning. Every knob the engine uses lives here, not in code.
+
+roster:
+  starters: {QB: 1, RB: 2, WR: 2, TE: 1, DST: 1}
+  flex: {count: 2, eligible: [RB, WR, TE]}
+  bench: 8
+  total_spots: 17
+  max: {QB: 4, RB: 9, WR: 8, TE: 3, DST: 3}
+  # No kicker slot in this league.
+
+scoring:
+  reception: 1.0          # full PPR
+  te_premium: 0.0
+
+objective:
+  variance_preference: 0.15   # >0 favors ceiling; 8/12 teams make a 1-week bracket
+  keeper_horizon_bonus: 0.05  # tiebreak toward youth; 2 keepers again in 2027
+
+adp:
+  # Per-source weights for the weighted median that becomes ADPMean.
+  # sigma: true means the source participates in the σ (MAD) calculation.
+  # Best-ball spread is format noise, not real disagreement, so it is excluded from σ.
+  sources:
+    ESPN:          {weight: 1.0, sigma: true}
+    CBS:           {weight: 1.0, sigma: true}
+    NFFC:          {weight: 1.0, sigma: true}
+    RT Sports:     {weight: 1.0, sigma: true}
+    Yahoo!:        {weight: 1.0, sigma: true}
+    FFPC:          {weight: 1.0, sigma: true, pos_weight: {TE: 0.3}}   # TE premium inflates TE ADP
+    Sleeper 1QB:   {weight: 0.7, sigma: true}
+    MFL:           {weight: 0.7, sigma: true}
+    FBG OC:        {weight: 0.7, sigma: true}   # sharp 1QB redraft pool; good QB-timing signal
+    Underdog:      {weight: 0.4, sigma: false}
+    Drafters:      {weight: 0.4, sigma: false}
+    BestBall10s:   {weight: 0.4, sigma: false}
+    DraftKings:    {weight: 0.4, sigma: false}
+    # Excluded entirely: Sleeper SF*, *Rookie, *IDP* (superflex/rookie/IDP formats).
+  min_sources: 3            # fewer weighted sources than this -> thin-data fallback
+  sigma_floor: 3.0          # picks; a player every site agrees on still has draft-day variance
+  sigma_mad_scale: 1.4826   # MAD -> σ for a normal distribution
+  thin_sigma: {min: 12.0, frac: 0.15}   # σ = max(min, frac × ADPMean) when data is thin
+  pos_map: {TD: DST, PK: K, CB: WR, DEF: DST, D/ST: DST}   # CB: Travis Hunter is a WR here
+
+engine:
+  sims: 2000
+  candidate_pool: 40          # top-N by noisy ADP each opposing pick draws from
+  lambda_rank: 0.25           # w = exp(-λ_rank × rank): steepness of BPA preference
+  lambda_regret: 1.0          # score = VOR + λ_regret × regret
+  survive_threshold: 0.5      # fallback = best at pos with p_survive > this
+  # Opponent positional-need multipliers, derived from each team's live roster
+  # (keepers included). Modest on purpose: managers reach and go BPA.
+  need:
+    starter_open: 1.8         # a required starter slot at this position is unfilled
+    flex_open: 1.25           # position is flex-eligible and a flex slot is unfilled
+    full: 0.6                 # starters + flex share satisfied; only bench value left
+    at_max: 0.0               # position max reached
+    dst_before_round: 15      # opponents essentially never take DST before this round
+    dst_early_mult: 0.05
+  flex_share: {RB: 0.45, WR: 0.45, TE: 0.10}   # how flex demand splits by position in PPR
+  # VOR multiplier when a pick can only be bench for MY roster (starters + flex already
+  # covered at that position). League replacement level says a QB2 is worth +20; my
+  # lineup says it starts only if QB1 is hurt. Unlisted positions are undiscounted.
+  bench_discount: {QB: 0.05, DST: 0.0}
+  bench_decay: 0.75  # k-th bench player at a position is worth decay^k of the first
+
+gates:
+  - position: QB
+    must_draft_by_live_pick: 68
+    max: 2
+    rationale: "0 QBs kept; 12 teams × 1 QB. QB12 by ADP is ~Stafford/Purdy."
+  - position: TE
+    must_draft_by_live_pick: 49
+    max: 2
+    rationale: "Bowers/Loveland/Warren kept. Kraft/LaPorta/Pitts/Fannin tier lands here."
+  - position: DST
+    exactly: 1
+    not_before_round: 16
+    rationale: "One slot, no kicker. Only mandatory endgame pick."
+  - position: RB
+    min_count_by_live_pick: {26: 2}
+    rationale: "10 RBs kept. Two startable RBs by end of round 3 or you stream all year."
+
+flex_policy: best_available   # RB/WR/TE by VOR — never force a position into flex

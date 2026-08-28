@@ -1,0 +1,6 @@
+draft-copilot
+events.jsonl
+data/events*.jsonl
+web/node_modules/
+web/dist/
+server
