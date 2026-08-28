@@ -29,15 +29,16 @@ func main() {
 		seed    = flag.Uint64("seed", 1, "base seed")
 		verbose = flag.Bool("v", false, "print every violating draft")
 		show    = flag.Int("show", 1, "print this many full engine drafts")
+		keepers = flag.Bool("keepers", false, "list the top keeper-speculative candidates and exit")
 	)
 	flag.Parse()
-	if err := run(*n, *sims, *dataDir, *myTeam, *seed, *verbose, *show); err != nil {
+	if err := run(*n, *sims, *dataDir, *myTeam, *seed, *verbose, *show, *keepers); err != nil {
 		slog.Error("simdraft", "err", err)
 		os.Exit(1)
 	}
 }
 
-func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show int) error {
+func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show int, keepers bool) error {
 	cfg, err := strategy.Load(filepath.Join(dataDir, "strategy.yaml"))
 	if err != nil {
 		return err
@@ -55,6 +56,11 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	}
 	if pool.CurveProjections() {
 		fmt.Println("note: no projections loaded; VOR from fitted ADP curve")
+	}
+
+	if keepers {
+		engine.PrintKeeperCandidates(os.Stdout, lg, pool, cfg, 25)
+		return nil
 	}
 
 	type job struct {
@@ -102,7 +108,9 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	flexPos := map[players.Position]int{}
 	posTotals := map[players.Position]int{}
 	var engLineup, baseLineup []float64
+	specTotal := 0
 	for i, r := range engRes {
+		specTotal += r.SpecCount
 		if len(r.Violations) > 0 {
 			bad++
 			if verbose {
@@ -137,6 +145,7 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	for _, pos := range []players.Position{players.QB, players.RB, players.WR, players.TE, players.DST} {
 		fmt.Printf("  %s %.1f", pos, float64(posTotals[pos])/float64(n))
 	}
+	fmt.Printf("\nkeeper-speculative per draft: %.2f (cap %d)", float64(specTotal)/float64(n), cfg.Keeper.MaxSpeculative)
 	fmt.Printf("\nflex fills:")
 	for _, pos := range []players.Position{players.RB, players.WR, players.TE} {
 		fmt.Printf("  %s %d", pos, flexPos[pos])

@@ -80,9 +80,10 @@
       el.recs.innerHTML = ad.top.slice(0, 3).map((r, i) => {
         const pl = r.player;
         const why = (r.reasons || []).map((s) => esc(s)).join(" · ");
-        return `<div class="rec${r.gate_forced ? " gate" : ""}" data-id="${esc(pl.id)}">
+        const badge = r.keeper_spec ? `<span class="badge spec" title="2027 keeper asset, not a 2026 contributor">2027</span>` : "";
+        return `<div class="rec${r.gate_forced ? " gate" : ""}${r.keeper_spec ? " spec" : ""}" data-id="${esc(pl.id)}">
           <div class="n num">${i + 1}</div>
-          <div class="who">${esc(pl.name)}${posSpan(pl.pos)}<span class="tm">${esc(pl.team)}${pl.bye ? " · bye " + pl.bye : ""}</span></div>
+          <div class="who">${esc(pl.name)}${posSpan(pl.pos)}<span class="tm">${esc(pl.team)}${pl.bye ? " · bye " + pl.bye : ""}</span>${badge}</div>
           <div class="vor num">${r.vor.toFixed(1)}<small>VOR</small></div>
           <div class="why">${why.replace(/^(\d+% gone)/, "<b>$1</b>")}</div>
         </div>`;

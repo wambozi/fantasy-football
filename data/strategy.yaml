@@ -80,4 +80,17 @@ gates:
     min_count_by_live_pick: {26: 2}
     rationale: "10 RBs kept. Two startable RBs by end of round 3 or you stream all year."
 
+# Keeper economics (spec §14). Rounds 8–17 cost the same to keep, so from round 8 a
+# young player with a real 2027 outlook earns a bonus: P(hit) × (2027 value − value of a
+# round-8 pick) × surplus_weight_late. Zero before the floor: no arbitrage exists there.
+keeper:
+  max_keepers: 2
+  cost_floor_round: 8
+  surplus_weight: 0.0          # rounds 1–7 — never pulls a young player up at #49 or #65
+  surplus_weight_late: 0.35    # rounds 8+
+  max_speculative: 3           # hard cap on keeper-speculative roster spots (bench is 8)
+  spec_threshold: 0.5          # P(hit) at/above which a round-8+ pick counts as speculative
+  round8_overall_pick: 96      # what a floor-round pick is worth, as an overall ADP slot
+  targets: []                  # optional: names whose P(hit) is forced to 1
+
 flex_policy: best_available   # RB/WR/TE by VOR — never force a position into flex

@@ -80,7 +80,22 @@ type Gate struct {
 	Rationale           string           `yaml:"rationale"`
 }
 
+// Keeper encodes the league's keeper economics (spec §14). Year-1 keeper cost is the
+// round drafted, floored at CostFloorRound, so every round from the floor onward has
+// identical keeper cost and speculation is "free" except for 2026 bench value.
+type Keeper struct {
+	MaxKeepers     int      `yaml:"max_keepers"`
+	CostFloorRound int      `yaml:"cost_floor_round"`
+	SurplusWeight  float64  `yaml:"surplus_weight"`      // rounds before the floor; keep 0
+	SurplusLate    float64  `yaml:"surplus_weight_late"` // rounds >= floor
+	MaxSpeculative int      `yaml:"max_speculative"`     // hard cap on keeper-speculative roster spots
+	SpecThreshold  float64  `yaml:"spec_threshold"`      // P(hit) at/above which a pick is "speculative"
+	R8Pick         int      `yaml:"round8_overall_pick"` // overall pick a floor-round pick is worth (12 teams × 8)
+	Targets        []string `yaml:"targets"`             // optional hand-picked names: P(hit) forced to 1
+}
+
 type Config struct {
+	Keeper Keeper `yaml:"keeper"`
 	Roster struct {
 		Starters map[players.Position]int `yaml:"starters"`
 		Flex     struct {
@@ -127,6 +142,12 @@ func (c *Config) validate() error {
 	}
 	if c.ADP.MinSources < 1 || c.ADP.SigmaFloor <= 0 || c.ADP.SigmaMADScale <= 0 {
 		return fmt.Errorf("adp min_sources/sigma_floor/sigma_mad_scale must be positive")
+	}
+	if c.Keeper.SpecThreshold == 0 {
+		c.Keeper.SpecThreshold = 0.5
+	}
+	if c.Keeper.R8Pick == 0 {
+		c.Keeper.R8Pick = 96
 	}
 	if c.Engine.BenchDecay == 0 {
 		c.Engine.BenchDecay = 1

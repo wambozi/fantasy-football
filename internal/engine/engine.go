@@ -33,6 +33,12 @@ type Recommendation struct {
 	Regret     float64         `json:"regret"`
 	Reasons    []string        `json:"reasons"`
 	GateForced bool            `json:"gate_forced"`
+	// Keeper economics (rounds >= cost floor only).
+	KeeperCost string  `json:"keeper_cost,omitempty"` // e.g. "R8"
+	KeeperP    float64 `json:"keeper_p,omitempty"`    // P(top-2 keeper candidate in 2027)
+	KeeperSpec bool    `json:"keeper_spec,omitempty"` // flagged as a 2027 asset, not a 2026 contributor
+
+	bench float64 // bench multiplier applied to VOR (1 when the pick fills a starter/flex slot)
 }
 
 // Advice is the output contract for the UI and the Claude brief.
@@ -46,6 +52,7 @@ type Advice struct {
 	Top          []Recommendation                       `json:"top"`
 	ByPosition   map[players.Position]Recommendation    `json:"by_position"`
 	Warnings     []string                               `json:"warnings"`
+	SpecCount    int                                    `json:"spec_count"`          // keeper-speculative players already on my roster
 	GateBand     string                                 `json:"gate_band,omitempty"` // red band text, e.g. "QB GATE: 1 pick left"
 	Replacement  map[players.Position]float64           `json:"replacement"`
 	Waiver       map[players.Position]float64           `json:"waiver"` // best available beyond the last draft slot
@@ -69,6 +76,9 @@ type Engine struct {
 	mu      sync.Mutex
 	cacheV  int
 	cacheAd *Advice
+
+	rankOnce    sync.Once
+	valueByRank []float64 // projection by overall ADP rank, for keeper value lookups
 }
 
 // New builds an engine. seed makes Monte Carlo deterministic for tests/sims.
@@ -153,17 +163,19 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 	// best player nobody will draft — scaled by how likely that bench spot ever starts.
 	// Without the split, every mid-round candidate is negative against replacement and
 	// a backup QB's small positive VOR wins by default.
-	vor := func(p *players.Player) float64 {
+	vor := func(p *players.Player) (float64, float64) {
 		if rc.fillsStarter(me, p.Pos) {
-			return p.ProjPoints - ad.Replacement[p.Pos]
+			return p.ProjPoints - ad.Replacement[p.Pos], 1
 		}
 		f := e.cfg.Engine.BenchFactor(p.Pos) * math.Pow(e.cfg.Engine.BenchDecay, float64(rc.benchIndex(me, p.Pos)))
-		return (p.ProjPoints - ad.Waiver[p.Pos]) * f
+		return (p.ProjPoints - ad.Waiver[p.Pos]) * f, f
 	}
 	recs := make([]Recommendation, 0, len(board))
 	for _, p := range board {
-		recs = append(recs, Recommendation{Player: p, VOR: vor(p), PSurvive: surv[p.ID]})
+		v, f := vor(p)
+		recs = append(recs, Recommendation{Player: p, VOR: v, PSurvive: surv[p.ID], bench: f})
 	}
+	e.annotateKeeper(recs, ad.Round)
 	e.score(recs, ad)
 
 	// Hard constraints for my seat.
@@ -172,6 +184,21 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 	for _, r := range recs {
 		if g.allowed[r.Player.Pos] {
 			eligible = append(eligible, r)
+		}
+	}
+	// Keeper cap: once max_speculative 2027 assets are rostered, speculative candidates
+	// are off the board — the bench still has to carry byes and injuries in 2026.
+	ad.SpecCount = e.specCount(snap, me)
+	if k := e.cfg.Keeper; k.MaxSpeculative > 0 && ad.SpecCount >= k.MaxSpeculative && ad.Round >= k.CostFloorRound {
+		var kept []Recommendation
+		for _, r := range eligible {
+			if r.KeeperP < k.SpecThreshold {
+				kept = append(kept, r)
+			}
+		}
+		if len(kept) > 0 {
+			eligible = kept
+			ad.Warnings = append(ad.Warnings, fmt.Sprintf("keeper cap: %d speculative already rostered", ad.SpecCount))
 		}
 	}
 	if len(eligible) == 0 { // should not happen; never leave the user with nothing
@@ -313,7 +340,7 @@ func (e *Engine) score(recs []Recommendation, ad *Advice) {
 			}
 		}
 		r.Regret = (1 - r.PSurvive) * math.Max(0, r.VOR-fallback)
-		r.Score = r.VOR + e.cfg.Engine.LambdaRegret*r.Regret + vp*math.Min(r.Player.ADPStdDev, 30)
+		r.Score = r.VOR + e.cfg.Engine.LambdaRegret*r.Regret + vp*math.Min(r.Player.ADPStdDev, 30) + e.keeperSurplus(*r, ad)
 		if ad.ProjMode == players.ProjNone {
 			// No points: fall back to ADP order with survival as the tiebreak so the
 			// tool is still usable. Flagged loudly in Warnings.
@@ -359,9 +386,16 @@ func (e *Engine) reasons(r Recommendation, ad *Advice, rc *rosterCounts, me stri
 		}
 		out = append(out, s)
 	}
+	if r.KeeperCost != "" {
+		s := "keeper " + r.KeeperCost
+		if r.KeeperSpec {
+			s += fmt.Sprintf(" · 2027 asset (%.0f%%)", r.KeeperP*100)
+		}
+		out = append(out, s)
+	}
 	// Keeper zone (round >= cost floor): the 2027 view matters, so show age and
 	// dynasty/rookie standing. Before the floor it is noise on a 60-second clock.
-	if p := r.Player; ad.Round >= 8 && (p.Age > 0 || p.RookieRank > 0) {
+	if p := r.Player; ad.Round >= e.cfg.Keeper.CostFloorRound && e.cfg.Keeper.CostFloorRound > 0 && (p.Age > 0 || p.RookieRank > 0) {
 		var bits []string
 		if p.Age > 0 {
 			bits = append(bits, fmt.Sprintf("age %d", p.Age))

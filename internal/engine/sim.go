@@ -29,6 +29,7 @@ type SimResult struct {
 	Lineup     float64            // ProjPoints of my optimal starting lineup
 	FlexPos    []players.Position // positions that ended up in my flex slots
 	Violations []string           // §10 invariants this draft broke
+	SpecCount  int                // keeper-speculative players on my final roster
 	Counts     map[players.Position]int
 }
 
@@ -97,7 +98,7 @@ func SimulateDraft(lg *league.League, pool *players.Pool, cfg0 *strategyConfig, 
 		res.Counts[p.Pos]++
 	}
 	res.Lineup, res.FlexPos = lineup(&cfg, res.Roster)
-	res.Violations = checkInvariants(lg, &cfg, &res)
+	res.Violations = checkInvariants(e, lg, &cfg, &res)
 	return res, nil
 }
 
@@ -206,7 +207,7 @@ func lineup(cfg *strategyConfig, roster []*players.Player) (float64, []players.P
 }
 
 // checkInvariants evaluates the §10 per-draft invariants.
-func checkInvariants(lg *league.League, cfg *strategyConfig, r *SimResult) []string {
+func checkInvariants(e *Engine, lg *league.League, cfg *strategyConfig, r *SimResult) []string {
 	var v []string
 	countBy := func(pos players.Position, live int) int {
 		n := 0
@@ -235,6 +236,18 @@ func checkInvariants(lg *league.League, cfg *strategyConfig, r *SimResult) []str
 					v = append(v, fmt.Sprintf("%s in round %d (not before %d)", g.Position, p.Round, g.NotBeforeRound))
 				}
 			}
+		}
+	}
+	if k := cfg.Keeper; k.MaxSpeculative > 0 && k.CostFloorRound > 0 {
+		spec := 0
+		for _, p := range r.Mine {
+			if p.Round >= k.CostFloorRound && e.keeperP(p.Player) >= k.SpecThreshold {
+				spec++
+			}
+		}
+		r.SpecCount = spec
+		if spec > k.MaxSpeculative {
+			v = append(v, fmt.Sprintf("%d keeper-speculative players, cap %d", spec, k.MaxSpeculative))
 		}
 	}
 	if r.Counts[players.K] > 0 {
