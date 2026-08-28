@@ -13,8 +13,7 @@ export FANTASY_ANTHROPIC_API_KEY=… # optional: Claude briefs
 ./server                           # http://<laptop-ip>:8090 on the phone
 ```
 
-The UI is a two-column laptop layout (minimum 1013px wide; no phone layout) built on the
-design handoff in [docs/design_handoff_draft_copilot/](docs/design_handoff_draft_copilot/).
+The UI is a two-column laptop layout (minimum 1013px wide; no phone layout).
 
 - Type a name, `Enter` marks the pick for the team on the clock. `↑/↓` to choose, `Esc` clears.
 - `1`–`6` drafts that shortlist card when you're on the clock (search field empty).
