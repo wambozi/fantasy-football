@@ -241,6 +241,7 @@ Your job: explain the SHAPE of this decision in at most 3 bullets, each under 15
 - what the numbers miss: bye-week collisions with the manager's roster, handcuff logic, positional runs visible in the recent picks, a player the room is drafting far from expert consensus
 - which of the top candidates is the safe vs the upside choice, and why
 - when a strategy gate is about to bind
+If on_clock is false the manager is NOT picking yet: frame everything as what to do at next_live_pick ("at #8, …"), never "now".
 If a brief is marked PROJECTED, the board is a prediction of the next few picks; say nothing about which specific players "just went".
 Plain text bullets starting with "- ". Nothing else.`)
 	return b.String()
