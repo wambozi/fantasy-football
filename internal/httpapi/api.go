@@ -8,14 +8,17 @@ import (
 	"fmt"
 	"io/fs"
 	"log/slog"
+	"math"
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/wambozi/draft-copilot/internal/league"
 	"github.com/wambozi/draft-copilot/internal/players"
 	"github.com/wambozi/draft-copilot/internal/state"
+	"github.com/wambozi/draft-copilot/internal/strategy"
 )
 
 // Advisor produces the recommendation payload for a state version. Nil until M2.
@@ -51,6 +54,10 @@ type Server struct {
 	log     *slog.Logger
 	search  func(q string, snap state.Snapshot, limit int) []*players.Player
 	auto    *automation
+	cfg     *strategy.Config
+
+	vorMu   sync.Mutex
+	pickVOR map[int]float64 // live pick -> VOR at the moment it was made (this process only)
 }
 
 // Options configure optional collaborators.
@@ -60,6 +67,9 @@ type Options struct {
 	Static  fs.FS
 	Search  func(q string, snap state.Snapshot, limit int) []*players.Player
 	Log     *slog.Logger
+	// Config, when set, is served on /api/league so the UI's roster-state logic reads
+	// the same strategy.yaml the engine does (one source of truth, spec handoff).
+	Config *strategy.Config
 	// FrameLog is where raw FanDraft frames are appended (recon). "" disables.
 	FrameLog string
 	// FrameParser extracts picks from raw frames once the wire shape is known.
@@ -72,6 +82,8 @@ func New(lg *league.League, pool *players.Pool, st *state.DraftState, o Options)
 	if s.log == nil {
 		s.log = slog.Default()
 	}
+	s.cfg = o.Config
+	s.pickVOR = map[int]float64{}
 	s.auto = &automation{parser: o.FrameParser}
 	if o.FrameLog != "" {
 		f, err := os.OpenFile(o.FrameLog, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
@@ -125,6 +137,9 @@ type StatePayload struct {
 	Advice     any              `json:"advice,omitempty"`
 	Brief      *BriefPayload    `json:"brief,omitempty"`
 	Automation AutomationStatus `json:"automation"`
+	// PickVOR is the VOR each live pick carried when it was made, for the rail. Only
+	// picks made since this process started are known; the UI falls back for the rest.
+	PickVOR map[int]float64 `json:"pick_vor"`
 }
 
 // BriefPayload is the Claude commentary, if any.
@@ -132,7 +147,7 @@ type BriefPayload = Brief
 
 func (s *Server) payload() StatePayload {
 	snap := s.st.Snapshot()
-	p := StatePayload{State: snap, Automation: s.automationStatus()}
+	p := StatePayload{State: snap, Automation: s.automationStatus(), PickVOR: s.pickVORs()}
 	if s.advisor != nil {
 		p.Advice = s.advisor.Advise(snap)
 	}
@@ -149,14 +164,27 @@ func (s *Server) handleState(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (s *Server) handleLeague(w http.ResponseWriter, _ *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]any{
+	out := map[string]any{
 		"teams":         s.lg.Teams,
 		"my_team":       s.lg.MyTeam,
 		"my_live_picks": s.lg.MyLivePicks,
 		"num_live":      s.lg.NumLive(),
+		"rounds":        s.lg.Rounds(),
 		"slots":         s.lg.Slots,
 		"players":       s.pool.Players,
-	})
+	}
+	if s.cfg != nil {
+		out["roster"] = map[string]any{
+			"starters":    s.cfg.Roster.Starters,
+			"flex":        map[string]any{"count": s.cfg.Roster.Flex.Count, "eligible": s.cfg.Roster.Flex.Eligible},
+			"bench":       s.cfg.Roster.Bench,
+			"total_spots": s.cfg.Roster.TotalSpots,
+			"max":         s.cfg.Roster.Max,
+		}
+		out["need"] = s.cfg.Engine.Need
+		out["keeper"] = map[string]any{"cost_floor_round": s.cfg.Keeper.CostFloorRound}
+	}
+	writeJSON(w, http.StatusOK, out)
 }
 
 type pickReq struct {
@@ -180,6 +208,7 @@ func (s *Server) handlePick(w http.ResponseWriter, r *http.Request) {
 	if req.Source == "" {
 		req.Source = state.SourceManual
 	}
+	vor, vorOK := s.vorNow(req.PlayerID)
 	var (
 		p   state.Pick
 		err error
@@ -193,6 +222,7 @@ func (s *Server) handlePick(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, statusFor(err), err)
 		return
 	}
+	s.recordVOR(p.LivePick, vor, vorOK)
 	s.log.Info("pick", "live", p.LivePick, "team", p.Team, "player", p.PlayerID, "source", p.Source)
 	s.afterMutation()
 	writeJSON(w, http.StatusOK, map[string]any{"pick": p, "state": s.payload()})
@@ -204,6 +234,7 @@ func (s *Server) handleUndo(w http.ResponseWriter, _ *http.Request) {
 		writeErr(w, statusFor(err), err)
 		return
 	}
+	s.forgetVOR(p.LivePick)
 	s.log.Info("undo", "live", p.LivePick, "player", p.PlayerID)
 	s.afterMutation()
 	writeJSON(w, http.StatusOK, map[string]any{"undone": p, "state": s.payload()})
@@ -314,4 +345,62 @@ func Serve(ctx context.Context, addr string, h http.Handler, log *slog.Logger) e
 		defer cancel()
 		return srv.Shutdown(shutdownCtx)
 	}
+}
+
+// vorReplacement is the subset of engine.Advice the rail needs: replacement level per
+// position at the current state. Read through the Advisor's untyped payload.
+type vorReplacement struct {
+	Waiver map[players.Position]float64 `json:"waiver"`
+}
+
+// vorNow is a player's value over the waiver level at the current state — what the
+// pick is worth over free agency. That baseline stays meaningful for every team's
+// pick all draft long, where the starter-demand replacement level goes negative for
+// most mid-round picks. Cheap: the advisor caches per state version.
+func (s *Server) vorNow(playerID string) (v float64, ok bool) {
+	if s.advisor == nil {
+		return 0, false
+	}
+	pl, found := s.pool.ByID[playerID]
+	if !found || pl.ProjPoints == 0 {
+		return 0, false
+	}
+	raw, err := json.Marshal(s.advisor.Advise(s.st.Snapshot()))
+	if err != nil {
+		return 0, false
+	}
+	var ad vorReplacement
+	if json.Unmarshal(raw, &ad) != nil || ad.Waiver == nil {
+		return 0, false
+	}
+	repl, has := ad.Waiver[pl.Pos]
+	if !has {
+		return 0, false
+	}
+	return math.Max(0, pl.ProjPoints-repl), true
+}
+
+func (s *Server) recordVOR(live int, v float64, ok bool) {
+	if !ok {
+		return
+	}
+	s.vorMu.Lock()
+	s.pickVOR[live] = v
+	s.vorMu.Unlock()
+}
+
+func (s *Server) forgetVOR(live int) {
+	s.vorMu.Lock()
+	delete(s.pickVOR, live)
+	s.vorMu.Unlock()
+}
+
+func (s *Server) pickVORs() map[int]float64 {
+	s.vorMu.Lock()
+	defer s.vorMu.Unlock()
+	out := make(map[int]float64, len(s.pickVOR))
+	for k, v := range s.pickVOR {
+		out[k] = v
+	}
+	return out
 }

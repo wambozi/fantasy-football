@@ -182,6 +182,7 @@ func (s *Server) applyAutoPick(ap AutoPick) (string, error) {
 	}
 	p := hits[0]
 	before := len(s.st.Snapshot().Picks)
+	vor, vorOK := s.vorNow(p.ID)
 	var (
 		pk  state.Pick
 		err error
@@ -203,6 +204,7 @@ func (s *Server) applyAutoPick(ap AutoPick) (string, error) {
 		s.auto.mu.Lock()
 		s.auto.st.Picks++
 		s.auto.mu.Unlock()
+		s.recordVOR(pk.LivePick, vor, vorOK)
 		s.log.Info("auto pick", "live", pk.LivePick, "player", p.Name, "source", src)
 		s.afterMutation()
 		return fmt.Sprintf("#%d %s", pk.LivePick, p.Name), nil

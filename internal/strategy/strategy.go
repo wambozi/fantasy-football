@@ -35,12 +35,12 @@ type ADP struct {
 }
 
 type Need struct {
-	StarterOpen    float64 `yaml:"starter_open"`
-	FlexOpen       float64 `yaml:"flex_open"`
-	Full           float64 `yaml:"full"`
-	AtMax          float64 `yaml:"at_max"`
-	DSTBeforeRound int     `yaml:"dst_before_round"`
-	DSTEarlyMult   float64 `yaml:"dst_early_mult"`
+	StarterOpen    float64 `yaml:"starter_open" json:"starter_open"`
+	FlexOpen       float64 `yaml:"flex_open" json:"flex_open"`
+	Full           float64 `yaml:"full" json:"full"`
+	AtMax          float64 `yaml:"at_max" json:"at_max"`
+	DSTBeforeRound int     `yaml:"dst_before_round" json:"dst_before_round"`
+	DSTEarlyMult   float64 `yaml:"dst_early_mult" json:"dst_early_mult"`
 }
 
 type Engine struct {

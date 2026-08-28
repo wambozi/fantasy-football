@@ -27,7 +27,16 @@ import (
 //	    draw one by weight, mark taken, update that team's roster counts
 //	survivors are tallied; p_survive = survivals / sims
 func (e *Engine) Survival(board []*players.Player, snap state.Snapshot, rc *rosterCounts, nextLive int, me string) map[string]float64 {
+	out, _ := e.survival(board, snap, rc, nextLive, me)
+	return out
+}
+
+// survival is Survival plus, per opposing team, the share of sims in which that team's
+// first pick inside the window went to each position — the "likely next move" the
+// league view shows. Same sims, no extra cost.
+func (e *Engine) survival(board []*players.Player, snap state.Snapshot, rc *rosterCounts, nextLive int, me string) (map[string]float64, map[string]map[players.Position]float64) {
 	out := make(map[string]float64, len(board))
+	posByTeam := map[string]map[players.Position]float64{}
 	// Opposing picks between now and my next turn.
 	var opp []int
 	start := snap.LivePick
@@ -43,7 +52,7 @@ func (e *Engine) Survival(board []*players.Player, snap state.Snapshot, rc *rost
 		for _, p := range board {
 			out[p.ID] = 1
 		}
-		return out
+		return out, posByTeam
 	}
 
 	// Only the top K by ADP can realistically go in the next h picks; the rest survive.
@@ -67,8 +76,11 @@ func (e *Engine) Survival(board []*players.Player, snap state.Snapshot, rc *rost
 	picked := make([]int, 0, h)
 	rng := rand.New(rand.NewPCG(e.seed, uint64(snap.Version)))
 	lam := e.cfg.Engine.LambdaRank
+	firstPick := map[string]bool{} // per sim: has this team's first window pick been tallied
+	tally := map[string]map[players.Position]int{}
 
 	for s := 0; s < sims; s++ {
+		clear(firstPick)
 		for i, p := range cand {
 			noisy[i] = p.ADPMean + rng.NormFloat64()*p.ADPStdDev
 			order[i] = i
@@ -117,6 +129,13 @@ func (e *Engine) Survival(board []*players.Player, snap state.Snapshot, rc *rost
 			}
 			taken[chosen] = true
 			sim.add(team, cand[chosen].Pos)
+			if !firstPick[team] {
+				firstPick[team] = true
+				if tally[team] == nil {
+					tally[team] = map[players.Position]int{}
+				}
+				tally[team][cand[chosen].Pos]++
+			}
 		}
 		for i := range cand {
 			if !taken[i] {
@@ -127,5 +146,12 @@ func (e *Engine) Survival(board []*players.Player, snap state.Snapshot, rc *rost
 	for i, p := range cand {
 		out[p.ID] = float64(survived[i]) / float64(sims)
 	}
-	return out
+	for team, m := range tally {
+		shares := make(map[players.Position]float64, len(m))
+		for pos, n := range m {
+			shares[pos] = float64(n) / float64(sims)
+		}
+		posByTeam[team] = shares
+	}
+	return out, posByTeam
 }

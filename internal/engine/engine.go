@@ -43,24 +43,28 @@ type Recommendation struct {
 
 // Advice is the output contract for the UI and the Claude brief.
 type Advice struct {
-	Version      int                                    `json:"version"`
-	OnClock      bool                                   `json:"on_clock"`
-	LivePick     int                                    `json:"live_pick"`
-	Round        int                                    `json:"round"`
-	NextLivePick int                                    `json:"next_live_pick"` // 0 when I have no picks left
-	PicksUntil   int                                    `json:"picks_until"`    // opposing picks before my next turn
-	Top          []Recommendation                       `json:"top"`
-	ByPosition   map[players.Position]Recommendation    `json:"by_position"`
-	Warnings     []string                               `json:"warnings"`
-	SpecCount    int                                    `json:"spec_count"`          // keeper-speculative players already on my roster
-	GateBand     string                                 `json:"gate_band,omitempty"` // red band text, e.g. "QB GATE: 1 pick left"
-	Replacement  map[players.Position]float64           `json:"replacement"`
-	Waiver       map[players.Position]float64           `json:"waiver"` // best available beyond the last draft slot
-	Demand       map[players.Position]float64           `json:"demand"`
-	ProjMode     string                                 `json:"proj_mode"` // "projections" | "adp-only"
-	MyRoster     map[players.Position][]*players.Player `json:"my_roster"`
-	Candidates   []Recommendation                       `json:"candidates"` // top N by score, unfiltered, for the brief
-	Params       struct {
+	Version      int                                 `json:"version"`
+	OnClock      bool                                `json:"on_clock"`
+	LivePick     int                                 `json:"live_pick"`
+	Round        int                                 `json:"round"`
+	NextLivePick int                                 `json:"next_live_pick"` // 0 when I have no picks left
+	PicksUntil   int                                 `json:"picks_until"`    // opposing picks before my next turn
+	Top          []Recommendation                    `json:"top"`
+	ByPosition   map[players.Position]Recommendation `json:"by_position"`
+	Warnings     []string                            `json:"warnings"`
+	SpecCount    int                                 `json:"spec_count"`          // keeper-speculative players already on my roster
+	GateBand     string                              `json:"gate_band,omitempty"` // red band text, e.g. "QB GATE: 1 pick left"
+	Replacement  map[players.Position]float64        `json:"replacement"`
+	Waiver       map[players.Position]float64        `json:"waiver"` // best available beyond the last draft slot
+	// PosByTeam is, per opposing team picking before my next turn, the share of Monte
+	// Carlo sims in which that team's next pick was at each position. Derived from the
+	// same sims that produce PSurvive — no extra simulation cost.
+	PosByTeam  map[string]map[players.Position]float64 `json:"pos_by_team"`
+	Demand     map[players.Position]float64            `json:"demand"`
+	ProjMode   string                                  `json:"proj_mode"` // "projections" | "adp-only"
+	MyRoster   map[players.Position][]*players.Player  `json:"my_roster"`
+	Candidates []Recommendation                        `json:"candidates"` // top N by score, unfiltered, for the brief
+	Params     struct {
 		Sims         int
 		LambdaRegret float64
 	} `json:"params"`
@@ -153,7 +157,8 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 	ad.Demand, ad.Replacement = e.replacement(board, rc)
 
 	// Survival over the opposing picks before my next turn.
-	surv := e.Survival(board, snap, rc, ad.NextLivePick, me)
+	surv, posByTeam := e.survival(board, snap, rc, ad.NextLivePick, me)
+	ad.PosByTeam = posByTeam
 
 	// Score every candidate.
 	ad.Waiver = e.waiverLevel(board)

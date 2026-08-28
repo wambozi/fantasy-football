@@ -5,5 +5,5 @@ package web
 
 import "embed"
 
-//go:embed index.html app.js style.css
+//go:embed index.html app.js broadsheet.css draft-copilot.css
 var FS embed.FS

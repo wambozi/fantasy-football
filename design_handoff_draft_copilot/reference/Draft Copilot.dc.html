@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="broadsheet.css">
+<style>
+:root{
+  --d-brand:23px; --d-status:38px; --d-recname:25px; --d-recvor:34px; --d-rail:14px;
+  --d-gapmain:44px; --d-cardpad:20px; --d-rowpad:9px; --d-sec:30px; --d-search:19px; --d-kick:11px;
+}
+[data-dense="1"]{
+  --d-brand:19px; --d-status:27px; --d-recname:19px; --d-recvor:25px; --d-rail:12.5px;
+  --d-gapmain:26px; --d-cardpad:13px; --d-rowpad:4px; --d-sec:17px; --d-search:16px; --d-kick:10px;
+}
+html,body{margin:0;background:#f3f2f2}
+a{color:#0088b0}
+a:hover{color:#006786}
+input::placeholder{font-style:italic}
+</style>
+</helmet>
+<div data-dense="{{ denseFlag }}" style="min-height:100vh;padding:20px 34px 34px;font-family:var(--font-body);color:var(--color-text);background:var(--color-bg)">
+
+  <div style="height:4px;background:var(--color-text)"></div>
+  <div style="display:flex;align-items:baseline;gap:26px;padding:9px 0 7px">
+    <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-brand);letter-spacing:-0.022em;white-space:nowrap">The Draft Copilot</div>
+    <div style="display:flex;gap:16px;font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap">
+      <span>Round {{ round }}</span>
+      <span>Live pick {{ livePick }}</span>
+      <span>12 teams &middot; full ppr</span>
+      <span>keeper &middot; 17 rounds</span>
+      <span>Sittin Purdy</span>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <div class="seg" style="flex:none">
+        <label class="seg-opt" style="font-family:var(--font-heading);letter-spacing:.06em;text-transform:uppercase;font-size:10px">
+          <input type="radio" name="density" checked="{{ isAiry }}" onChange="{{ setAiry }}">Airy
+        </label>
+        <label class="seg-opt" style="font-family:var(--font-heading);letter-spacing:.06em;text-transform:uppercase;font-size:10px">
+          <input type="radio" name="density" checked="{{ isDense }}" onChange="{{ setDense }}">Dense
+        </label>
+      </div>
+      <button class="btn btn-secondary" style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 11px" onClick="{{ undo }}">&#9003; Undo</button>
+    </div>
+  </div>
+  <div style="height:1px;background:var(--color-text)"></div>
+
+  <div style="display:flex;align-items:flex-end;gap:var(--space-6);padding:16px 0 0;border-bottom:0">
+    <div style="min-width:0">
+      <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:{{ statusKickColor }}">{{ statusKicker }}</div>
+      <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-status);line-height:1.04;letter-spacing:-0.022em;color:{{ statusColor }}">{{ statusHead }}</div>
+    </div>
+    <div style="margin-left:auto;text-align:right;white-space:nowrap">
+      <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700)">{{ untilKicker }}</div>
+      <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-status);line-height:1.04;letter-spacing:-0.02em;color:{{ statusColor }}">{{ untilHead }}</div>
+    </div>
+  </div>
+
+  <sc-if value="{{ gateBand }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:12px;padding:7px 11px;background:var(--color-accent-2-100);color:var(--color-accent-2-800);font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase">{{ gateBand }}</div>
+  </sc-if>
+
+  <div style="margin-top:12px;font-size:15px;font-style:italic;color:var(--color-neutral-800);text-wrap:pretty">{{ threatLine }}</div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 352px;gap:var(--d-gapmain);margin-top:var(--d-sec);align-items:start">
+
+    <div style="min-width:0">
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <div style="flex:1;min-width:0">
+          <label style="display:block;font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:5px">Mark a pick &mdash; type a name, enter</label>
+          <input class="input" value="{{ query }}" onInput="{{ onQuery }}" onKeyDown="{{ onKey }}" placeholder="e.g. jacobs" autoComplete="off" spellCheck="{{ false }}" style="font-family:var(--font-heading);font-size:var(--d-search);min-height:44px;padding:8px 12px;background:transparent;border:0;border-bottom:2px solid var(--color-text);border-radius:0"/>
+        </div>
+      </div>
+
+      <sc-if value="{{ hasHits }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:6px;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ hits }}" as="h" hint-placeholder-count="0">
+            <div onClick="{{ h.pick }}" style="display:grid;grid-template-columns:18px minmax(0,1fr) 62px 54px 64px;gap:10px;align-items:baseline;padding:7px 4px;cursor:pointer;background:{{ h.bg }};border-top:1px solid var(--color-divider)">
+              <div style="color:var(--color-accent);font-size:13px">{{ h.arrow }}</div>
+              <div style="font-family:var(--font-heading);font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ h.name }}</div>
+              <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ h.pos }} &middot; {{ h.tm }}</div>
+              <div style="font-size:12px;color:var(--color-neutral-700);font-variant-numeric:tabular-nums">ADP {{ h.adp }}</div>
+              <div style="font-size:12px;text-align:right;color:var(--color-neutral-700);font-variant-numeric:tabular-nums">{{ h.vor }} VOR</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;gap:22px;align-items:baseline;margin-top:var(--d-sec)">
+        <div onClick="{{ showShortlist }}" style="cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding-bottom:4px;color:{{ tabAColor }};box-shadow:{{ tabAUnderline }}">The shortlist</div>
+        <div onClick="{{ showLeague }}" style="cursor:pointer;font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding-bottom:4px;color:{{ tabBColor }};box-shadow:{{ tabBUnderline }}">The league &mdash; needs &amp; next moves</div>
+        <div style="margin-left:auto;font-size:11px;color:var(--color-neutral-600);letter-spacing:.06em;text-transform:uppercase">press g to flip</div>
+      </div>
+
+      <sc-if value="{{ showsShortlist }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px">
+            <sc-for list="{{ recs }}" as="r" hint-placeholder-count="3">
+              <div class="card elev-sm" style="padding:var(--d-cardpad);gap:var(--space-1);border-radius:var(--radius-md);box-shadow:{{ r.shadow }}">
+                <div style="display:flex;align-items:baseline;gap:8px">
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:14px;color:var(--color-accent)">{{ r.rank }}</div>
+                  <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:{{ r.flagColor }}">{{ r.flag }}</div>
+                  <div style="margin-left:auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.slotFill }}</div>
+                </div>
+                <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-recname);line-height:1.06;letter-spacing:-0.02em;text-wrap:balance">{{ r.name }}</div>
+                <div style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--color-neutral-700)">{{ r.meta }}</div>
+                <div style="display:flex;align-items:baseline;gap:7px;margin-top:8px">
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-recvor);line-height:1;font-variant-numeric:tabular-nums">{{ r.vor }}</div>
+                  <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">vor</div>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:6px;margin-top:7px;white-space:nowrap">
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:13px;font-variant-numeric:tabular-nums;color:{{ r.goneColor }}">{{ r.gone }}</div>
+                  <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--color-neutral-600)">gone by #{{ nextPick }}</div>
+                </div>
+                <div style="height:3px;background:var(--color-neutral-300);margin-top:1px">
+                  <div style="height:3px;width:{{ r.goneBar }};background:{{ r.goneColor }}"></div>
+                </div>
+                <div style="font-size:13px;line-height:1.45;color:var(--color-neutral-800);margin-top:7px;text-wrap:pretty">{{ r.why }}</div>
+                <sc-if value="{{ isDense }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:12px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-700);font-variant-numeric:tabular-nums;border-top:1px solid var(--color-divider);padding-top:5px;margin-top:2px">
+                    <span>ADP {{ r.adp }}</span><span>&sigma; {{ r.sigma }}</span><span>regret {{ r.regret }}</span><span>score {{ r.score }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ onClock }}" hint-placeholder-val="{{ false }}">
+                  <button class="btn btn-primary btn-block" onClick="{{ r.draft }}" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:6px">Draft &mdash; press {{ r.rank }}</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:var(--d-sec);border-top:1px solid var(--color-divider);padding-top:10px">
+            <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:7px">Best available by position</div>
+            <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px">
+              <sc-for list="{{ byPos }}" as="b" hint-placeholder-count="5">
+                <div>
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:{{ b.color }}">{{ b.pos }}</div>
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:16px;line-height:1.15;letter-spacing:-0.015em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.name }}</div>
+                  <div style="font-size:11px;color:var(--color-neutral-700);font-variant-numeric:tabular-nums;letter-spacing:.04em">{{ b.stat }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ showBrief }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:var(--d-sec);border-top:1px solid var(--color-divider);padding-top:10px;max-width:62ch">
+              <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-accent);margin-bottom:6px">Claude &mdash; the read at #{{ livePick }}</div>
+              <div style="font-size:15px;line-height:1.6;white-space:pre-line;text-wrap:pretty">{{ brief }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showsLeague }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:16px">
+          <div style="display:grid;grid-template-columns:46px minmax(0,1.6fr) repeat(4,38px) 44px minmax(0,1.6fr);gap:8px;align-items:end;padding:0 4px 6px;border-bottom:1px solid var(--color-text);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+            <div>Next</div><div>Team</div><div style="text-align:center">QB</div><div style="text-align:center">RB</div><div style="text-align:center">WR</div><div style="text-align:center">TE</div><div style="text-align:center">Open</div><div>Likely next move</div>
+          </div>
+          <sc-for list="{{ teamRows }}" as="t" hint-placeholder-count="12">
+            <div style="display:grid;grid-template-columns:46px minmax(0,1.6fr) repeat(4,38px) 44px minmax(0,1.6fr);gap:8px;align-items:baseline;padding:var(--d-rowpad) 4px;border-bottom:1px solid var(--color-neutral-200);background:{{ t.bg }};box-shadow:{{ t.marker }}">
+              <div style="font-size:12px;font-variant-numeric:tabular-nums;color:{{ t.nextColor }};font-weight:{{ t.nextWeight }}">{{ t.next }}</div>
+              <div style="font-family:var(--font-heading);font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-0.012em">{{ t.name }}</div>
+              <sc-for list="{{ t.cells }}" as="c" hint-placeholder-count="4">
+                <div style="text-align:center;font-variant-numeric:tabular-nums">
+                  <div style="font-family:var(--font-heading);font-weight:600;font-size:15px;color:{{ c.color }}">{{ c.n }}</div>
+                  <div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:{{ c.color }}">{{ c.st }}</div>
+                </div>
+              </sc-for>
+              <div style="text-align:center;font-family:var(--font-heading);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;color:var(--color-neutral-800)">{{ t.open }}</div>
+              <div style="min-width:0">
+                <div style="font-size:12.5px;font-family:var(--font-heading);font-weight:600;letter-spacing:.03em;white-space:nowrap">{{ t.likely }}</div>
+                <div style="font-size:11.5px;line-height:1.3;color:var(--color-neutral-700);font-style:italic;text-wrap:pretty">{{ t.note }}</div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display:flex;gap:18px;margin-top:10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-700)">
+            <span><b style="color:var(--color-accent-2-700)">Open</b> starter slot unfilled</span>
+            <span><b style="color:var(--color-accent-700)">Flex</b> covered, flex still live</span>
+            <span><b>Set</b> starters &amp; flex satisfied</span>
+            <span><b>Max</b> positional cap reached</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:var(--d-sec);border-top:1px solid var(--color-divider);padding-top:10px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:7px">
+          <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700)">My roster</div>
+          <div style="font-size:var(--d-kick);letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ rosterCount }} of 17 &middot; {{ rosterOpen }} starters open</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px 22px">
+          <sc-for list="{{ myslots }}" as="s" hint-placeholder-count="9">
+            <div style="display:flex;gap:6px;align-items:baseline;white-space:nowrap">
+              <div style="font-family:var(--font-heading);font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:{{ s.labelColor }}">{{ s.label }}</div>
+              <div style="font-size:14px;color:{{ s.nameColor }}">{{ s.name }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;font-size:11px;letter-spacing:.05em;color:var(--color-neutral-600)">
+        Enter marks the pick for the team on the clock &middot; 1 / 2 / 3 drafts a card when you are on the clock &middot; G flips the view &middot; Cmd&#8209;Z undoes
+      </div>
+    </div>
+
+    <div style="min-width:0;border-left:1px solid var(--color-text);padding-left:20px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--color-text)">
+        <div style="font-family:var(--font-heading);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase">The board</div>
+        <div style="margin-left:auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);font-variant-numeric:tabular-nums">{{ madeCount }} picks in</div>
+      </div>
+
+      <div style="padding:9px 0 11px;border-bottom:1px solid var(--color-divider)">
+        <div style="font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:5px">On deck</div>
+        <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding:2px 0">
+            <div style="font-size:12px;font-variant-numeric:tabular-nums;color:{{ u.color }};font-weight:{{ u.weight }}">#{{ u.live }}</div>
+            <div style="font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:{{ u.color }};font-weight:{{ u.weight }}">{{ u.team }}</div>
+            <div style="font-size:11px;letter-spacing:.05em;color:{{ u.tagColor }};font-style:italic">{{ u.tag }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-for list="{{ rail }}" as="p" hint-placeholder-count="14">
+        <div>
+          <sc-if value="{{ p.newRound }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:9px;padding:11px 0 5px">
+              <div style="font-family:var(--font-heading);font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap">{{ p.roundLabel }}</div>
+              <div style="flex:1;height:1px;background:var(--color-neutral-300)"></div>
+            </div>
+          </sc-if>
+          <div style="display:grid;grid-template-columns:30px minmax(0,1fr) 46px;gap:9px;align-items:baseline;padding:var(--d-rowpad) 0;border-bottom:1px solid var(--color-neutral-200);background:{{ p.bg }};box-shadow:{{ p.marker }}">
+            <div style="font-size:12px;font-variant-numeric:tabular-nums;color:var(--color-neutral-600)">{{ p.live }}</div>
+            <div style="min-width:0">
+              <div style="font-family:var(--font-heading);font-weight:600;font-size:var(--d-rail);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-0.012em">{{ p.name }}<span style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--color-neutral-700);margin-left:6px">{{ p.pos }}</span></div>
+              <div style="font-size:11.5px;color:var(--color-neutral-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.team }}{{ p.keeperTag }}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:12.5px;font-variant-numeric:tabular-nums;font-family:var(--font-heading);font-weight:600">{{ p.vor }}</div>
+              <div style="font-size:10px;letter-spacing:.05em;font-variant-numeric:tabular-nums;color:{{ p.deltaColor }}">{{ p.delta }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:980},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dense&quot;,&quot;airy&quot;],&quot;default&quot;:&quot;dense&quot;,&quot;tsType&quot;:&quot;'dense' | 'airy'&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;railLength&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:22,&quot;min&quot;:4,&quot;max&quot;:40,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showBrief&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const TEAMS = ["Patient Zeros Aids Epidemic","The Comeback Story","Stopped The Steal!","Tom","Lawson Country Lets Ride","Pollock Debacle","Ja'Marr & Jahmyr","Trash Pandas","Svannah Alley Cats","Sittin Purdy","Woke Mob Warriors","Time Stamps"];
+const ME = 9;
+const ROUNDS = [
+  [0,1,2,3,4,5,6,7,8,9,10,11],
+  [10,1,9,8,7,4,5,2,3,6,11,0],
+  [1,11,2,3,7,5,6,4,8,9,0,10],
+  [6,10,9,8,4,11,5,7,3,2,1,0],
+  [0,1,6,3,6,5,2,4,8,9,10,7],
+  [11,3,9,8,7,11,5,4,1,2,2,0],
+  [0,10,1,3,4,5,6,7,8,9,2,11],
+  [11,2,9,8,7,4,5,6,3,10,10,0]
+];
+const SLOTS = ROUNDS.reduce((a, r) => a.concat(r), []);
+const POSF = { QB: 0.62, RB: 1.0, WR: 0.96, TE: 0.8, DST: 0.1 };
+const STARTERS = { QB: 1, RB: 2, WR: 2, TE: 1, DST: 1 };
+const FLEXELIG = ["RB", "WR", "TE"];
+const FLEXCOUNT = 2;
+const MAXPOS = { QB: 4, RB: 9, WR: 8, TE: 3, DST: 3 };
+const NEED = { starterOpen: 1.8, flexOpen: 1.25, full: 0.6, atMax: 0, dstBeforeRound: 15, dstEarly: 0.05 };
+const ORDER = ["QB", "RB", "WR", "TE", "DST"];
+
+const RAW = [
+  ["chase","Ja'Marr Chase","WR","CIN",6,1],["gibbs","Jahmyr Gibbs","RB","DET",6,2],
+  ["nacua","Puka Nacua","WR","LAR",11,3],["bijan","Bijan Robinson","RB","ATL",11,4],
+  ["jsn","Jaxon Smith-Njigba","WR","SEA",11,5],["stbrown","Amon-Ra St. Brown","WR","DET",6,6],
+  ["lamb","CeeDee Lamb","WR","DAL",14,7],["cmc","Christian McCaffrey","RB","SF",8,8],
+  ["jjeff","Justin Jefferson","WR","MIN",6,9],["jtaylor","Jonathan Taylor","RB","IND",13,10],
+  ["london","Drake London","WR","ATL",11,11],["ajbrown","A.J. Brown","WR","NE",11,12],
+  ["cook","James Cook III","RB","BUF",7,13],["nico","Nico Collins","WR","HOU",8,14],
+  ["cbrown","Chase Brown","RB","CIN",6,15],["olave","Chris Olave","WR","NO",8,16],
+  ["bowers","Brock Bowers","TE","LV",13,17],["pickens","George Pickens","WR","DAL",14,18],
+  ["achane","De'Von Achane","RB","MIA",6,19],["mcbride","Trey McBride","TE","ARI",14,20],
+  ["dsmith","DeVonta Smith","WR","PHI",10,21],["barkley","Saquon Barkley","RB","PHI",10,22],
+  ["rice","Rashee Rice","WR","KC",5,23],["nabers","Malik Nabers","WR","NYG",8,24],
+  ["hampton","Omarion Hampton","RB","LAC",7,25],["jallen","Josh Allen","QB","BUF",7,26],
+  ["kwalker","Kenneth Walker III","RB","KC",5,27],["jeanty","Ashton Jeanty","RB","LV",13,28],
+  ["gwilson","Garrett Wilson","WR","NYJ",13,29],["flowers","Zay Flowers","WR","BAL",13,30],
+  ["lamar","Lamar Jackson","QB","BAL",13,31],["waddle","Jaylen Waddle","WR","DEN",10,32],
+  ["mcconkey","Ladd McConkey","WR","LAC",7,33],["tmac","Tetairoa McMillan","WR","CAR",5,34],
+  ["higgins","Tee Higgins","WR","CIN",6,35],["loveland","Colston Loveland","TE","CHI",10,36],
+  ["henry","Derrick Henry","RB","BAL",13,37],["maye","Drake Maye","QB","NE",11,38],
+  ["breece","Breece Hall","RB","NYJ",13,39],["egbuka","Emeka Egbuka","WR","TB",10,40],
+  ["love","Jeremiyah Love","RB","ARI",14,41],["kyren","Kyren Williams","RB","LAR",11,42],
+  ["javonte","Javonte Williams","RB","DAL",14,43],["burrow","Joe Burrow","QB","CIN",6,44],
+  ["jacobs","Josh Jacobs","RB","GB",11,45],["mclaurin","Terry McLaurin","WR","WAS",7,46],
+  ["burden","Luther Burden III","WR","CHI",10,47],["etienne","Travis Etienne Jr.","RB","NO",8,48],
+  ["dadams","Davante Adams","WR","LAR",11,49],["djmoore","DJ Moore","WR","BUF",7,50],
+  ["twarren","Tyler Warren","TE","IND",13,51],["jdaniels","Jayden Daniels","QB","WAS",7,52],
+  ["swift","D'Andre Swift","RB","CHI",10,53],["jameson","Jameson Williams","WR","DET",6,54],
+  ["evans","Mike Evans","WR","SF",8,55],["hurts","Jalen Hurts","QB","PHI",10,56],
+  ["skattebo","Cam Skattebo","RB","NYG",8,57],["odunze","Rome Odunze","WR","CHI",10,58],
+  ["watson","Christian Watson","WR","GB",11,59],["irving","Bucky Irving","RB","TB",10,60],
+  ["montgomery","David Montgomery","RB","HOU",8,61],["judkins","Quinshon Judkins","RB","CLE",11,62],
+  ["pwashington","Parker Washington","WR","JAC",7,63],["cwilliams","Caleb Williams","QB","CHI",10,64],
+  ["tuten","Bhayshul Tuten","RB","JAC",7,65],["tate","Carnell Tate","WR","TEN",9,66],
+  ["mhj","Marvin Harrison Jr.","WR","ARI",14,67],["treveyon","TreVeyon Henderson","RB","NE",11,68],
+  ["herbert","Justin Herbert","QB","LAC",7,69],["price","Jadarian Price","RB","SEA",11,70],
+  ["fannin","Harold Fannin Jr.","TE","CLE",11,71],["godwin","Chris Godwin Jr.","WR","TB",10,72],
+  ["rhamondre","Rhamondre Stevenson","RB","NE",11,73],["jwarren","Jaylen Warren","RB","PIT",9,74],
+  ["tlawrence","Trevor Lawrence","QB","JAC",7,75],["dak","Dak Prescott","QB","DAL",14,76],
+  ["dk","DK Metcalf","WR","PIT",9,77],["pitts","Kyle Pitts Sr.","TE","ATL",11,78],
+  ["btj","Brian Thomas Jr.","WR","JAC",7,79],["pittman","Michael Pittman Jr.","WR","PIT",9,80],
+  ["kraft","Tucker Kraft","TE","GB",11,81],["sutton","Courtland Sutton","WR","DEN",10,82],
+  ["den","Denver D/ST","DST","DEN",10,148],["phi","Philadelphia D/ST","DST","PHI",10,152],
+  ["hou","Houston D/ST","DST","HOU",8,157]
+];
+const POOL = RAW.map(([id, name, pos, tm, bye, adp]) => ({
+  id, name, pos, tm, bye, adp,
+  vor: Math.round(Math.max(3, (120 - adp * 1.2) * POSF[pos]) * 10) / 10,
+  sigma: Math.max(3, Math.round(adp * 0.13 * 10) / 10)
+}));
+const BY_ID = {};
+POOL.forEach(p => { BY_ID[p.id] = p; });
+
+// Keepers are pre-filled in draft-order.csv and count toward rosters from pick one.
+const KEEPERS = [[4,"stbrown"],[7,"gibbs"],[11,"jtaylor"],[12,"cmc"],[22,"chase"],[23,"bijan"],[24,"cook"],[32,"kwalker"],[39,"jsn"],[44,"achane"],[47,"nacua"],[58,"odunze"],[59,"pickens"],[60,"dsmith"],[69,"cbrown"],[72,"bowers"],[81,"skattebo"],[83,"javonte"],[86,"loveland"],[88,"twarren"],[90,"egbuka"]];
+const MADE = [[1,"lamb"],[2,"jjeff"],[3,"barkley"],[5,"london"],[6,"ajbrown"],[8,"nico"],[9,"hampton"],[10,"mcbride"],[13,"jeanty"],[14,"nabers"],[15,"kyren"],[16,"rice"],[17,"breece"],[18,"olave"],[19,"gwilson"],[20,"flowers"],[21,"henry"],[25,"jallen"],[26,"higgins"],[27,"mcconkey"],[28,"waddle"],[29,"lamar"],[30,"tmac"]];
+
+const nCdf = (z) => {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989423 * Math.exp(-z * z / 2);
+  const p = d * t * (1.330274 * Math.pow(t, 4) - 1.821256 * Math.pow(t, 3) + 1.781478 * t * t - 0.356538 * t + 0.319382);
+  return z >= 0 ? 1 - p : p;
+};
+const lastName = (n) => {
+  const parts = n.split(" ");
+  if (parts.length < 2) return n;
+  const rest = parts.slice(1).join(" ");
+  return /^(Jr\.|Sr\.|II|III|IV)$/.test(rest) ? parts[0] : rest;
+};
+const shortTeam = (t) => (t.length > 22 ? t.slice(0, 21) + "\u2026" : t);
+
+class Component extends DCLogic {
+  state = {
+    picks: MADE.concat(KEEPERS).map(([live, id]) => ({ live, id, keeper: live > 30 || KEEPERS.some(k => k[0] === live) })),
+    livePick: 31,
+    query: "",
+    sel: 0,
+    view: "shortlist",
+    dense: null
+  };
+
+  componentDidMount() {
+    this._onKey = (e) => {
+      const tag = (e.target.tagName || "").toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); this.undo(); return; }
+      if (tag === "input") return;
+      if (e.key.toLowerCase() === "g") { e.preventDefault(); this.setState(s => ({ view: s.view === "shortlist" ? "league" : "shortlist" })); return; }
+      if (/^[1-3]$/.test(e.key) && this.onClock()) {
+        const r = this.recs()[+e.key - 1];
+        if (r) { e.preventDefault(); this.pick(r.id); }
+      }
+    };
+    window.addEventListener("keydown", this._onKey);
+  }
+  componentWillUnmount() { window.removeEventListener("keydown", this._onKey); }
+
+  dense() { return this.state.dense === null ? (this.props.density || "dense") === "dense" : this.state.dense; }
+  teamAt(live) { return SLOTS[live - 1]; }
+  onClock() { return this.teamAt(this.state.livePick) === ME; }
+  taken() {
+    const t = {};
+    this.state.picks.forEach(p => { t[p.id] = true; });
+    return t;
+  }
+  avail() {
+    const t = this.taken();
+    return POOL.filter(p => !t[p.id]).sort((a, b) => b.vor - a.vor);
+  }
+  nextMyPick() {
+    for (let l = this.state.livePick; l <= SLOTS.length; l++) if (this.teamAt(l) === ME) return l;
+    return 0;
+  }
+
+  counts(team) {
+    const c = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0 };
+    this.state.picks.forEach(p => {
+      if (this.teamAt(p.live) !== team) return;
+      if (!p.keeper && p.live >= this.state.livePick) return;
+      c[BY_ID[p.id].pos]++;
+    });
+    return c;
+  }
+  starterOpen(c, pos) { return Math.max(0, STARTERS[pos] - c[pos]); }
+  flexOpen(c) {
+    let used = 0;
+    FLEXELIG.forEach(pos => { used += Math.max(0, c[pos] - STARTERS[pos]); });
+    return Math.max(0, FLEXCOUNT - used);
+  }
+  openStarters(c) {
+    let n = this.flexOpen(c);
+    ORDER.forEach(pos => { n += this.starterOpen(c, pos); });
+    return n;
+  }
+  status(c, pos) {
+    if (c[pos] >= MAXPOS[pos]) return "max";
+    if (this.starterOpen(c, pos) > 0) return "open";
+    if (this.flexOpen(c) > 0 && FLEXELIG.indexOf(pos) >= 0) return "flex";
+    return "set";
+  }
+  needMult(c, pos, round) {
+    const st = this.status(c, pos);
+    let m = st === "max" ? NEED.atMax : st === "open" ? NEED.starterOpen : st === "flex" ? NEED.flexOpen : NEED.full;
+    if (pos === "DST" && round < NEED.dstBeforeRound) m *= NEED.dstEarly;
+    return m;
+  }
+  bestAt(av, pos) { return av.find(p => p.pos === pos) || null; }
+
+  // Highest need x best-available value: the position a team is most likely to take.
+  predict(team, round) {
+    const c = this.counts(team);
+    const av = this.avail();
+    const ws = [];
+    let total = 0;
+    ORDER.forEach(pos => {
+      const b = this.bestAt(av, pos);
+      if (!b) return;
+      const w = this.needMult(c, pos, round) * b.vor;
+      total += w;
+      ws.push({ pos, w, player: b });
+    });
+    if (!ws.length) return null;
+    ws.sort((a, b) => b.w - a.w);
+    const share = (x) => (total ? x.w / total : 0);
+    return {
+      pos: ws[0].pos, player: ws[0].player, share: share(ws[0]),
+      second: ws[1] ? ws[1].pos : null, secondShare: ws[1] ? share(ws[1]) : 0
+    };
+  }
+
+  recs() {
+    const av = this.avail();
+    const next = this.nextMyPick() || this.state.livePick;
+    const c = this.counts(ME);
+    const scored = av.slice(0, 26).map(p => {
+      const psurv = 1 - nCdf((next - p.adp) / p.sigma);
+      const nextBest = av.find(q => q.pos === p.pos && q.id !== p.id);
+      const regret = Math.max(0, (1 - psurv) * (p.vor - (nextBest ? nextBest.vor : 0)));
+      const bench = this.status(c, p.pos) === "set" && p.pos === "QB" ? 0.05 : 1;
+      return { p, psurv, regret, score: p.vor * bench + regret };
+    });
+    // The §strategy RB gate: two startable RBs due by live pick 26.
+    const rbGate = c.RB < 2 && this.state.livePick > 26;
+    scored.sort((a, b) => b.score - a.score);
+    if (rbGate) {
+      const i = scored.findIndex(x => x.p.pos === "RB");
+      if (i > 0) scored.unshift(scored.splice(i, 1)[0]);
+    }
+    return scored.slice(0, 3).map((s, i) => ({
+      id: s.p.id, rank: i + 1, p: s.p, psurv: s.psurv, regret: s.regret, score: s.score,
+      gate: rbGate && s.p.pos === "RB" && i === 0
+    }));
+  }
+
+  pick(id) {
+    if (!id) return;
+    const live = this.state.livePick;
+    this.setState(s => {
+      let l = live + 1;
+      const next = s.picks.concat([{ live, id, keeper: false }]);
+      while (l <= SLOTS.length && next.some(p => p.live === l)) l++;
+      return { picks: next, livePick: Math.min(l, SLOTS.length), query: "", sel: 0 };
+    });
+  }
+  undo = () => {
+    this.setState(s => {
+      const mine = s.picks.filter(p => !p.keeper);
+      if (!mine.length) return {};
+      const last = mine.reduce((a, b) => (b.live > a.live ? b : a));
+      if (last.live < 24) return {};
+      return { picks: s.picks.filter(p => p !== last), livePick: last.live };
+    });
+  };
+
+  renderVals() {
+    const s = this.state;
+    const dense = this.dense();
+    const live = s.livePick;
+    const round = Math.floor((live - 1) / 12) + 1;
+    const onClock = this.onClock();
+    const next = this.nextMyPick();
+    const untilCount = Math.max(0, next - live);
+    const av = this.avail();
+    const c = this.counts(ME);
+    const recs = this.recs();
+    const ink = "var(--color-text)";
+    const mag = "var(--color-accent-2-700)";
+    const cy = "var(--color-accent-700)";
+    const dim = "var(--color-neutral-700)";
+
+    // search
+    const q = s.query.trim().toLowerCase();
+    const hitList = q.length < 2 ? [] : av.filter(p => p.name.toLowerCase().indexOf(q) >= 0).slice(0, 6);
+
+    // threat read: what comes off the board before my next turn
+    const before = [];
+    for (let l = live; l < next; l++) {
+      const t = this.teamAt(l);
+      const keeper = s.picks.find(p => p.live === l && p.keeper);
+      before.push({ live: l, team: t, keeper: keeper ? BY_ID[keeper.id] : null, pred: keeper ? null : this.predict(t, Math.floor((l - 1) / 12) + 1) });
+    }
+    let threat;
+    if (onClock) {
+      threat = "You are on the clock at #" + live + (recs[0] ? ". " + recs[0].p.name + " leads the board at " + recs[0].p.vor.toFixed(1) + " VOR." : ".");
+    } else {
+      const unknown = before.filter(b => !b.keeper);
+      const posSeq = unknown.map(b => (b.pred ? b.pred.pos : "?"));
+      const names = unknown.filter(b => b.pred).slice(0, 2).map(b => b.pred.player.name);
+      const keepers = before.filter(b => b.keeper);
+      threat = untilCount === 0 ? "No picks left." :
+        "Expect " + (posSeq.join(" then ") || "nothing") + " off the board before #" + next +
+        (names.length ? " \u2014 " + names.join(" and ") + " are the exposed names" : "") +
+        (keepers.length ? ". " + keepers.map(b => lastName(b.keeper.name) + " is a keeper locked at #" + b.live).join("; ") + "." : ".");
+    }
+
+    // gate band (strategy.yaml)
+    let gateBand = "";
+    if (c.RB < 2 && live > 26) gateBand = "RB gate \u00b7 two startable RBs were due by #26 \u2014 you have " + c.RB;
+    else if (c.QB < 1 && live > 58) gateBand = "QB gate \u00b7 one QB due by #68";
+
+    const rows = TEAMS.map((name, i) => {
+      const cc = this.counts(i);
+      let nx = 0;
+      for (let l = live; l <= SLOTS.length; l++) if (this.teamAt(l) === i) { nx = l; break; }
+      const upcoming = nx > 0 && nx < next && i !== ME;
+      const pred = this.predict(i, round);
+      const openN = this.openStarters(cc);
+      const missing = ["QB", "RB", "WR", "TE"].filter(p => this.starterOpen(cc, p) > 0);
+      const surplus = FLEXELIG.map(pos => ({ pos, n: cc[pos] - STARTERS[pos] })).filter(x => x.n > 0).sort((a, b) => b.n - a.n);
+      const parts = [];
+      if (missing.length) parts.push("needs " + missing.join(", "));
+      else parts.push(this.flexOpen(cc) > 0 ? "starters set, flex live" : "starters and flex full");
+      if (surplus.length) parts.push(surplus.map(x => "+" + x.n + " " + x.pos).join(", ") + " past the starters");
+      const note = parts.join(" \u00b7 ");
+      return {
+        name: shortTeam(name),
+        next: nx ? "#" + nx : "\u2014",
+        nextColor: i === ME ? cy : upcoming ? mag : dim,
+        nextWeight: upcoming || i === ME ? "600" : "400",
+        bg: i === ME ? "color-mix(in srgb, var(--color-accent) 7%, transparent)" : upcoming ? "color-mix(in srgb, var(--color-accent-2) 5%, transparent)" : "transparent",
+        marker: i === ME ? "inset 3px 0 0 var(--color-accent)" : upcoming ? "inset 3px 0 0 var(--color-accent-2)" : "none",
+        open: openN,
+        likely: !pred || i === ME ? "\u2014" : pred.pos + " " + Math.round(pred.share * 100) + "%" + (pred.second ? "  \u00b7  " + pred.second + " " + Math.round(pred.secondShare * 100) + "%" : ""),
+        note: i === ME ? "your seat" : note,
+        cells: ["QB", "RB", "WR", "TE"].map(pos => {
+          const st = this.status(cc, pos);
+          return {
+            n: cc[pos],
+            st: st.toUpperCase(),
+            color: st === "open" ? mag : st === "flex" ? cy : st === "max" ? dim : "var(--color-neutral-600)"
+          };
+        })
+      };
+    });
+
+    const made = s.picks.filter(p => p.live < live).sort((a, b) => b.live - a.live);
+    const railLen = Math.max(4, this.props.railLength ?? 22);
+    const rail = made.slice(0, railLen).map((p, i, arr) => {
+      const pl = BY_ID[p.id];
+      const rd = Math.floor((p.live - 1) / 12) + 1;
+      const prev = i > 0 ? Math.floor((arr[i - 1].live - 1) / 12) + 1 : null;
+      const team = this.teamAt(p.live);
+      const d = Math.round(pl.adp - p.live);
+      return {
+        live: "#" + p.live,
+        newRound: i === 0 || prev !== rd,
+        roundLabel: "Round " + rd,
+        name: pl.name, pos: pl.pos,
+        team: shortTeam(TEAMS[team]),
+        keeperTag: p.keeper ? "  \u00b7  keeper" : "",
+        vor: pl.vor.toFixed(1),
+        delta: p.keeper ? "kept" : d > 2 ? "+" + d + " value" : d < -2 ? d + " reach" : "at adp",
+        deltaColor: p.keeper ? "var(--color-neutral-600)" : d > 2 ? cy : d < -2 ? mag : "var(--color-neutral-600)",
+        bg: team === ME ? "color-mix(in srgb, var(--color-accent) 8%, transparent)" : "transparent",
+        marker: team === ME ? "inset 3px 0 0 var(--color-accent)" : "none"
+      };
+    });
+
+    const upcomingRows = [];
+    for (let l = live; l < Math.min(live + 5, SLOTS.length + 1); l++) {
+      const t = this.teamAt(l);
+      const keeper = s.picks.find(p => p.live === l && p.keeper);
+      const pred = keeper ? null : this.predict(t, Math.floor((l - 1) / 12) + 1);
+      upcomingRows.push({
+        live: l,
+        team: t === ME ? "You \u2014 Sittin Purdy" : shortTeam(TEAMS[t]),
+        color: t === ME ? cy : l === live ? ink : dim,
+        weight: t === ME || l === live ? "600" : "400",
+        tag: t === ME ? "your pick" : keeper ? "keeper: " + lastName(BY_ID[keeper.id].name) : pred ? "likely " + pred.pos : "",
+        tagColor: t === ME ? cy : keeper ? cy : mag
+      });
+    }
+
+    // my roster slots
+    const mine = {};
+    ORDER.forEach(pos => { mine[pos] = []; });
+    s.picks.forEach(p => {
+      if (this.teamAt(p.live) !== ME) return;
+      if (!p.keeper && p.live >= live) return;
+      mine[BY_ID[p.id].pos].push(BY_ID[p.id]);
+    });
+    const myslots = [];
+    ORDER.forEach(pos => {
+      for (let i = 0; i < STARTERS[pos]; i++) {
+        const pl = mine[pos][i];
+        myslots.push({
+          label: pos + (STARTERS[pos] > 1 ? String(i + 1) : ""),
+          name: pl ? lastName(pl.name) : "open",
+          labelColor: pl ? ink : mag,
+          nameColor: pl ? ink : "var(--color-neutral-600)"
+        });
+      }
+    });
+    const surplusPl = FLEXELIG.reduce((a, pos) => a.concat(mine[pos].slice(STARTERS[pos])), []);
+    for (let i = 0; i < FLEXCOUNT; i++) {
+      const pl = surplusPl[i];
+      myslots.push({ label: "Flex", name: pl ? lastName(pl.name) : "open", labelColor: pl ? ink : mag, nameColor: pl ? ink : "var(--color-neutral-600)" });
+    }
+
+    const brief = "Two picks stand between you and #" + next + ", and both seats want a runner. " +
+      "The RB gate is already behind you \u2014 Kyren Williams is your only back and the flex is empty, so a Love or Jacobs here is the cheapest way to stop the bleed.\n" +
+      "Terry McLaurin is the value play, but with Smith-Njigba and Odunze already kept, a third receiver only fills a flex slot you can buy later at half the price.\n" +
+      "Quarterback can wait: the gate is #68 and six startable arms remain. Do not spend #34 on one.";
+
+    return {
+      undo: this.undo,
+      denseFlag: dense ? "1" : "0",
+      isDense: dense, isAiry: !dense,
+      setDense: () => this.setState({ dense: true }),
+      setAiry: () => this.setState({ dense: false }),
+      round, livePick: live, onClock, nextPick: next || live,
+      statusKicker: onClock ? "Your pick" : "On the clock",
+      statusKickColor: onClock ? mag : dim,
+      statusHead: onClock ? "You're up \u2014 #" + live : shortTeam(TEAMS[this.teamAt(live)]),
+      statusColor: onClock ? mag : ink,
+      untilKicker: onClock ? "Board leader" : "You're up in",
+      untilHead: onClock ? (recs[0] ? recs[0].p.vor.toFixed(1) + " vor" : "\u2014") : untilCount + " \u00b7 #" + next,
+      gateBand,
+      threatLine: threat,
+      query: s.query,
+      onQuery: (e) => this.setState({ query: e.target.value, sel: 0 }),
+      onKey: (e) => {
+        if (e.key === "ArrowDown") { e.preventDefault(); this.setState(st => ({ sel: (st.sel + 1) % Math.max(1, hitList.length) })); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); this.setState(st => ({ sel: (st.sel - 1 + hitList.length) % Math.max(1, hitList.length) })); }
+        else if (e.key === "Enter") { e.preventDefault(); if (hitList[s.sel]) this.pick(hitList[s.sel].id); }
+        else if (e.key === "Escape") this.setState({ query: "", sel: 0 });
+      },
+      hasHits: hitList.length > 0,
+      hits: hitList.map((p, i) => ({
+        name: p.name, pos: p.pos, tm: p.tm, adp: p.adp, vor: p.vor.toFixed(1),
+        arrow: i === s.sel ? "\u2192" : "",
+        bg: i === s.sel ? "color-mix(in srgb, var(--color-accent) 9%, transparent)" : "transparent",
+        pick: () => this.pick(p.id)
+      })),
+      showsShortlist: s.view === "shortlist",
+      showsLeague: s.view === "league",
+      showShortlist: () => this.setState({ view: "shortlist" }),
+      showLeague: () => this.setState({ view: "league" }),
+      tabAColor: s.view === "shortlist" ? ink : "var(--color-neutral-600)",
+      tabBColor: s.view === "league" ? ink : "var(--color-neutral-600)",
+      tabAUnderline: s.view === "shortlist" ? "inset 0 -3px 0 var(--color-accent)" : "none",
+      tabBUnderline: s.view === "league" ? "inset 0 -3px 0 var(--color-accent)" : "none",
+      recs: recs.map(r => {
+        const gone = Math.round((1 - r.psurv) * 100);
+        const fills = this.status(c, r.p.pos);
+        return {
+          rank: r.rank, name: r.p.name, adp: r.p.adp, sigma: r.p.sigma.toFixed(1),
+          meta: r.p.pos + " \u00b7 " + r.p.tm + " \u00b7 bye " + r.p.bye,
+          vor: r.p.vor.toFixed(1), regret: r.regret.toFixed(1), score: r.score.toFixed(1),
+          gone: gone + "%", goneBar: gone + "%",
+          goneColor: gone >= 45 ? mag : gone >= 20 ? "var(--color-accent-600)" : "var(--color-neutral-500)",
+          flag: r.gate ? "gate forced" : r.rank === 1 ? "board leader" : "",
+          flagColor: r.gate ? mag : cy,
+          slotFill: fills === "open" ? r.p.pos + " starter" : fills === "flex" ? "flex slot" : "bench",
+          shadow: r.gate ? "inset 3px 0 0 var(--color-accent-2), var(--shadow-sm)" : "var(--shadow-sm)",
+          why: r.p.pos + (av.filter(x => x.pos === r.p.pos).indexOf(r.p) + 1) + " by VOR \u00b7 " +
+            (fills === "open" ? "your " + r.p.pos + " starter is empty" : fills === "flex" ? "flex slot, not a starter" : "depth only") +
+            " \u00b7 " + gone + "% gone by #" + (next || live),
+          draft: () => this.pick(r.p.id)
+        };
+      }),
+      byPos: ORDER.map(pos => {
+        const b = this.bestAt(av, pos);
+        const st = this.status(c, pos);
+        return {
+          pos: pos === "DST" ? "D/ST" : pos,
+          name: b ? lastName(b.name) : "\u2014",
+          stat: b ? b.vor.toFixed(0) + " vor \u00b7 adp " + b.adp + " \u00b7 " + Math.round((1 - nCdf(((next || live) - b.adp) / b.sigma)) * 100) + "% survives" : "",
+          color: st === "open" ? mag : st === "flex" ? cy : dim
+        };
+      }),
+      showBrief: this.props.showBrief ?? true,
+      brief,
+      teamRows: rows,
+      rail, upcoming: upcomingRows,
+      madeCount: made.length,
+      myslots,
+      rosterCount: ORDER.reduce((a, pos) => a + mine[pos].length, 0),
+      rosterOpen: this.openStarters(c)
+    };
+  }
+}
+
+</script>
+</body>
+</html>

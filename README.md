@@ -13,11 +13,16 @@ export FANTASY_ANTHROPIC_API_KEY=… # optional: Claude briefs
 ./server                           # http://<laptop-ip>:8090 on the phone
 ```
 
-- Type a name, `Enter` marks the pick for the team on the clock. `↑/↓` to choose.
-- `1` / `2` / `3` drafts that recommendation when you're on the clock (search box empty).
-- `Cmd/Ctrl+Z` undoes. The event log replays on restart, so a crash loses nothing.
-- Yellow bar = you're on the clock. Red text = a strategy gate is binding.
-- Purple `2027` badge = keeper-speculative pick (round 8+ only, capped at 3).
+The UI is a two-column laptop layout (minimum 1013px wide; no phone layout) built on the
+design handoff in [docs/design_handoff_draft_copilot/](docs/design_handoff_draft_copilot/).
+
+- Type a name, `Enter` marks the pick for the team on the clock. `↑/↓` to choose, `Esc` clears.
+- `1` / `2` / `3` drafts that card when you're on the clock (search field empty).
+- `G` flips between the shortlist and the league view (needs & likely next moves).
+- `Cmd/Ctrl+Z` or the masthead `⌫ Undo` reverts the last pick. The event log replays on restart.
+- Magenta = urgency: your turn, a binding gate, an open starter slot, a seat picking before you.
+  Cyan = interactive and your own seat. Positions are not colour-coded.
+- Dense is the default density; `Airy` is a preference, remembered per browser.
 
 ## Before draft night
 
@@ -58,6 +63,7 @@ Manual entry is the source of truth; automation is an accelerator.
 cmd/server     main binary        internal/engine   VOR, Monte Carlo survival, gates, keeper
 cmd/ingest     CSVs → players.json internal/brief    Claude commentary (prefetch + cache)
 cmd/simdraft   simulation harness  internal/httpapi  JSON + SSE + FanDraft endpoints
-web/           embedded UI         internal/state    event-sourced draft state
+web/           embedded UI (vanilla JS + vendored Broadsheet CSS)
+                                   internal/state    event-sourced draft state
 userscripts/   FanDraft recon/ingest
 ```

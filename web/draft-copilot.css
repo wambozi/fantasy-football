@@ -1,0 +1,601 @@
+/* ============================================================================
+   Draft Copilot — application design system
+   ----------------------------------------------------------------------------
+   Layer 2 of two. Load AFTER broadsheet.css, which owns the brand tokens
+   (--color-*, --font-*, --space-*, --radius-*, --shadow-*) and the generic
+   component classes (.btn, .input, .seg, .card, .tag, .table).
+
+       <link rel="stylesheet" href="/broadsheet.css">
+       <link rel="stylesheet" href="/draft-copilot.css">
+
+   This file adds ONLY what the draft copilot needs on top of that: a density
+   scale, the page shell, and the eight app components. It hard-codes no
+   colors and no font families — every value below resolves to a Broadsheet
+   token. If a value here is a raw px number it is a layout dimension the
+   brand scale does not carry (column widths, hairline offsets, bar heights).
+
+   Density: DENSE is the default and the draft-night setting. Airy is opt-in
+   via `<body data-density="airy">` (or on any subtree).
+   ========================================================================= */
+
+:root {
+  /* Type — the draft-copilot scale. Dense values. */
+  --dc-brand: 19px;      /* masthead wordmark */
+  --dc-status: 27px;     /* on-the-clock team, picks-until figure */
+  --dc-recname: 19px;    /* recommendation card player name */
+  --dc-recvor: 25px;     /* recommendation card VOR figure */
+  --dc-rail: 12.5px;     /* pick-rail player name */
+  --dc-search: 16px;     /* the search field */
+  --dc-kick: 10px;       /* small-caps kickers and section labels */
+
+  /* Rhythm */
+  --dc-gap-main: 26px;   /* gutter between the main column and the rail */
+  --dc-card-pad: 13px;   /* recommendation card padding */
+  --dc-row-pad: 4px;     /* vertical padding inside a rail / needs row */
+  --dc-section: 17px;    /* space above a new section inside a column */
+
+  /* Fixed layout dimensions */
+  --dc-rail-w: 352px;
+  --dc-page-pad-y: 20px;
+  --dc-page-pad-x: 34px;
+  --dc-rule-thick: 4px;
+  --dc-rule-thin: 1px;
+  --dc-marker: 3px;      /* the inset row marker for "mine" / "upcoming" */
+  --dc-bar: 3px;         /* the gone-by-my-pick meter */
+  --dc-min-w: 1013px;    /* below this the layout does not reflow */
+
+  /* Semantic colors — mapped, never invented.
+     Cyan  = interactive, value, my seat.
+     Magenta = urgency: my turn, a binding gate, an unfilled starter slot. */
+  --dc-ink: var(--color-text);
+  --dc-dim: var(--color-neutral-700);
+  --dc-faint: var(--color-neutral-600);
+  --dc-hair: var(--color-neutral-200);
+  --dc-live: var(--color-accent-700);      /* cyan, body-copy safe */
+  --dc-live-fill: var(--color-accent);
+  --dc-urgent: var(--color-accent-2-700);  /* magenta, body-copy safe */
+  --dc-urgent-fill: var(--color-accent-2);
+  --dc-tint-live: var(--color-accent-100);
+  --dc-tint-urgent: var(--color-accent-2-100);
+}
+
+[data-density="airy"] {
+  --dc-brand: 23px;
+  --dc-status: 38px;
+  --dc-recname: 25px;
+  --dc-recvor: 34px;
+  --dc-rail: 14px;
+  --dc-search: 19px;
+  --dc-kick: 11px;
+  --dc-gap-main: 44px;
+  --dc-card-pad: 20px;
+  --dc-row-pad: 9px;
+  --dc-section: 30px;
+}
+
+/* ── page shell ─────────────────────────────────────────────────────────── */
+
+.dc-page {
+  min-height: 100vh;
+  min-width: var(--dc-min-w);
+  padding: var(--dc-page-pad-y) var(--dc-page-pad-x) var(--dc-page-pad-x);
+  background: var(--color-bg);
+  color: var(--dc-ink);
+  font-family: var(--font-body);
+}
+
+/* Front-page furniture. The ONLY rules Broadsheet prints: a thick-thin pair
+   bracketing the dateline. Do not add rules anywhere else — sections are
+   separated by whitespace and by the one hairline a data row needs. */
+.dc-rule-thick { height: var(--dc-rule-thick); background: var(--dc-ink); }
+.dc-rule-thin  { height: var(--dc-rule-thin);  background: var(--dc-ink); }
+
+.dc-masthead {
+  display: flex;
+  align-items: baseline;
+  gap: 26px;
+  padding: 9px 0 7px;
+}
+.dc-wordmark {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--dc-brand);
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+}
+.dc-dateline {
+  display: flex;
+  gap: 16px;
+  white-space: nowrap;
+  color: var(--dc-dim);
+}
+.dc-masthead-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+/* The small-caps voice. Used for every label, kicker and column head. */
+.dc-kicker {
+  font-size: var(--dc-kick);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--dc-dim);
+}
+.dc-kicker--live   { color: var(--dc-live); }
+.dc-kicker--urgent { color: var(--dc-urgent); }
+
+/* ── status band ────────────────────────────────────────────────────────── */
+
+.dc-status {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-6);
+  padding-top: 16px;
+}
+.dc-status-figure {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--dc-status);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+}
+.dc-status-right { margin-left: auto; text-align: right; white-space: nowrap; }
+/* On my clock the whole band goes magenta. Nothing else on the page may. */
+.dc-status.is-mine .dc-status-figure,
+.dc-status.is-mine .dc-kicker { color: var(--dc-urgent); }
+
+/* A binding strategy gate. Tinted fill, dark ramp text — never accent-on-paper
+   at this size. At most one gate band is shown at a time. */
+.dc-gate {
+  margin-top: 12px;
+  padding: 7px 11px;
+  background: var(--dc-tint-urgent);
+  color: var(--color-accent-2-800);
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* The synthesised read: what comes off the board before my next turn.
+   Body copy in the serif's true italic — never a synthesized oblique. */
+.dc-read {
+  margin-top: 12px;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--color-neutral-800);
+  text-wrap: pretty;
+}
+
+/* ── two-column body ───────────────────────────────────────────────────── */
+
+.dc-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--dc-rail-w);
+  gap: var(--dc-gap-main);
+  margin-top: var(--dc-section);
+  align-items: start;
+}
+.dc-col { min-width: 0; }
+.dc-rail {
+  min-width: 0;
+  border-left: var(--dc-rule-thin) solid var(--dc-ink);
+  padding-left: 20px;
+}
+
+/* A section inside a column: a hairline, a kicker, then the content. */
+.dc-section {
+  margin-top: var(--dc-section);
+  padding-top: 10px;
+  border-top: 1px solid var(--color-divider);
+}
+
+/* ── search / pick entry ────────────────────────────────────────────────── */
+
+/* Not the boxed .input: the entry line is a ruled writing line, which is the
+   one border this system allows on a field. */
+.dc-search {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-family: var(--font-heading);
+  font-size: var(--dc-search);
+  color: var(--dc-ink);
+  caret-color: var(--dc-live-fill);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--dc-ink);
+  border-radius: 0;
+}
+.dc-search::placeholder { font-style: italic; color: var(--dc-faint); opacity: 1; }
+.dc-search:focus-visible { border-bottom-color: var(--dc-live-fill); outline: none; }
+
+.dc-hits { margin-top: 6px; border-bottom: 1px solid var(--color-divider); }
+.dc-hit {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 62px 54px 64px;
+  gap: 10px;
+  align-items: baseline;
+  padding: 7px 4px;
+  cursor: pointer;
+  border-top: 1px solid var(--color-divider);
+}
+.dc-hit:hover { background: var(--dc-tint-live); }
+.dc-hit.is-selected { background: var(--dc-tint-live); }
+.dc-hit-caret { color: var(--dc-live-fill); font-size: 13px; }
+
+/* ── view tabs ──────────────────────────────────────────────────────────── */
+
+.dc-tabs { display: flex; gap: 22px; align-items: baseline; margin-top: var(--dc-section); }
+.dc-tab {
+  cursor: pointer;
+  padding-bottom: 4px;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dc-faint);
+  background: none;
+  border: 0;
+}
+.dc-tab:hover { color: var(--dc-live); }
+.dc-tab[aria-selected="true"] {
+  color: var(--dc-ink);
+  box-shadow: inset 0 calc(var(--dc-marker) * -1) 0 var(--dc-live-fill);
+}
+
+/* ── recommendation cards ──────────────────────────────────────────────── */
+
+/* .card is Broadsheet's one boxed component and this is what it is FOR:
+   three genuinely discrete listings. Never use it for page layout. */
+.dc-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.dc-card { padding: var(--dc-card-pad); gap: var(--space-1); box-shadow: var(--shadow-sm); }
+.dc-card.is-gate { box-shadow: inset var(--dc-marker) 0 0 var(--dc-urgent-fill), var(--shadow-sm); }
+
+.dc-card-head { display: flex; align-items: baseline; gap: 8px; }
+.dc-card-rank {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 14px;
+  color: var(--dc-live-fill);
+}
+.dc-card-flag { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dc-live); }
+.dc-card-flag.is-gate { color: var(--dc-urgent); }
+.dc-card-slot { margin-left: auto; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dc-faint); }
+
+.dc-card-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--dc-recname);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.dc-card-meta { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--dc-dim); }
+
+.dc-card-vor { display: flex; align-items: baseline; gap: 7px; margin-top: 8px; }
+.dc-card-vor b {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--dc-recvor);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Survival: the chance this player is gone by my next turn. */
+.dc-card-gone { display: flex; align-items: baseline; gap: 6px; margin-top: 7px; white-space: nowrap; }
+.dc-card-gone b {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.dc-meter { height: var(--dc-bar); background: var(--color-neutral-300); margin-top: 1px; }
+.dc-meter > span { display: block; height: var(--dc-bar); background: var(--dc-fill, var(--color-neutral-500)); }
+/* Three bands, set on the meter and on the figure together:
+   <20% calm, 20-44% cyan, >=45% magenta. */
+.dc-risk-low  { --dc-fill: var(--color-neutral-500); color: var(--color-neutral-500); }
+.dc-risk-mid  { --dc-fill: var(--color-accent-600);  color: var(--color-accent-600); }
+.dc-risk-high { --dc-fill: var(--dc-urgent-fill);    color: var(--dc-urgent); }
+
+.dc-card-why { font-size: 13px; line-height: 1.45; color: var(--color-neutral-800); margin-top: 7px; text-wrap: pretty; }
+/* Dense only: the numbers behind the recommendation. */
+.dc-card-stats {
+  display: flex;
+  gap: 12px;
+  padding-top: 5px;
+  margin-top: 2px;
+  border-top: 1px solid var(--color-divider);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dc-dim);
+  font-variant-numeric: tabular-nums;
+}
+[data-density="airy"] .dc-card-stats { display: none; }
+
+/* ── best available by position ────────────────────────────────────────── */
+
+.dc-bypos { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.dc-bypos-pos {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dc-bypos-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.dc-bypos-stat { font-size: 11px; letter-spacing: 0.04em; color: var(--dc-dim); font-variant-numeric: tabular-nums; }
+
+/* ── the Claude brief ──────────────────────────────────────────────────── */
+
+.dc-brief { max-width: 62ch; }
+.dc-brief-body { font-size: 15px; line-height: 1.6; white-space: pre-line; text-wrap: pretty; }
+
+/* ── the league grid: needs and next moves ─────────────────────────────── */
+
+/* A grid, not <table>: the cells stack a figure over a status word, which a
+   data table's row rhythm fights. Row rules are the one hairline allowed. */
+.dc-needs { margin-top: 16px; }
+.dc-needs-head,
+.dc-needs-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1.6fr) repeat(4, 38px) 44px minmax(0, 1.6fr);
+  gap: 8px;
+}
+.dc-needs-head {
+  align-items: end;
+  padding: 0 4px 6px;
+  border-bottom: 1px solid var(--dc-ink);
+  font-size: var(--dc-kick);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dc-dim);
+}
+.dc-needs-row {
+  align-items: baseline;
+  padding: var(--dc-row-pad) 4px;
+  border-bottom: 1px solid var(--dc-hair);
+}
+/* My seat, and the seats that pick between now and my next turn. */
+.dc-needs-row.is-mine     { background: var(--dc-tint-live);   box-shadow: inset var(--dc-marker) 0 0 var(--dc-live-fill); }
+.dc-needs-row.is-upcoming { background: var(--dc-tint-urgent); box-shadow: inset var(--dc-marker) 0 0 var(--dc-urgent-fill); }
+
+.dc-needs-team {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 15px;
+  letter-spacing: -0.012em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-needs-cell { text-align: center; font-variant-numeric: tabular-nums; }
+.dc-needs-cell b {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 15px;
+}
+.dc-needs-cell small { display: block; font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+/* The four roster states. This is the whole point of the view — keep the
+   mapping fixed: magenta reads as "they will take one of these". */
+.dc-needs-cell.is-open b, .dc-needs-cell.is-open small { color: var(--dc-urgent); }
+.dc-needs-cell.is-flex b, .dc-needs-cell.is-flex small { color: var(--dc-live); }
+.dc-needs-cell.is-set  b, .dc-needs-cell.is-set  small { color: var(--dc-faint); }
+.dc-needs-cell.is-max  b, .dc-needs-cell.is-max  small { color: var(--dc-dim); }
+
+.dc-needs-likely {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.dc-needs-note { font-size: 11.5px; line-height: 1.3; font-style: italic; color: var(--dc-dim); text-wrap: pretty; }
+
+.dc-legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dc-dim);
+}
+
+/* ── the pick rail ─────────────────────────────────────────────────────── */
+
+.dc-rail-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--dc-ink);
+}
+.dc-rail-title {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dc-ondeck { padding: 9px 0 11px; border-bottom: 1px solid var(--color-divider); }
+.dc-ondeck-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 2px 0;
+  font-size: 13.5px;
+}
+.dc-ondeck-row.is-now  { color: var(--dc-ink); font-weight: var(--font-heading-weight); }
+.dc-ondeck-row.is-mine { color: var(--dc-live); font-weight: var(--font-heading-weight); }
+.dc-ondeck-tag { font-size: 11px; font-style: italic; letter-spacing: 0.05em; color: var(--dc-urgent); }
+.dc-ondeck-tag.is-known { color: var(--dc-live); }  /* a keeper already locked to that slot */
+
+.dc-round {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 0 5px;
+}
+.dc-round span {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dc-dim);
+  white-space: nowrap;
+}
+.dc-round i { flex: 1; height: 1px; background: var(--color-neutral-300); }
+
+.dc-pick {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 46px;
+  gap: 9px;
+  align-items: baseline;
+  padding: var(--dc-row-pad) 0;
+  border-bottom: 1px solid var(--dc-hair);
+}
+.dc-pick.is-mine { background: var(--dc-tint-live); box-shadow: inset var(--dc-marker) 0 0 var(--dc-live-fill); }
+.dc-pick-no { font-size: 12px; color: var(--dc-faint); font-variant-numeric: tabular-nums; }
+.dc-pick-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--dc-rail);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-pick-name small { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--dc-dim); margin-left: 6px; }
+.dc-pick-team { font-size: 11.5px; color: var(--dc-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dc-pick-vor {
+  text-align: right;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.dc-pick-delta { font-size: 10px; letter-spacing: 0.05em; font-variant-numeric: tabular-nums; text-align: right; }
+.dc-pick-delta.is-value { color: var(--dc-live); }    /* fell past ADP by 3+ */
+.dc-pick-delta.is-reach { color: var(--dc-urgent); }  /* taken 3+ picks early */
+.dc-pick-delta.is-flat,
+.dc-pick-delta.is-keeper { color: var(--dc-faint); }  /* keepers are not reaches */
+
+/* ── my roster strip ───────────────────────────────────────────────────── */
+
+.dc-roster { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.dc-slot { display: flex; gap: 6px; align-items: baseline; white-space: nowrap; font-size: 14px; }
+.dc-slot b {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dc-slot.is-open b { color: var(--dc-urgent); }
+.dc-slot.is-open span { color: var(--dc-faint); }
+
+/* ── keyboard legend ───────────────────────────────────────────────────── */
+
+.dc-keys { margin-top: 22px; font-size: 11px; letter-spacing: 0.05em; color: var(--dc-faint); }
+
+/* ── numerals ──────────────────────────────────────────────────────────── */
+
+/* Every figure on this page is compared against the figure above it. */
+.dc-num, .dc-page [class*="-vor"], .dc-page [class*="-no"] { font-variant-numeric: tabular-nums; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Additions beyond the handoff. Each exists because the shipped UI keeps a
+   behaviour the prototype did not model (spec §9.5 automation, the conflict
+   banner, the toast) or because a layout value was left to the implementer.
+   Every value still resolves to a token; no colors or families invented.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.hidden { display: none !important; }
+
+/* The masthead's small controls: the handoff sets the .seg and undo button in
+   10–11px uppercase heading serif. Broadsheet's defaults are 13–14px. */
+.dc-seg-opt { font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+.dc-btn-small { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 11px; }
+
+/* The dateline row carries the automation freshness line (spec §9.5). Two
+   accents only: cyan while the userscript is alive, magenta once it is stale. */
+.dc-auto { color: var(--dc-live); white-space: nowrap; }
+.dc-auto.is-stale { color: var(--dc-urgent); }
+
+/* The conflict banner is a second magenta band directly under the gate band. */
+.dc-conflict { display: flex; align-items: center; gap: 12px; }
+.dc-conflict .btn { margin-left: auto; }
+
+/* Status band: the left block must be allowed to shrink so a long team name
+   ellipsises instead of pushing the right block off the row. */
+.dc-status-left { min-width: 0; }
+.dc-status-figure { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dc-status.is-complete .dc-status-right { visibility: hidden; }
+
+/* Search label sits above the writing line. */
+.dc-search-label { display: block; margin-bottom: 5px; }
+.dc-hit-name { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dc-hit-meta { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dc-dim); }
+.dc-hit-num { font-size: 12px; color: var(--dc-dim); font-variant-numeric: tabular-nums; }
+.dc-hit-num.is-right { text-align: right; }
+
+.dc-tabs-hint { margin-left: auto; }
+.dc-section-kicker { margin-bottom: 7px; }
+.dc-kicker--faint { color: var(--dc-faint); }
+.dc-roster-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px; }
+
+/* Card slot label variants, the draft button's small-caps voice. */
+.dc-card-btn { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 6px; }
+.dc-card-vor small, .dc-card-gone small { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dc-faint); }
+
+.dc-bypos-pos.is-open { color: var(--dc-urgent); }
+.dc-bypos-pos.is-flex { color: var(--dc-live); }
+.dc-bypos-pos.is-set  { color: var(--dc-dim); }
+.dc-bypos-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* League grid: the NEXT cell's three states, the OPEN total. */
+.dc-needs-next { font-size: 12px; color: var(--dc-faint); font-variant-numeric: tabular-nums; }
+.dc-needs-next.is-mine { color: var(--dc-live); font-weight: var(--font-heading-weight); }
+.dc-needs-next.is-upcoming { color: var(--dc-urgent); font-weight: var(--font-heading-weight); }
+.dc-needs-open { text-align: center; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 15px; color: var(--color-neutral-800); font-variant-numeric: tabular-nums; }
+.dc-needs-move { min-width: 0; }
+.dc-needs-head > div:nth-child(n+3):nth-child(-n+7) { text-align: center; }
+.dc-legend-open { color: var(--dc-urgent); }
+.dc-legend-flex { color: var(--dc-live); }
+
+/* On-deck rows: the pick number and the beyond-now dimming. */
+.dc-ondeck-kicker { margin-bottom: 5px; }
+.dc-ondeck-no { font-size: 12px; font-variant-numeric: tabular-nums; }
+.dc-ondeck-team { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dc-ondeck-row { color: var(--dc-dim); }
+.dc-ondeck-tag.is-mine { color: var(--dc-live); }
+
+/* The board scrolls after 22 rows (dense) / 13 (airy). A row is the rail type
+   size plus the team line plus padding; the divider rows are extra headroom. */
+.dc-board { overflow-y: auto; max-height: calc(22 * (var(--dc-rail) + 14px + 2 * var(--dc-row-pad) + 1px) + 6 * 27px); }
+[data-density="airy"] .dc-board { max-height: calc(13 * (var(--dc-rail) + 15px + 2 * var(--dc-row-pad) + 1px) + 4 * 27px); }
+.dc-pick-body { min-width: 0; }
+.dc-pick-right { text-align: right; }
+
+/* The toast: surface fill, ink text; success cyan-tinted, error magenta-tinted. */
+.dc-toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  padding: 8px 14px; max-width: 70vw;
+  background: var(--color-surface); color: var(--dc-ink);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px;
+  box-shadow: var(--shadow-md);
+}
+.dc-toast.is-ok  { background: var(--dc-tint-live); }
+.dc-toast.is-err { background: var(--dc-tint-urgent); color: var(--color-accent-2-800); }
