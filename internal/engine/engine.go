@@ -168,7 +168,13 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 	ad.PosByTeam = posByTeam
 
 	// Score every candidate.
-	ad.Waiver = e.waiverLevel(board)
+	taken := map[players.Position]int{}
+	for _, m := range rc.counts {
+		for pos, n := range m {
+			taken[pos] += n
+		}
+	}
+	ad.Waiver = e.waiverLevel(board, taken)
 	// Two baselines. A pick that fills one of MY starter/flex slots is measured against
 	// the league's dynamic replacement level (what the last team to fill that slot gets).
 	// A pick that can only sit on my bench is measured against the waiver wire — the
@@ -264,18 +270,28 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 
 // waiverLevel is, per position, what a bench spot is worth relative to free: the
 // projection of the k-th best available player at the position, where k is how many
-// at that position are still expected to be drafted (available players with ADP inside
-// the draft). Ranking by projection rather than ADP keeps the baseline on a real
-// projection instead of on a deep player valued by the fallback curve.
-func (e *Engine) waiverLevel(board []*players.Player) map[players.Position]float64 {
+// at that position are still expected to be drafted. With engine.waiver_drafted set,
+// k is the room's own measured positional draft count minus players already taken
+// (keepers included) — consensus ADP inside the draft is the fallback, and it imports
+// other formats' habits (29 QBs and 27 TEs by pick 204 where this room takes ~21 and
+// ~23, so the QB/TE baselines sat 8 and 4 players too deep). Ranking by projection
+// rather than ADP keeps the baseline on a real projection instead of on a deep player
+// valued by the fallback curve.
+func (e *Engine) waiverLevel(board []*players.Player, taken map[players.Position]int) map[players.Position]float64 {
 	limit := float64(len(e.lg.Slots))
+	wd := e.cfg.Engine.WaiverDrafted
 	k := map[players.Position]int{}
 	proj := map[players.Position][]float64{}
 	for _, p := range board {
-		if p.ADPMean > 0 && p.ADPMean <= limit {
+		if len(wd) == 0 && p.ADPMean > 0 && p.ADPMean <= limit {
 			k[p.Pos]++
 		}
 		proj[p.Pos] = append(proj[p.Pos], p.ProjPoints)
+	}
+	for pos, total := range wd {
+		if n := total - taken[pos]; n > 0 {
+			k[pos] = n
+		}
 	}
 	out := map[players.Position]float64{}
 	for pos, pts := range proj {

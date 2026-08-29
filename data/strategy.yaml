@@ -75,11 +75,23 @@ engine:
   # different cost. So the discount relaxes only in the endgame. Swept 2026-08-29 over 500
   # drafts: unfillable bye weeks 2.01 -> 1.60 with the paired median unchanged at +40.
   # QB 0.60 bought only 0.08 more for another 0.6pp of win rate, so 0.35 is the knee.
+  # NOTE: that sweep predates waiver_drafted below. With the QB wire correctly at ~268,
+  # QB2 bench VOR is negative at any discount and the engine streams the bye instead —
+  # this knob is moot for QB unless waiver_drafted is cleared. docs/reach-vs-adp-2026-08-29.md.
   # DST stays 0 at every round: a second defence scores ~0 VOR at any multiplier, because
   # the DST waiver level IS the next defence you would take.
   bench_late_round: 13
   bench_discount_late: {QB: 0.35}
   bench_decay: 0.75  # k-th bench player at a position is worth decay^k of the first
+  # How many players THIS room drafts per position, keepers included — the waiver-level
+  # index is expected-drafted minus already-taken. Measured from the room's own boards
+  # (RB/WR/QB/TE/DST): 2023 62/78/20/24/12, 2024 67/78/22/24/13, 2025 71/78/20/22/13;
+  # n=604 picks. The old fallback counted available players with consensus ADP inside
+  # the draft, which imports other formats' habits: 29 QBs and 27 TEs by pick 204 where
+  # this room takes ~21 and ~23, so the QB/TE waiver baselines sat 8 and 4 players too
+  # deep (bench VOR inflated) and RB 4 too shallow. RB trends up (62→71) with keeper
+  # count; revisit after the 2026 board lands. docs/reach-vs-adp-2026-08-29.md.
+  waiver_drafted: {QB: 21, RB: 67, WR: 78, TE: 23, DST: 13}
 
 gates:
   - position: QB
@@ -132,18 +144,29 @@ manager_bias:
   # Scaling the starter-filling term modelled an opponent who fills needs harder, which
   # is a better drafter, not a habitual one.
   applies_to: surplus
+  # lambda_rank: per-team steepness of the BPA preference (reach-vs-ADP), same scale as
+  # engine.lambda_rank. Fit by MLE on the 2023-25 boards (keepers excluded, rank on the
+  # live board, K=200 so late picks count), empirical-Bayes-shrunk toward the pooled fit
+  # and re-anchored so the room average stays exactly engine.lambda_rank — the raw MLEs
+  # sit near 0.03 because they are measured against noiseless ADP ranks while the engine
+  # applies λ after its per-player σ draw. n is ~44 picks per manager; the shrinkage is
+  # doing real work (weights 0.46-0.81) and the manager ORDERING is not stable across
+  # estimators, only the rough flat-vs-steep split is. Numbers below the n≥700 bar for
+  # trusting a specific value; treat as provisional and refit when 2026 lands.
+  # Derivation and caveats: docs/reach-vs-adp-2026-08-29.md.
+  lambda_weight: 1.0             # 0 falls back to the global engine.lambda_rank for everyone
   teams:
-    "Ja'Marr & Jahmyr":            {qb: 1.09, rb: 0.98, wr: 0.88, te: 0.99, dst: 1.60, first_qb: 7, first_te: 5, first_dst: 13}
-    "Lawson Country Lets Ride":    {qb: 1.04, rb: 1.07, wr: 0.96, te: 0.94, dst: 0.93, first_qb: 7, first_te: 10, first_dst: 17}
-    "Patient Zeros Aids Epidemic": {qb: 0.85, rb: 1.16, wr: 1.10, te: 0.60, dst: 0.96, first_qb: 3, first_te: 8, first_dst: 13}
-    "Pollock Debacle":             {qb: 0.87, rb: 0.91, wr: 0.94, te: 1.58, dst: 0.98, first_qb: 3, first_te: 7, first_dst: 17}
-    "Sittin Purdy":                {qb: 1.22, rb: 0.78, wr: 1.23, te: 0.74, dst: 0.91, first_qb: 2, first_te: 9, first_dst: 15}
-    "Stopped The Steal!":          {qb: 1.28, rb: 1.16, wr: 0.98, te: 0.60, dst: 0.96, first_qb: 10, first_te: 11, first_dst: 17}
-    "Svannah Alley Cats":          {qb: 0.60, rb: 1.07, wr: 1.14, te: 0.94, dst: 0.93, first_qb: 12, first_te: 7, first_dst: 13}
-    "The Comeback Story":          {qb: 1.04, rb: 0.93, wr: 0.96, te: 1.32, dst: 0.93, first_qb: 4, first_te: 3, first_dst: 13}
-    "Time Stamps":                 {qb: 0.64, rb: 0.82, wr: 1.23, te: 1.16, dst: 0.96, first_qb: 8, first_te: 7, first_dst: 15}
-    "Tom":                         {qb: 1.43, rb: 0.78, wr: 1.00, te: 1.29, dst: 0.91, first_qb: 8, first_te: 7, first_dst: 14}
-    "Trash Pandas":                {qb: 1.07, rb: 1.23, wr: 0.74, te: 1.16, dst: 0.96, first_qb: 4, first_te: 5, first_dst: 14}
-    "Woke Mob Warriors":           {qb: 1.04, rb: 1.13, wr: 0.84, te: 1.13, dst: 0.93, first_qb: 4, first_te: 6, first_dst: 13}
+    "Ja'Marr & Jahmyr":            {qb: 1.09, rb: 0.98, wr: 0.88, te: 0.99, dst: 1.60, first_qb: 7, first_te: 5, first_dst: 13, lambda_rank: 0.213}
+    "Lawson Country Lets Ride":    {qb: 1.04, rb: 1.07, wr: 0.96, te: 0.94, dst: 0.93, first_qb: 7, first_te: 10, first_dst: 17, lambda_rank: 0.344}
+    "Patient Zeros Aids Epidemic": {qb: 0.85, rb: 1.16, wr: 1.10, te: 0.60, dst: 0.96, first_qb: 3, first_te: 8, first_dst: 13, lambda_rank: 0.288}
+    "Pollock Debacle":             {qb: 0.87, rb: 0.91, wr: 0.94, te: 1.58, dst: 0.98, first_qb: 3, first_te: 7, first_dst: 17, lambda_rank: 0.206}
+    "Sittin Purdy":                {qb: 1.22, rb: 0.78, wr: 1.23, te: 0.74, dst: 0.91, first_qb: 2, first_te: 9, first_dst: 15, lambda_rank: 0.184}
+    "Stopped The Steal!":          {qb: 1.28, rb: 1.16, wr: 0.98, te: 0.60, dst: 0.96, first_qb: 10, first_te: 11, first_dst: 17, lambda_rank: 0.258}
+    "Svannah Alley Cats":          {qb: 0.60, rb: 1.07, wr: 1.14, te: 0.94, dst: 0.93, first_qb: 12, first_te: 7, first_dst: 13, lambda_rank: 0.229}
+    "The Comeback Story":          {qb: 1.04, rb: 0.93, wr: 0.96, te: 1.32, dst: 0.93, first_qb: 4, first_te: 3, first_dst: 13, lambda_rank: 0.264}
+    "Time Stamps":                 {qb: 0.64, rb: 0.82, wr: 1.23, te: 1.16, dst: 0.96, first_qb: 8, first_te: 7, first_dst: 15, lambda_rank: 0.274}
+    "Tom":                         {qb: 1.43, rb: 0.78, wr: 1.00, te: 1.29, dst: 0.91, first_qb: 8, first_te: 7, first_dst: 14, lambda_rank: 0.293}
+    "Trash Pandas":                {qb: 1.07, rb: 1.23, wr: 0.74, te: 1.16, dst: 0.96, first_qb: 4, first_te: 5, first_dst: 14, lambda_rank: 0.250}
+    "Woke Mob Warriors":           {qb: 1.04, rb: 1.13, wr: 0.84, te: 1.13, dst: 0.93, first_qb: 4, first_te: 6, first_dst: 13, lambda_rank: 0.230}
 
 flex_policy: best_available   # RB/WR/TE by VOR — never force a position into flex

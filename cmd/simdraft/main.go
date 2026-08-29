@@ -109,6 +109,7 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	posTotals := map[players.Position]int{}
 	var engLineup, baseLineup, diffs []float64
 	specTotal := 0
+	engHoles, baseHoles := 0, 0
 	gateFired := map[players.Position]int{}
 	gateBinding := map[players.Position]int{}
 	for i, r := range engRes {
@@ -137,6 +138,8 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 		engLineup = append(engLineup, r.Lineup)
 		baseLineup = append(baseLineup, baseRes[i].Lineup)
 		diffs = append(diffs, r.Lineup-baseRes[i].Lineup)
+		engHoles += r.ByeHoles
+		baseHoles += baseRes[i].ByeHoles
 	}
 	for i := 0; i < show && i < len(engRes); i++ {
 		printDraft(engRes[i])
@@ -155,6 +158,7 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 		fmt.Printf("  %s %.1f", pos, float64(posTotals[pos])/float64(n))
 	}
 	fmt.Printf("\nkeeper-speculative per draft: %.2f (cap %d)", float64(specTotal)/float64(n), cfg.Keeper.MaxSpeculative)
+	fmt.Printf("\nunfillable bye slot-weeks per draft: engine %.2f  baseline %.2f", float64(engHoles)/float64(n), float64(baseHoles)/float64(n))
 	fmt.Printf("\nflex fills:")
 	for _, pos := range []players.Position{players.RB, players.WR, players.TE} {
 		fmt.Printf("  %s %d", pos, flexPos[pos])
