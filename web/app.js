@@ -15,9 +15,13 @@
     status: $("status"), statusKicker: $("status-kicker"), statusFigure: $("status-figure"),
     untilKicker: $("until-kicker"), untilFigure: $("until-figure"),
     gate: $("gate"), conflict: $("conflict"), conflictText: $("conflict-text"), conflictOk: $("conflict-ok"),
+    catchup: $("catchup"), catchupText: $("catchup-text"), catchupCancel: $("catchup-cancel"),
+    rewind: $("rewind"), rewindText: $("rewind-text"), rewindGo: $("rewind-go"), rewindCancel: $("rewind-cancel"),
     read: $("read"), search: $("search"), hits: $("hits"),
+    delta: $("delta"), deltaKicker: $("delta-kicker"), deltaBody: $("delta-body"),
     tabs: Array.from(document.querySelectorAll(".dc-tab")),
-    viewShortlist: $("view-shortlist"), viewLeague: $("view-league"),
+    viewShortlist: $("view-shortlist"), viewLeague: $("view-league"), viewAvail: $("view-avail"),
+    availPos: $("avail-pos"), availSort: $("avail-sort"), availCount: $("avail-count"), avail: $("avail"),
     cards: $("cards"), bypos: $("bypos"), brief: $("brief"), briefKicker: $("brief-kicker"), briefBody: $("brief-body"),
     needsRows: $("needs-rows"), likelyHead: $("likely-head"),
     rosterCount: $("roster-count"), roster: $("roster"),
@@ -36,10 +40,24 @@
   let hits = [];
   let sel = 0;
   let view = "shortlist";
+  let availPos = "RB";
+  let availSort = "value";
+  // Catching up after stepping away: the last live pick I am entering in this run.
+  // The picks themselves still go in strictly in order — the event log is append-only
+  // and PickAt refuses anything but the pick on the clock — so this is a guide rail,
+  // not out-of-order editing.
+  let catchUpTo = 0;
+  // A past pick armed for rewind. Undo is LIFO, so "rewind to #N" is N undos.
+  let rewindAt = 0;
   let density = "dense";
   let busy = false;
   let pollTimer = null;
   let autoState = null;
+  // Snapshots of the advice as it stood the moment I arrived on the clock, so the
+  // delta panel can show what the intervening opposing picks did to the engine's
+  // numbers. Display only — nothing here feeds a recommendation.
+  let mineNow = null;    // this turn
+  let minePrev = null;   // my previous turn
 
   // ---------- helpers ----------
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -159,10 +177,15 @@
     renderMasthead(st, ad);
     renderStatus(st, ad, onClock, live, next);
     renderGate(ad);
+    renderCatchup(st);
+    renderRewind(st);
     renderRead(st, ad, onClock, live, next);
+    trackTurn(ad, onClock);
+    renderDelta(st, ad, onClock, live);
     renderCards(ad, onClock, myCounts, next || live);
     renderByPos(ad, myCounts);
     renderBrief(p, live);
+    renderAvail(st, ad, live);
     renderLeague(st, ad, me, live, next);
     renderRoster(st, me, myCounts);
     renderMyTeam(st, ad, me, myCounts);
@@ -203,6 +226,166 @@
       el.statusFigure.textContent = shortTeam(st.on_clock);
       el.untilKicker.textContent = next > 0 ? "You're up in" : "";
       el.untilFigure.innerHTML = next > 0 ? `<span class="dc-num">${ad ? ad.picks_until : "—"}</span> · #<span class="dc-num">${next}</span>` : "No picks left";
+    }
+  }
+
+  // ---------- "since your last pick" ----------
+
+  // The subset of an Advice worth keeping to diff against later. Kept small: this is
+  // held across turns and never mutated.
+  function compactAdvice(ad) {
+    if (!ad) return null;
+    const p = {};
+    for (const r of [...(ad.top || []), ...(ad.candidates || [])]) if (r && r.player) p[r.player.id] = r.p_survive;
+    return {
+      live_pick: ad.live_pick,
+      replacement: Object.assign({}, ad.replacement || {}),
+      p,
+      posByTeam: JSON.parse(JSON.stringify(ad.pos_by_team || {})),
+    };
+  }
+
+  // Capture once per turn, on arrival. Re-renders of the same turn keep the first
+  // snapshot so the baseline is "what it looked like when I got here".
+  function trackTurn(ad, onClock) {
+    if (!ad || !onClock) return;
+    if (mineNow && mineNow.live_pick === ad.live_pick) return;
+    // Undo rewinds the board. Re-baseline rather than shifting, so the panel never
+    // diffs against a turn that no longer exists.
+    if (mineNow && ad.live_pick < mineNow.live_pick) { mineNow = compactAdvice(ad); minePrev = null; return; }
+    minePrev = mineNow;
+    mineNow = compactAdvice(ad);
+  }
+
+  // What the room did between my last pick and this one, against what the sim said it
+  // would do. `pos_by_team` is each team's FIRST pick inside the window, so the actual
+  // side counts each team once too — otherwise a team with two picks skews the compare.
+  function roomDelta(st, live) {
+    const me = league ? league.my_team : "";
+    const from = minePrev.live_pick;
+    const seen = new Set();
+    const actual = {};
+    let n = 0;
+    for (const pk of (st.picks || [])) {
+      if (pk.live_pick <= from || pk.live_pick >= live || pk.team === me) continue;
+      n++;
+      if (seen.has(pk.team)) continue;
+      seen.add(pk.team);
+      const pl = byId.get(pk.player_id);
+      if (pl) actual[pl.pos] = (actual[pl.pos] || 0) + 1;
+    }
+    const pred = {};
+    for (const team of Object.keys(minePrev.posByTeam)) {
+      if (!seen.has(team)) continue;
+      for (const [pos, share] of Object.entries(minePrev.posByTeam[team])) pred[pos] = (pred[pos] || 0) + share;
+    }
+    return { from, n, actual, pred };
+  }
+
+  function renderDelta(st, ad, onClock, live) {
+    const show = !!(onClock && ad && minePrev && !st.complete);
+    el.delta.classList.toggle("hidden", !show);
+    if (!show) return;
+    const d = roomDelta(st, live);
+    el.deltaKicker.textContent = `Since your #${d.from} pick · ${d.n} pick${d.n === 1 ? "" : "s"}`;
+
+    const rows = [];
+
+    // 1. Did the room behave the way the sim expected?
+    const runs = ORDER.map((pos) => ({ pos, a: d.actual[pos] || 0, e: d.pred[pos] || 0 }))
+      .filter((r) => r.a > 0 || r.e >= 0.5)
+      .sort((x, y) => (y.a - y.e) - (x.a - x.e));
+    if (runs.length) {
+      const cells = runs.map((r) => {
+        const surprise = r.a - r.e;
+        const cls = surprise >= 1 ? "is-hot" : surprise <= -1 ? "is-cold" : "";
+        return `<span class="dc-delta-chip ${cls}"><b>${esc(posTitle(r.pos))}</b> ${r.a} <small>vs ${r.e.toFixed(1)} expected</small></span>`;
+      }).join("");
+      rows.push({ label: "Room", body: cells });
+    }
+
+    // 2. Replacement level is the invisible thing that moves VOR under you.
+    const moves = ORDER.map((pos) => ({ pos, d: (ad.replacement?.[pos] ?? 0) - (minePrev.replacement?.[pos] ?? 0) }))
+      .filter((m) => Math.abs(m.d) >= 1)
+      .sort((x, y) => Math.abs(y.d) - Math.abs(x.d));
+    if (moves.length) {
+      rows.push({
+        label: "Replacement",
+        body: moves.map((m) => {
+          // Replacement falling means everyone left at that position is worth more.
+          const cls = m.d < 0 ? "is-hot" : "is-cold";
+          return `<span class="dc-delta-chip ${cls}"><b>${esc(posTitle(m.pos))}</b> ${m.d > 0 ? "+" : ""}${Math.round(m.d)} <small>${m.d < 0 ? "your " + posTitle(m.pos) + "s gained VOR" : "VOR eroded"}</small></span>`;
+        }).join(""),
+      });
+    }
+
+    // 3. Who slipped away from you while you waited.
+    const slips = (ad.top || []).map((r) => {
+      const was = minePrev.p[r.player.id];
+      return was == null ? null : { name: lastName(r.player.name), pos: r.player.pos, drop: was - r.p_survive, was, now: r.p_survive };
+    }).filter((x) => x && x.drop >= 0.05).sort((x, y) => y.drop - x.drop).slice(0, 3);
+    if (slips.length) {
+      rows.push({
+        label: "Slipping",
+        body: slips.map((x) => `<span class="dc-delta-chip is-hot"><b>${esc(x.name)}</b> ${pct(x.was)}% &rarr; ${pct(x.now)}% <small>survives</small></span>`).join(""),
+      });
+    }
+
+    el.deltaBody.innerHTML = rows.length
+      ? rows.map((r) => `<div class="dc-delta-row"><span class="dc-delta-label">${esc(r.label)}</span><span class="dc-delta-chips">${r.body}</span></div>`).join("")
+      : `<div class="dc-delta-row"><span class="dc-delta-label">Quiet</span><span class="dc-delta-chips"><span class="dc-delta-chip">nothing moved enough to change the board</span></span></div>`;
+  }
+
+  // ---------- catching up / rewinding ----------
+
+  function renderCatchup(st) {
+    const live = st.live_pick || 0;
+    if (catchUpTo && (st.complete || live > catchUpTo)) {
+      catchUpTo = 0;
+      toast("Caught up", "ok");
+    }
+    const on = catchUpTo > 0;
+    el.catchup.classList.toggle("hidden", !on);
+    if (!on) return;
+    const left = catchUpTo - live + 1;
+    const slot = slotAt(live);
+    el.catchupText.textContent = `Catching up — #${live}${slot ? ` (${shortTeam(slot.team)})` : ""}, ${left} to go through #${catchUpTo}. Type the player who went.`;
+  }
+
+  function renderRewind(st) {
+    const live = st.live_pick || 0;
+    const on = rewindAt > 0 && rewindAt < live;
+    if (rewindAt > 0 && !on) rewindAt = 0;
+    el.rewind.classList.toggle("hidden", !on);
+    if (!on) return;
+    const n = live - rewindAt;
+    const names = (st.picks || []).filter((pk) => pk.live_pick >= rewindAt).sort((a, b) => b.live_pick - a.live_pick)
+      .slice(0, 3).map((pk) => `#${pk.live_pick} ${lastName(name(pk.player_id))}`);
+    el.rewindText.textContent = `Rewind to #${rewindAt} — undoes ${n} pick${n === 1 ? "" : "s"}: ${names.join(", ")}${n > 3 ? "…" : ""}. You then re-enter them in order.`;
+  }
+
+  // N undos, newest first. Sequential on purpose: each one is its own event and the
+  // server is the only thing that knows whether the next is still legal.
+  async function rewind(toLive) {
+    if (busy) return;
+    const st = (cur && cur.state) || {};
+    let n = (st.live_pick || 0) - toLive;
+    if (n <= 0) return;
+    busy = true;
+    try {
+      let last = null;
+      for (let i = 0; i < n; i++) {
+        last = await api("/api/undo", {});
+        render(last.state);
+      }
+      rewindAt = 0;
+      catchUpTo = 0;
+      toast(`Rewound ${n} pick${n === 1 ? "" : "s"} — board is back at #${toLive}`, "ok");
+    } catch (e) {
+      toast(e.message, "err");
+    } finally {
+      busy = false;
+      focus();
     }
   }
 
@@ -262,9 +445,19 @@
       el.cards.innerHTML = `<p class="dc-card-why">${cur && cur.state && cur.state.complete ? "Nothing left to draft." : "No recommendations yet."}</p>`;
       return;
     }
+    // score = VOR + lambda_regret x regret + variance_preference x min(sigma,30) + keeper
+    // surplus. The first two are the interesting split: VOR is "this player is good",
+    // regret is "and he will not be here next time". The remainder is derived rather
+    // than sent, so nothing new is needed from the server.
+    const lam = (ad && ad.params && ad.params.LambdaRegret != null) ? ad.params.LambdaRegret : 1;
     el.cards.innerHTML = top.slice(0, 6).map((r, i) => {
       const pl = r.player;
       const gone = pct(1 - r.p_survive);
+      const reg = lam * (r.regret || 0);
+      const rest = (r.score || 0) - (r.vor || 0) - reg;
+      const driver = reg > Math.max(r.vor || 0, 0) ? "scarcity" : "value";
+      const wasP = minePrev && minePrev.p ? minePrev.p[pl.id] : null;
+      const wasTxt = (wasP != null && Math.abs(wasP - r.p_survive) >= 0.05) ? ` <small class="dc-card-was">was ${pct(1 - wasP)}%</small>` : "";
       const risk = gone >= 45 ? "dc-risk-high" : gone >= 20 ? "dc-risk-mid" : "dc-risk-low";
       const fill = status(myCounts, pl.pos);
       const slot = fill === "open" ? `${posTitle(pl.pos)} starter` : fill === "flex" ? "Flex slot" : "Bench";
@@ -275,10 +468,11 @@
         <h3 class="dc-card-name">${esc(pl.name)}</h3>
         <div class="dc-card-meta">${esc(posTitle(pl.pos))} · ${esc(pl.team)}${pl.bye ? ` · bye ${pl.bye}` : ""}</div>
         <div class="dc-card-vor"><b>${f1(r.vor)}</b><small>vor</small></div>
-        <div class="dc-card-gone ${risk}"><b>${gone}%</b><small>gone by #${nextPick}</small></div>
+        <div class="dc-card-gone ${risk}"><b>${gone}%</b><small>gone by #${nextPick}</small>${wasTxt}</div>
         <div class="dc-meter ${risk}"><span style="width:${gone}%"></span></div>
         <p class="dc-card-why">${why}</p>
         <div class="dc-card-stats"><span>ADP ${Math.round(pl.adp_mean)}</span><span>σ ${f1(pl.adp_stddev)}</span><span>regret ${f1(r.regret)}</span><span>score ${f1(r.score)}</span></div>
+        <div class="dc-card-calc"><span class="dc-calc-tag is-${driver}">${driver}</span><span class="dc-calc-sum">${f1(r.vor)} vor + ${f1(reg)} regret + ${f1(rest)} ceiling/keeper = <b>${f1(r.score)}</b></span></div>
         ${onClock ? `<button class="btn btn-primary btn-block dc-card-btn" type="button" data-draft="${esc(pl.id)}">Draft — press ${i + 1}</button>` : ""}
       </article>`;
     }).join("");
@@ -292,6 +486,55 @@
       const cls = st === "open" ? "is-open" : st === "flex" ? "is-flex" : "is-set";
       if (!r || !r.player) return `<div><div class="dc-bypos-pos ${cls}">${esc(posTitle(pos))}</div><div class="dc-bypos-name">—</div><div class="dc-bypos-stat"></div></div>`;
       return `<div><div class="dc-bypos-pos ${cls}">${esc(posTitle(pos))}</div><div class="dc-bypos-name" title="${esc(r.player.name)}">${esc(lastName(r.player.name))}</div><div class="dc-bypos-stat">${Math.round(r.vor)} vor · adp ${Math.round(r.player.adp_mean)} · ${pct(r.p_survive)}% survives</div></div>`;
+    }).join("");
+  }
+
+  // ---------- still on the board ----------
+
+  // Everyone already rostered, keepers included — state.rosters is pre-filled with
+  // keeper slots at boot, so this is the whole taken set without consulting picks.
+  function takenIds(st) {
+    const out = new Set();
+    for (const ids of Object.values((st && st.rosters) || {})) for (const id of ids) out.add(id);
+    return out;
+  }
+
+  // The full remaining pool at one position. The shortlist answers "who should I take";
+  // this answers "what is actually left", which is the question you ask when deciding
+  // whether to wait a round.
+  function renderAvail(st, ad, live) {
+    if (!league) { el.avail.innerHTML = ""; el.availCount.textContent = ""; return; }
+    const taken = takenIds(st);
+    const pool = (league.players || []).filter((p) => p.pos === availPos && !taken.has(p.id));
+    // Within a position VOR is monotonic in projection, so "by value" is projection
+    // order; it just reads in the app's own units.
+    pool.sort(availSort === "adp"
+      ? (a, b) => (a.adp_mean || 9999) - (b.adp_mean || 9999)
+      : (a, b) => (b.proj_points || 0) - (a.proj_points || 0) || (a.adp_mean || 9999) - (b.adp_mean || 9999));
+    // p_survive exists only for the players the engine scored this turn.
+    const surv = {};
+    for (const r of [...((ad && ad.top) || []), ...((ad && ad.candidates) || [])]) if (r && r.player) surv[r.player.id] = r.p_survive;
+    const shown = pool.slice(0, 30);
+    const repl = ad && ad.replacement ? ad.replacement[availPos] : null;
+    el.availCount.textContent = `${pool.length} left · showing ${shown.length}` + (repl != null ? ` · replacement ${Math.round(repl)}` : "");
+    if (!shown.length) { el.avail.innerHTML = `<p class="dc-card-why">Nobody left at ${esc(posTitle(availPos))}.</p>`; return; }
+    const curSlot = slotAt(live);
+    const overall = curSlot ? curSlot.overall : 0;
+    el.avail.innerHTML = shown.map((p, i) => {
+      const v = vorOf(p, ad);
+      // + means he has already fallen past his ADP; - means taking him is a reach.
+      const d = (p.adp_mean && overall) ? Math.round(overall - p.adp_mean) : null;
+      const dcls = d == null ? "" : d > 0 ? "is-fallen" : d < 0 ? "is-reach" : "";
+      const gone = surv[p.id] != null ? `${pct(1 - surv[p.id])}%` : "";
+      return `<div class="dc-avail-row" data-id="${esc(p.id)}" role="button" tabindex="0">
+        <div class="dc-avail-rank dc-num">${i + 1}</div>
+        <div class="dc-avail-name" title="${esc(p.name)}">${esc(p.name)}</div>
+        <div class="dc-avail-meta">${esc(p.team || "")}${p.bye ? ` · bye ${p.bye}` : ""}${p.age ? ` · ${p.age}y` : ""}</div>
+        <div class="dc-avail-num">${p.adp_mean ? Math.round(p.adp_mean) : "—"}<small>adp</small>${d == null ? "" : `<i class="${dcls}">${d > 0 ? "+" : ""}${d}</i>`}</div>
+        <div class="dc-avail-num">${p.proj_points ? Math.round(p.proj_points) : "—"}<small>proj</small></div>
+        <div class="dc-avail-num is-right">${v == null ? "—" : f1(v)}<small>vor</small></div>
+        <div class="dc-avail-gone">${gone}${gone ? "<small>gone</small>" : ""}</div>
+      </div>`;
     }).join("");
   }
 
@@ -432,7 +675,8 @@
       if (s.keeper_id) { tag = `keeper: ${lastName(name(s.keeper_id))}`; tagCls = "is-known"; }
       else if (mine) { tag = "your pick"; tagCls = "is-mine"; }
       else { const pr = predict(s.team, s.round); tag = pr ? `likely ${pr.pos}` : ""; tagCls = ""; }
-      return `<div class="dc-ondeck-row${mine ? " is-mine" : now ? " is-now" : ""}">
+      const fillable = !s.keeper_id && s.live_pick > 0;
+      return `<div class="dc-ondeck-row${mine ? " is-mine" : now ? " is-now" : ""}${fillable ? " is-fillable" : ""}"${fillable ? ` data-live="${s.live_pick}" role="button" tabindex="0" title="Catch up: record picks through #${s.live_pick}"` : ""}>
         <div class="dc-ondeck-no">${s.live_pick ? "#" + s.live_pick : "—"}</div>
         <div class="dc-ondeck-team" title="${esc(s.team)}">${mine ? "You — " : ""}${esc(shortTeam(s.team))}</div>
         <div class="dc-ondeck-tag ${tagCls}">${esc(tag)}</div>
@@ -458,7 +702,8 @@
       else { delta = "at adp"; dcls = "is-flat"; }
       const recorded = pk && cur.pick_vor && cur.pick_vor[pk.live_pick];
       const vor = recorded != null ? recorded : vorOf(pl, ad);
-      return `${divider}<div class="dc-pick${s.team === me ? " is-mine" : ""}">
+      const undoable = !keeper && s.live_pick > 0;
+      return `${divider}<div class="dc-pick${s.team === me ? " is-mine" : ""}${undoable ? " is-undoable" : ""}"${undoable ? ` data-live="${s.live_pick}" role="button" tabindex="0" title="Rewind the board to #${s.live_pick}"` : ""}>
         <div class="dc-pick-no">${s.live_pick ? "#" + s.live_pick : "—"}</div>
         <div class="dc-pick-body">
           <div class="dc-pick-name" title="${esc(pl.name)}">${esc(pl.name)}<small>${esc(posTitle(pl.pos))}</small></div>
@@ -562,6 +807,7 @@
     view = v;
     el.viewShortlist.classList.toggle("hidden", v !== "shortlist");
     el.viewLeague.classList.toggle("hidden", v !== "league");
+    el.viewAvail.classList.toggle("hidden", v !== "avail");
     for (const t of el.tabs) t.setAttribute("aria-selected", String(t.dataset.view === v));
   }
   function setDensity(d, persist) {
@@ -604,15 +850,81 @@
     focus();
   }
   el.undo.addEventListener("click", (e) => { e.preventDefault(); undo(); });
+  // Rail: an upcoming slot arms catch-up, a past pick arms a rewind. Neither mutates
+  // anything on its own — catch-up only guides the normal in-order entry, and rewind
+  // waits for the confirm button.
+  function railLive(e) {
+    const row = e.target.closest("[data-live]");
+    return row ? Number(row.dataset.live) : 0;
+  }
+  el.ondeck.addEventListener("click", (e) => {
+    const live = railLive(e);
+    const cl = (cur && cur.state && cur.state.live_pick) || 0;
+    if (!live || live <= cl) return;
+    catchUpTo = live;
+    rewindAt = 0;
+    if (cur) render(cur);
+    focus();
+  });
+  el.board.addEventListener("click", (e) => {
+    const live = railLive(e);
+    if (!live) return;
+    rewindAt = live;
+    catchUpTo = 0;
+    if (cur) render(cur);
+  });
+  for (const rail of [el.ondeck, el.board]) {
+    rail.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (!e.target.closest("[data-live]")) return;
+      e.preventDefault();
+      e.target.click();
+    });
+  }
+  el.catchupCancel.addEventListener("click", (e) => { e.preventDefault(); catchUpTo = 0; if (cur) render(cur); focus(); });
+  el.rewindCancel.addEventListener("click", (e) => { e.preventDefault(); rewindAt = 0; if (cur) render(cur); focus(); });
+  el.rewindGo.addEventListener("click", (e) => { e.preventDefault(); rewind(rewindAt); });
   el.conflictOk.addEventListener("click", async (e) => { e.preventDefault(); try { await api("/api/fandraft/resolve", {}); } catch (err) { toast(err.message, "err"); } focus(); });
   for (const t of el.tabs) t.addEventListener("click", () => { setView(t.dataset.view); focus(); });
+  el.availPos.addEventListener("change", (e) => {
+    if (!e.target.value) return;
+    availPos = e.target.value;
+    if (cur) renderAvail(cur.state || {}, cur.advice || null, (cur.state || {}).live_pick || 0);
+  });
+  el.availSort.addEventListener("change", (e) => {
+    if (!e.target.value) return;
+    availSort = e.target.value;
+    if (cur) renderAvail(cur.state || {}, cur.advice || null, (cur.state || {}).live_pick || 0);
+  });
+  // Same gesture as a shortlist card: click stages the name in search, Enter confirms.
+  el.avail.addEventListener("click", (e) => {
+    const row = e.target.closest(".dc-avail-row[data-id]");
+    if (row) stage(row.dataset.id);
+  });
+  el.avail.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const row = e.target.closest(".dc-avail-row[data-id]");
+    if (row) { e.preventDefault(); stage(row.dataset.id); }
+  });
   el.density.addEventListener("change", (e) => { if (e.target.name === "density") { setDensity(e.target.value, true); focus(); } });
 
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); return; }
     const tag = (e.target.tagName || "").toLowerCase();
     const inField = tag === "input" || tag === "textarea";
-    if (e.key.toLowerCase() === "g" && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); setView(view === "shortlist" ? "league" : "shortlist"); return; }
+    // Escape in a non-empty search box clears the box first; a second Escape leaves
+    // catch-up. Otherwise one stray Escape mid-typo would abandon the run.
+    if (e.key === "Escape" && (catchUpTo || rewindAt) && (!inField || !el.search.value)) {
+      catchUpTo = 0; rewindAt = 0;
+      if (cur) render(cur);
+      return;
+    }
+    if (e.key.toLowerCase() === "g" && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      e.preventDefault();
+      const cycle = ["shortlist", "league", "avail"];
+      setView(cycle[(cycle.indexOf(view) + 1) % cycle.length]);
+      return;
+    }
     // 1–6 draft a card, but only when I'm on the clock and the search field is empty —
     // typing a jersey number into a name search must never fire a pick.
     if (/^[1-6]$/.test(e.key) && el.search.value === "" && cur && cur.advice && cur.advice.on_clock) {

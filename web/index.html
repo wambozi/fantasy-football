@@ -37,7 +37,13 @@
 
   <div class="dc-gate hidden" id="gate"></div>
   <div class="dc-gate dc-conflict hidden" id="conflict"><span id="conflict-text"></span><button class="btn btn-secondary dc-btn-small" id="conflict-ok" type="button">Dismiss</button></div>
+  <div class="dc-gate dc-catchup hidden" id="catchup"><span id="catchup-text"></span><button class="btn btn-secondary dc-btn-small" id="catchup-cancel" type="button">Stop</button></div>
+  <div class="dc-gate dc-rewind hidden" id="rewind"><span id="rewind-text"></span><button class="btn btn-primary dc-btn-small" id="rewind-go" type="button">Rewind</button><button class="btn btn-secondary dc-btn-small" id="rewind-cancel" type="button">Cancel</button></div>
   <p class="dc-read" id="read"></p>
+  <section class="dc-delta hidden" id="delta">
+    <div class="dc-kicker dc-delta-kicker" id="delta-kicker"></div>
+    <div class="dc-delta-body" id="delta-body"></div>
+  </section>
 
   <div class="dc-main">
     <div class="dc-col">
@@ -48,6 +54,7 @@
       <nav class="dc-tabs" role="tablist">
         <button class="dc-tab" role="tab" data-view="shortlist" aria-selected="true">The shortlist</button>
         <button class="dc-tab" role="tab" data-view="league" aria-selected="false">The league — needs &amp; next moves</button>
+        <button class="dc-tab" role="tab" data-view="avail" aria-selected="false">Still on the board</button>
         <span class="dc-tabs-hint dc-kicker">Press G to flip</span>
       </nav>
 
@@ -61,6 +68,24 @@
           <div class="dc-kicker dc-kicker--live dc-section-kicker" id="brief-kicker"></div>
           <div class="dc-brief-body" id="brief-body"></div>
         </div>
+      </section>
+
+      <section id="view-avail" class="hidden">
+        <div class="dc-avail-head">
+          <div class="seg dc-seg" id="avail-pos">
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availpos" value="QB">QB</label>
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availpos" value="RB" checked>RB</label>
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availpos" value="WR">WR</label>
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availpos" value="TE">TE</label>
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availpos" value="DST">D/ST</label>
+          </div>
+          <div class="seg dc-seg" id="avail-sort">
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availsort" value="value" checked>By value</label>
+            <label class="seg-opt dc-seg-opt"><input type="radio" name="availsort" value="adp">By ADP</label>
+          </div>
+          <span class="dc-kicker dc-kicker--faint dc-num" id="avail-count"></span>
+        </div>
+        <div class="dc-avail" id="avail"></div>
       </section>
 
       <section id="view-league" class="hidden">

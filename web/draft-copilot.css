@@ -619,3 +619,158 @@
 /* A card is clickable: it stages its player in the search field for Enter to confirm. */
 .dc-card { cursor: pointer; }
 .dc-card .btn { cursor: pointer; }
+
+/* ── "since your last pick" ─────────────────────────────────────────────────
+   What the intervening picks did to the engine's numbers. Read-only: nothing
+   here feeds a recommendation, it only explains one. Hidden unless I am on the
+   clock and have had a previous turn to diff against. */
+
+.dc-delta {
+  margin-top: 12px;
+  padding: 9px 11px;
+  background: var(--color-neutral-100, #f4f4f2);
+  border-left: var(--dc-marker) solid var(--dc-hair);
+}
+.dc-delta-kicker { margin-bottom: 6px; }
+.dc-delta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 3px 0;
+}
+.dc-delta-row + .dc-delta-row { border-top: 1px solid var(--color-divider); }
+.dc-delta-label {
+  flex: 0 0 88px;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dc-faint);
+}
+.dc-delta-chips { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.dc-delta-chip { font-size: 13px; color: var(--color-neutral-800); }
+.dc-delta-chip small { color: var(--dc-faint); font-size: 11px; }
+.dc-delta-chip b { font-family: var(--font-heading); font-weight: var(--font-heading-weight); }
+/* Hot = moved in my favour or against my board; cold = the reverse. Colour is a
+   cue on top of the number, never the only carrier of the meaning. */
+.dc-delta-chip.is-hot b  { color: var(--dc-urgent); }
+.dc-delta-chip.is-cold b { color: var(--dc-live); }
+
+/* ── score decomposition on a recommendation card ───────────────────────── */
+
+.dc-card-calc {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding-top: 4px;
+  font-size: 11px;
+  color: var(--dc-faint);
+}
+.dc-calc-tag {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+}
+.dc-calc-tag.is-scarcity { background: var(--dc-tint-urgent); color: var(--color-accent-2-800); }
+.dc-calc-tag.is-value    { background: var(--dc-tint-live);   color: var(--color-accent-800); }
+.dc-calc-sum b { color: var(--dc-ink); }
+.dc-card-was { color: var(--dc-faint); font-size: 10px; }
+[data-density="airy"] .dc-card-calc { display: none; }
+
+/* ── still on the board ─────────────────────────────────────────────────────
+   The full remaining pool at one position. The shortlist answers "who should I
+   take"; this answers "what is left", which is the question behind deciding to
+   wait a round. Same click gesture as a shortlist card: stage, then Enter. */
+
+.dc-avail-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+  border-bottom: var(--dc-rule-thin) solid var(--dc-ink);
+}
+.dc-avail-head .dc-kicker { margin-left: auto; }
+
+.dc-avail { margin-top: 2px; }
+.dc-avail-row {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 128px 66px 54px 54px 44px;
+  gap: 10px;
+  align-items: baseline;
+  padding: var(--dc-row-pad) 4px;
+  cursor: pointer;
+  border-top: 1px solid var(--color-divider);
+}
+.dc-avail-row:first-child { border-top: none; }
+.dc-avail-row:hover,
+.dc-avail-row:focus-visible { background: var(--dc-tint-live); outline: none; }
+.dc-avail-rank { color: var(--dc-faint); font-size: 11px; }
+.dc-avail-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-avail-meta { font-size: 11.5px; color: var(--dc-faint); }
+.dc-avail-num { font-size: 13px; color: var(--color-neutral-800); }
+.dc-avail-num.is-right { text-align: right; }
+.dc-avail-num small,
+.dc-avail-gone small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dc-faint);
+}
+/* ADP delta against the current board position: + has already fallen past his
+   ADP, - is a reach. Colour repeats the sign, it does not replace it. */
+.dc-avail-num i { font-style: normal; font-size: 10.5px; padding-left: 4px; }
+.dc-avail-num i.is-fallen { color: var(--dc-live); }
+.dc-avail-num i.is-reach { color: var(--dc-urgent); }
+.dc-avail-gone { font-size: 12px; text-align: right; color: var(--dc-urgent); }
+
+/* ── catching up / rewinding ────────────────────────────────────────────────
+   Stepping away means the app falls behind the real board. Picks still go in
+   strictly in order (the log is append-only), so catch-up is a guide rail over
+   normal entry and rewind is N undos with a confirm in front of it. */
+
+.dc-catchup {
+  background: var(--dc-tint-live);
+  color: var(--color-accent-800);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dc-catchup span { flex: 1; }
+.dc-rewind {
+  background: var(--dc-tint-urgent);
+  color: var(--color-accent-2-800);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dc-rewind span { flex: 1; }
+
+/* An upcoming slot you can catch up through, or a past pick you can rewind to.
+   The affordance is hover-only so the rail stays quiet while you read it. */
+.dc-ondeck-row.is-fillable,
+.dc-pick.is-undoable { cursor: pointer; }
+.dc-ondeck-row.is-fillable:hover,
+.dc-ondeck-row.is-fillable:focus-visible { background: var(--dc-tint-live); outline: none; }
+.dc-pick.is-undoable:hover,
+.dc-pick.is-undoable:focus-visible { background: var(--dc-tint-urgent); outline: none; }
+.dc-pick.is-undoable:hover .dc-pick-no::after {
+  content: " ↺";
+  color: var(--dc-urgent);
+}
+.dc-ondeck-row.is-fillable:hover .dc-ondeck-no::after {
+  content: " ↓";
+  color: var(--dc-live);
+}
