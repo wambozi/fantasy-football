@@ -97,6 +97,12 @@ func advanceBPAPos(t *testing.T, st *state.DraftState, pool *players.Pool, throu
 
 func TestNeedMultiplierFromKeepers(t *testing.T) {
 	lg, pool, cfg := fixture(t)
+	// This test is about roster state driving need — keepers filling starter and flex
+	// slots — so switch off the per-manager lean that multiplies on top of it. That term
+	// has its own coverage in TestManagerBias.
+	c := *cfg
+	c.ManagerBias.Weight = 0
+	cfg = &c
 	st := newState(t, lg, pool)
 	rc := newRosterCounts(lg, pool, cfg, st.Snapshot())
 	n := cfg.Engine.Need
@@ -488,4 +494,172 @@ func hasWarning(ad *Advice, sub string) bool {
 		}
 	}
 	return false
+}
+
+// TestBenchIndexSharesFlexPool pins the fix for the RB pile-up: the flex slots are one
+// shared pool, so a position stacked past its share is bench and gets decayed. The old
+// code gave every flex-eligible position its own copy of Flex.Count.
+func TestBenchIndexSharesFlexPool(t *testing.T) {
+	_, _, cfg := fixture(t)
+	me := "me"
+	mk := func(c map[players.Position]int) *rosterCounts {
+		return &rosterCounts{cfg: cfg, counts: map[string]map[players.Position]int{me: c}, left: map[string]int{me: 7}}
+	}
+	flexN := cfg.Roster.Flex.Count
+	cases := []struct {
+		name   string
+		counts map[players.Position]int
+		want   map[players.Position]int
+	}{
+		{
+			// 3 RB + 2 TE: one RB and one TE surplus exactly fill the two flex slots,
+			// so nobody is on the bench yet. This is the state at live #85.
+			"surplus exactly fills flex",
+			map[players.Position]int{players.RB: 3, players.WR: 2, players.TE: 2},
+			map[players.Position]int{players.RB: 0, players.WR: 0, players.TE: 0},
+		},
+		{
+			// 4 RB + 2 TE: three surplus for two slots, so one body is bench. Under the
+			// old per-position capacity this read 0 and the 4th RB went undiscounted.
+			"one past the pool",
+			map[players.Position]int{players.RB: 4, players.WR: 2, players.TE: 2},
+			map[players.Position]int{players.RB: 1, players.WR: 0, players.TE: 0},
+		},
+		{
+			// 5 RB + 2 TE: the state that prompted this. Two bodies are bench.
+			"stacked one position",
+			map[players.Position]int{players.RB: 5, players.WR: 2, players.TE: 2},
+			map[players.Position]int{players.RB: 1, players.WR: 0, players.TE: 1},
+		},
+		{
+			"nothing beyond starters",
+			map[players.Position]int{players.RB: 2, players.WR: 2, players.TE: 1},
+			map[players.Position]int{players.RB: 0, players.WR: 0, players.TE: 0},
+		},
+	}
+	for _, c := range cases {
+		rc := mk(c.counts)
+		for pos, want := range c.want {
+			if got := rc.benchIndex(me, pos); got != want {
+				t.Errorf("%s: benchIndex(%s)=%d want %d", c.name, pos, got, want)
+			}
+		}
+	}
+
+	// The invariant that makes the apportionment safe regardless of how ties fall:
+	// across positions, benchIndex counts exactly the players who cannot start.
+	for rb := 0; rb <= 8; rb++ {
+		for wr := 0; wr <= 8; wr++ {
+			for te := 0; te <= 4; te++ {
+				rc := mk(map[players.Position]int{players.RB: rb, players.WR: wr, players.TE: te})
+				surplus, bench := 0, 0
+				for _, pos := range cfg.Roster.Flex.Eligible {
+					if s := rc.count(me, pos) - cfg.Roster.Starters[pos]; s > 0 {
+						surplus += s
+					}
+					bench += rc.benchIndex(me, pos)
+				}
+				filled := surplus
+				if filled > flexN {
+					filled = flexN
+				}
+				if bench != surplus-filled {
+					t.Fatalf("RB %d WR %d TE %d: bench total %d, want %d (surplus %d, flex filled %d)", rb, wr, te, bench, surplus-filled, surplus, filled)
+				}
+			}
+		}
+	}
+
+	// And it must agree with fillsStarter: if a position still fills a starter or flex
+	// slot, nobody at that position is on the bench yet.
+	for rb := 0; rb <= 6; rb++ {
+		for te := 0; te <= 3; te++ {
+			rc := mk(map[players.Position]int{players.RB: rb, players.WR: 2, players.TE: te})
+			for _, pos := range cfg.Roster.Flex.Eligible {
+				if rc.fillsStarter(me, pos) && rc.benchIndex(me, pos) > 0 {
+					t.Errorf("RB %d TE %d: %s fills a slot but benchIndex is %d", rb, te, pos, rc.benchIndex(me, pos))
+				}
+			}
+		}
+	}
+}
+
+// TestManagerBias covers the per-manager lean measured from past seasons: it must nudge
+// the opponent model without replacing it, stay neutral for unknown teams, and switch off
+// cleanly at weight 0 so the league-average model is always one config edit away.
+func TestManagerBias(t *testing.T) {
+	_, _, cfg := fixture(t)
+	if len(cfg.ManagerBias.Teams) == 0 {
+		t.Fatal("strategy.yaml has no manager_bias.teams — the measured tendencies did not load")
+	}
+	// Every team in draft-order.csv should have a profile, or the bias silently applies
+	// to some managers and not others.
+	lg, _, _ := fixture(t)
+	for _, team := range lg.Teams {
+		if _, ok := cfg.ManagerBias.Teams[team]; !ok {
+			t.Errorf("no manager_bias entry for %q", team)
+		}
+	}
+
+	b := cfg.ManagerBias
+	t.Run("neutral when the pick fills a slot they need", func(t *testing.T) {
+		// The lean is a bench habit. A team with a TE slot still open is filling a need,
+		// not hoarding, so the multiplier must be 1 there.
+		if got := b.For("Pollock Debacle", players.TE, 9, true); got != 1 {
+			t.Errorf("got %v want 1 for a starter-filling pick", got)
+		}
+	})
+	t.Run("unknown team is neutral", func(t *testing.T) {
+		if got := b.For("Nobody FC", players.RB, 5, false); got != 1 {
+			t.Errorf("got %v want 1", got)
+		}
+	})
+	t.Run("weight 0 disables", func(t *testing.T) {
+		off := b
+		off.Weight = 0
+		for _, team := range lg.Teams {
+			for _, pos := range []players.Position{players.QB, players.RB, players.WR, players.TE, players.DST} {
+				if got := off.For(team, pos, 3, false); got != 1 {
+					t.Fatalf("weight 0: %s %s -> %v, want 1", team, pos, got)
+				}
+			}
+		}
+	})
+	t.Run("weight scales the deviation, not the multiplier", func(t *testing.T) {
+		half := b
+		half.Weight = 0.5
+		half.EarlyDamp = 0 // isolate the bias term from the timing term
+		full := b
+		full.EarlyDamp = 0
+		// Pollock Debacle reaches for TE: bias 1.58, so half weight must land halfway.
+		f := full.For("Pollock Debacle", players.TE, 9, false)
+		h := half.For("Pollock Debacle", players.TE, 9, false)
+		if f <= 1 {
+			t.Fatalf("expected a TE lean for Pollock Debacle, got %v", f)
+		}
+		if want := 1 + (f-1)/2; math.Abs(h-want) > 1e-9 {
+			t.Errorf("half weight = %v, want %v", h, want)
+		}
+	})
+	t.Run("damps a position before that manager's usual round", func(t *testing.T) {
+		// Svannah Alley Cats have not taken a QB before round 12 in three seasons.
+		early := b.For("Svannah Alley Cats", players.QB, 4, false)
+		late := b.For("Svannah Alley Cats", players.QB, 13, false)
+		if !(early < late) {
+			t.Errorf("QB weight round 4 (%v) should be below round 13 (%v)", early, late)
+		}
+	})
+	t.Run("the standout profiles survived the pipeline", func(t *testing.T) {
+		// One sanity check per distinctive habit, so a bad regeneration is caught here
+		// rather than in a draft. See data/draft-20*.json.
+		if got := b.Teams["Ja'Marr & Jahmyr"].DST; got < 1.4 {
+			t.Errorf("Ja'Marr & Jahmyr DST bias %v — they are the two-defence manager", got)
+		}
+		if got := b.Teams["Trash Pandas"].RB; got < 1.15 {
+			t.Errorf("Trash Pandas RB bias %v — they hoard RB", got)
+		}
+		if got := b.Teams["Svannah Alley Cats"].FirstQB; got < 10 {
+			t.Errorf("Svannah Alley Cats first_qb %v — they wait on QB", got)
+		}
+	})
 }

@@ -8,6 +8,13 @@ roster:
   max: {QB: 4, RB: 9, WR: 8, TE: 3, DST: 3}
   # No kicker slot in this league.
 
+# League mechanics that are not scoring or strategy: how the room runs. Read at boot, so
+# changing one is a restart, not a rebuild — which is the point on draft night when the
+# commissioner announces the clock is 2 minutes, not 90 seconds.
+draft:
+  seconds_per_pick: 90      # the clock each team gets; drives the countdown in the UI
+  clock_warn_seconds: 20    # the countdown turns urgent at or below this
+
 scoring:
   reception: 1.0          # full PPR
   te_premium: 0.0
@@ -54,13 +61,24 @@ engine:
     flex_open: 1.25           # position is flex-eligible and a flex slot is unfilled
     full: 0.6                 # starters + flex share satisfied; only bench value left
     at_max: 0.0               # position max reached
-    dst_before_round: 15      # opponents essentially never take DST before this round
+    # 13, not 15: pooled 2023-25 boards show DST at ~0% through round 12, then 43% of
+    # round 13, 19% of 14, 17% of 15. At 15 the engine treated defences as unavailable
+    # exactly while the room was taking them fastest. See data/draft-20*.json.
+    dst_before_round: 13      # opponents essentially never take DST before this round
     dst_early_mult: 0.05
   flex_share: {RB: 0.45, WR: 0.45, TE: 0.10}   # how flex demand splits by position in PPR
   # VOR multiplier when a pick can only be bench for MY roster (starters + flex already
   # covered at that position). League replacement level says a QB2 is worth +20; my
   # lineup says it starts only if QB1 is hurt. Unlisted positions are undiscounted.
   bench_discount: {QB: 0.05, DST: 0.0}
+  # A backup QB is a wasted pick in round 7 and bye insurance in round 15 — same player,
+  # different cost. So the discount relaxes only in the endgame. Swept 2026-08-29 over 500
+  # drafts: unfillable bye weeks 2.01 -> 1.60 with the paired median unchanged at +40.
+  # QB 0.60 bought only 0.08 more for another 0.6pp of win rate, so 0.35 is the knee.
+  # DST stays 0 at every round: a second defence scores ~0 VOR at any multiplier, because
+  # the DST waiver level IS the next defence you would take.
+  bench_late_round: 13
+  bench_discount_late: {QB: 0.35}
   bench_decay: 0.75  # k-th bench player at a position is worth decay^k of the first
 
 gates:
@@ -96,5 +114,36 @@ keeper:
   spec_threshold: 0.5          # P(hit) at/above which a round-8+ pick counts as speculative
   round8_overall_pick: 96      # what a floor-round pick is worth, as an overall ADP slot
   targets: []                  # optional: names whose P(hit) is forced to 1
+
+# Per-manager tendencies measured from data/draft-2023.json .. draft-2025.json, keepers
+# excluded (a kept RB is last season's roster decision, not a draft habit). Identity is
+# joined across seasons by data/managers.csv. Three seasons is ~44 drafted picks per
+# manager, so this is a nudge, not a profile: `bias` is that manager's positional share
+# divided by the league mean, clamped to [0.6, 1.6], and `weight` scales how much of the
+# deviation is applied. Set weight: 0 to fall back to the league-average opponent model.
+manager_bias:
+  weight: 1.0                  # 0 disables; 1.0 applies the observed deviation in full
+  early_damp: 0.5              # multiplier before a manager's usual first round at a position
+  # surplus, not all: the lean applies only to picks past a team's starter and flex slots.
+  # Measured 2026-08-29 over 300 drafts, my share of simulated titles:
+  #   bias off                    32.0%
+  #   bias on, applied to all     31.3%   (and 24.3% with the timing damp)
+  #   bias on, surplus only       37.3%
+  # Scaling the starter-filling term modelled an opponent who fills needs harder, which
+  # is a better drafter, not a habitual one.
+  applies_to: surplus
+  teams:
+    "Ja'Marr & Jahmyr":            {qb: 1.09, rb: 0.98, wr: 0.88, te: 0.99, dst: 1.60, first_qb: 7, first_te: 5, first_dst: 13}
+    "Lawson Country Lets Ride":    {qb: 1.04, rb: 1.07, wr: 0.96, te: 0.94, dst: 0.93, first_qb: 7, first_te: 10, first_dst: 17}
+    "Patient Zeros Aids Epidemic": {qb: 0.85, rb: 1.16, wr: 1.10, te: 0.60, dst: 0.96, first_qb: 3, first_te: 8, first_dst: 13}
+    "Pollock Debacle":             {qb: 0.87, rb: 0.91, wr: 0.94, te: 1.58, dst: 0.98, first_qb: 3, first_te: 7, first_dst: 17}
+    "Sittin Purdy":                {qb: 1.22, rb: 0.78, wr: 1.23, te: 0.74, dst: 0.91, first_qb: 2, first_te: 9, first_dst: 15}
+    "Stopped The Steal!":          {qb: 1.28, rb: 1.16, wr: 0.98, te: 0.60, dst: 0.96, first_qb: 10, first_te: 11, first_dst: 17}
+    "Svannah Alley Cats":          {qb: 0.60, rb: 1.07, wr: 1.14, te: 0.94, dst: 0.93, first_qb: 12, first_te: 7, first_dst: 13}
+    "The Comeback Story":          {qb: 1.04, rb: 0.93, wr: 0.96, te: 1.32, dst: 0.93, first_qb: 4, first_te: 3, first_dst: 13}
+    "Time Stamps":                 {qb: 0.64, rb: 0.82, wr: 1.23, te: 1.16, dst: 0.96, first_qb: 8, first_te: 7, first_dst: 15}
+    "Tom":                         {qb: 1.43, rb: 0.78, wr: 1.00, te: 1.29, dst: 0.91, first_qb: 8, first_te: 7, first_dst: 14}
+    "Trash Pandas":                {qb: 1.07, rb: 1.23, wr: 0.74, te: 1.16, dst: 0.96, first_qb: 4, first_te: 5, first_dst: 14}
+    "Woke Mob Warriors":           {qb: 1.04, rb: 1.13, wr: 0.84, te: 1.13, dst: 0.93, first_qb: 4, first_te: 6, first_dst: 13}
 
 flex_policy: best_available   # RB/WR/TE by VOR — never force a position into flex

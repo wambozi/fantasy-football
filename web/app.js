@@ -11,7 +11,8 @@
   const $ = (id) => document.getElementById(id);
   const el = {
     body: document.body,
-    dateline: $("dateline"), auto: $("auto"), density: $("density"), undo: $("undo"),
+    dateline: $("dateline"), auto: $("auto"), undo: $("undo"),
+    clock: $("clock"), clockKicker: $("clock-kicker"), clockFigure: $("clock-figure"),
     status: $("status"), statusKicker: $("status-kicker"), statusFigure: $("status-figure"),
     untilKicker: $("until-kicker"), untilFigure: $("until-figure"),
     gate: $("gate"), conflict: $("conflict"), conflictText: $("conflict-text"), conflictOk: $("conflict-ok"),
@@ -26,6 +27,7 @@
     needsRows: $("needs-rows"), likelyHead: $("likely-head"),
     rosterCount: $("roster-count"), roster: $("roster"),
     myteam: $("myteam"), myteamCount: $("myteam-count"), myteamNote: $("myteam-note"),
+    myteamTitle: $("myteam-title"), myteamBack: $("myteam-back"),
     picksIn: $("picks-in"), ondeck: $("ondeck"), board: $("board"), toast: $("toast"),
   };
   const ORDER = ["QB", "RB", "WR", "TE", "DST"];
@@ -49,7 +51,9 @@
   let catchUpTo = 0;
   // A past pick armed for rewind. Undo is LIFO, so "rewind to #N" is N undos.
   let rewindAt = 0;
-  let density = "dense";
+  // Which team the roster table is showing. Empty means mine, which is the default
+  // and what every other panel is about.
+  let viewTeam = "";
   let busy = false;
   let pollTimer = null;
   let autoState = null;
@@ -73,6 +77,8 @@
     return /^(Jr\.|Sr\.|II|III|IV)$/.test(rest) ? parts[0] : rest;
   }
   const roster = () => (league && league.roster) || { starters: { QB: 1, RB: 2, WR: 2, TE: 1, DST: 1 }, flex: { count: 2, eligible: ["RB", "WR", "TE"] }, max: { QB: 4, RB: 9, WR: 8, TE: 3, DST: 3 }, total_spots: 17 };
+  const draftCfg = () => (league && league.draft) || { seconds_per_pick: 0, clock_warn_seconds: 20 };
+
   const need = () => (league && league.need) || { starter_open: 1.8, flex_open: 1.25, full: 0.6, at_max: 0, dst_before_round: 15, dst_early_mult: 0.05 };
 
   let toastTimer = null;
@@ -188,9 +194,10 @@
     renderAvail(st, ad, live);
     renderLeague(st, ad, me, live, next);
     renderRoster(st, me, myCounts);
-    renderMyTeam(st, ad, me, myCounts);
+    renderMyTeam(st, ad, viewTeam || me, me);
     renderRail(st, ad, me, live, next);
     renderAutomation(p.automation);
+    tickClock();
   }
 
   function renderMasthead(st, ad) {
@@ -493,9 +500,13 @@
 
   // Everyone already rostered, keepers included — state.rosters is pre-filled with
   // keeper slots at boot, so this is the whole taken set without consulting picks.
+  //
+  // A team with nothing on its roster arrives as null, not []: Snapshot builds each
+  // entry with append([]string(nil), v...), which returns nil for an empty slice, and
+  // encoding/json writes nil as null. Every other reader here guards with `|| []`.
   function takenIds(st) {
     const out = new Set();
-    for (const ids of Object.values((st && st.rosters) || {})) for (const id of ids) out.add(id);
+    for (const ids of Object.values((st && st.rosters) || {})) for (const id of ids || []) out.add(id);
     return out;
   }
 
@@ -569,7 +580,7 @@
         const s = status(c, pos);
         return `<div class="dc-needs-cell is-${s}"><b>${c[pos]}</b><small>${s}</small></div>`;
       }).join("");
-      return `<div class="dc-needs-row${mine ? " is-mine" : upcoming ? " is-upcoming" : ""}">
+      return `<div class="dc-needs-row${mine ? " is-mine" : upcoming ? " is-upcoming" : ""}${team === viewTeam ? " is-viewing" : ""}" data-team="${esc(team)}" role="button" tabindex="0" title="Show ${esc(team)}\u2019s roster">
         <div class="dc-needs-next${mine ? " is-mine" : upcoming ? " is-upcoming" : ""}">${nx ? "#" + nx : "—"}</div>
         <div class="dc-needs-team" title="${esc(team)}">${esc(shortTeam(team))}</div>
         ${cells}
@@ -579,18 +590,36 @@
     }).join("");
   }
 
-  function renderRoster(st, me, c) {
-    const ids = ((st.rosters || {})[me] || []).map((id) => byId.get(id)).filter(Boolean);
+  // Slot a roster the way the engine actually scores it. Mirrors lineup() in
+  // internal/engine/sim.go: within a position the best projections start, and the flex
+  // slots go to the best surplus players regardless of position.
+  //
+  // The previous version filled flex by walking flex.eligible in order, which handed
+  // both slots to RB surplus and showed a lineup the engine would never field — a TE2
+  // outprojecting an RB4 appeared on the bench while the RB4 appeared as a starter.
+  function slotRoster(list) {
+    const byProj = (a, b) => (b.proj_points || 0) - (a.proj_points || 0);
     const byPos = {};
-    for (const p of ids) (byPos[p.pos] = byPos[p.pos] || []).push(p);
-    const slots = [];
+    for (const p of list) (byPos[p.pos] = byPos[p.pos] || []).push(p);
+    for (const pos of Object.keys(byPos)) byPos[pos].sort(byProj);
+    const rows = [];
     for (const pos of ORDER) {
       const n = roster().starters[pos] || 0;
-      for (let i = 0; i < n; i++) slots.push({ label: pos + (n > 1 ? i + 1 : ""), pl: (byPos[pos] || [])[i] });
+      for (let i = 0; i < n; i++) rows.push({ label: pos + (n > 1 ? i + 1 : ""), pl: (byPos[pos] || [])[i] });
     }
-    const surplus = roster().flex.eligible.flatMap((pos) => (byPos[pos] || []).slice(roster().starters[pos] || 0));
-    for (let i = 0; i < roster().flex.count; i++) slots.push({ label: "Flex", pl: surplus[i] });
-    const bench = surplus.slice(roster().flex.count).concat((byPos.QB || []).slice(roster().starters.QB || 0), (byPos.DST || []).slice(roster().starters.DST || 0));
+    const surplus = roster().flex.eligible
+      .flatMap((pos) => (byPos[pos] || []).slice(roster().starters[pos] || 0))
+      .sort(byProj);
+    for (let i = 0; i < roster().flex.count; i++) rows.push({ label: "Flex", pl: surplus[i] });
+    const bench = surplus.slice(roster().flex.count)
+      .concat((byPos.QB || []).slice(roster().starters.QB || 0))
+      .concat((byPos.DST || []).slice(roster().starters.DST || 0));
+    return { rows, bench };
+  }
+
+  function renderRoster(st, me, c) {
+    const ids = ((st.rosters || {})[me] || []).map((id) => byId.get(id)).filter(Boolean);
+    const { rows: slots, bench } = slotRoster(ids);
     el.rosterCount.textContent = `${ids.length} of ${roster().total_spots} · ${openStarters(c)} starters open`;
     el.roster.innerHTML = slots.map((s) => s.pl
       ? `<div class="dc-slot"><b>${esc(s.label)}</b><span title="${esc(s.pl.name)}">${esc(lastName(s.pl.name))}</span></div>`
@@ -600,24 +629,17 @@
 
   // My team, every spot: starters in league order, flex, bench, with the draft facts
   // behind each player. Empty starter/flex slots stay visible as "open" rows.
-  function renderMyTeam(st, ad, me, c) {
+  function renderMyTeam(st, ad, team, me) {
     if (!league) { el.myteam.innerHTML = ""; return; }
-    const ids = ((st.rosters || {})[me] || []);
-    const pickOf = new Map((st.picks || []).filter((pk) => pk.team === me).map((pk) => [pk.player_id, pk]));
-    const keeperSlot = new Map(league.slots.filter((s) => s.keeper_id && s.team === me).map((s) => [s.keeper_id, s]));
+    const c = counts(team);
+    el.myteamTitle.textContent = team === me ? "My team" : team;
+    el.myteamBack.classList.toggle("hidden", team === me);
+    const ids = ((st.rosters || {})[team] || []);
+    const pickOf = new Map((st.picks || []).filter((pk) => pk.team === team).map((pk) => [pk.player_id, pk]));
+    const keeperSlot = new Map(league.slots.filter((s) => s.keeper_id && s.team === team).map((s) => [s.keeper_id, s]));
     const players = ids.map((id) => byId.get(id)).filter(Boolean);
-    const byPos = {};
-    for (const p of players) (byPos[p.pos] = byPos[p.pos] || []).push(p);
-    // Same slotting as the roster strip: starters by position order, then flex from the
-    // surplus, then everything else on the bench.
-    const rows = [];
-    for (const pos of ORDER) {
-      const n = roster().starters[pos] || 0;
-      for (let i = 0; i < n; i++) rows.push({ label: pos + (n > 1 ? i + 1 : ""), pl: (byPos[pos] || [])[i] });
-    }
-    const surplus = roster().flex.eligible.flatMap((pos) => (byPos[pos] || []).slice(roster().starters[pos] || 0));
-    for (let i = 0; i < roster().flex.count; i++) rows.push({ label: "Flex", pl: surplus[i] });
-    const bench = surplus.slice(roster().flex.count).concat((byPos.QB || []).slice(roster().starters.QB || 0), (byPos.DST || []).slice(roster().starters.DST || 0));
+    // Same slotting as the roster strip and as the engine's own lineup().
+    const { rows, bench } = slotRoster(players);
     for (const p of bench) rows.push({ label: "Bench", pl: p });
     // Bye collisions among rostered players: two or more sharing a week.
     const byeCount = {};
@@ -742,6 +764,34 @@
   }
   setInterval(tickAutomation, 1000);
 
+  // The pick clock. The deadline is the last recorded pick's timestamp plus
+  // draft.seconds_per_pick, so it is derived rather than tracked: no extra server state,
+  // and a reload or a second browser shows the same number. Before the first pick there
+  // is nothing to count from, so it shows an em dash rather than a fake countdown.
+  function tickClock() {
+    const cfg = draftCfg();
+    const st = cur && cur.state;
+    const secs = cfg.seconds_per_pick | 0;
+    if (!st || st.complete || secs <= 0) { el.clock.classList.add("hidden"); return; }
+    const picks = st.picks || [];
+    const last = picks.length ? picks[picks.length - 1] : null;
+    el.clock.classList.remove("hidden");
+    if (!last || !last.at) {
+      el.clockKicker.textContent = "Pick clock";
+      el.clockFigure.textContent = "—";
+      el.clock.classList.remove("is-urgent", "is-over");
+      return;
+    }
+    const left = Math.round((new Date(last.at).getTime() + secs * 1000 - Date.now()) / 1000);
+    const mine = !!(cur.advice && cur.advice.on_clock);
+    el.clockKicker.textContent = mine ? "Your clock" : "Pick clock";
+    const m = Math.floor(Math.abs(left) / 60), s2 = Math.abs(left) % 60;
+    el.clockFigure.textContent = (left < 0 ? "+" : "") + (m ? `${m}:${String(s2).padStart(2, "0")}` : `${s2}s`);
+    el.clock.classList.toggle("is-urgent", left >= 0 && left <= (cfg.clock_warn_seconds | 0 || 20));
+    el.clock.classList.toggle("is-over", left < 0);
+  }
+  setInterval(tickClock, 1000);
+
   // ---------- search ----------
   let searchSeq = 0;
   async function doSearch() {
@@ -810,12 +860,6 @@
     el.viewAvail.classList.toggle("hidden", v !== "avail");
     for (const t of el.tabs) t.setAttribute("aria-selected", String(t.dataset.view === v));
   }
-  function setDensity(d, persist) {
-    density = d === "airy" ? "airy" : "dense";
-    el.body.dataset.density = density;
-    for (const input of el.density.querySelectorAll("input")) input.checked = input.value === density;
-    if (persist) { try { localStorage.setItem("dc.density", density); } catch (_) { /* private mode */ } }
-  }
 
   el.search.addEventListener("input", doSearch);
   el.search.addEventListener("keydown", (e) => {
@@ -850,6 +894,19 @@
     focus();
   }
   el.undo.addEventListener("click", (e) => { e.preventDefault(); undo(); });
+  // Clicking a team in The League swaps the roster table to that team. Mine is the
+  // default and the Back button returns to it; nothing else on the page changes.
+  el.needsRows.addEventListener("click", (e) => {
+    const row = e.target.closest("[data-team]");
+    if (!row) return;
+    const me = league ? league.my_team : "";
+    viewTeam = row.dataset.team === me ? "" : row.dataset.team;
+    if (cur) render(cur);
+  });
+  el.needsRows.addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && e.target.closest("[data-team]")) { e.preventDefault(); e.target.click(); }
+  });
+  el.myteamBack.addEventListener("click", (e) => { e.preventDefault(); viewTeam = ""; if (cur) render(cur); focus(); });
   // Rail: an upcoming slot arms catch-up, a past pick arms a rewind. Neither mutates
   // anything on its own — catch-up only guides the normal in-order entry, and rewind
   // waits for the confirm button.
@@ -906,7 +963,6 @@
     const row = e.target.closest(".dc-avail-row[data-id]");
     if (row) { e.preventDefault(); stage(row.dataset.id); }
   });
-  el.density.addEventListener("change", (e) => { if (e.target.name === "density") { setDensity(e.target.value, true); focus(); } });
 
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); return; }
@@ -953,9 +1009,6 @@
   }
 
   (async () => {
-    let stored = null;
-    try { stored = localStorage.getItem("dc.density"); } catch (_) { /* unavailable */ }
-    setDensity(stored || "dense", false);
     setView(location.hash === "#league" ? "league" : "shortlist");
     try {
       league = await api("/api/league");

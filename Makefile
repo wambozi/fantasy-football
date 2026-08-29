@@ -1,6 +1,12 @@
 # Draft Copilot — one binary, no build step for the UI.
+# Process-level settings come from .env when it exists (see .env.example); anything about
+# how the LEAGUE runs lives in data/strategy.yaml instead.
+-include .env
+export
+
 DATA ?= ./data
 PORT ?= 8090
+TEAM ?= Sittin Purdy
 
 .PHONY: build ingest sim test run keepers brief-test clean
 
@@ -20,7 +26,7 @@ test:
 	go test ./...
 
 run: build        ## start on 0.0.0.0:$(PORT)
-	./server -port $(PORT) -data $(DATA)
+	./server -port $(PORT) -data $(DATA) -team "$(TEAM)"
 
 brief-test: build ## one real Claude call for the current board (needs FANTASY_ANTHROPIC_API_KEY)
 	./server -data $(DATA) -brief-test
