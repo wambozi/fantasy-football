@@ -82,7 +82,7 @@ func SimulateDraft(lg *league.League, pool *players.Pool, cfg0 *strategyConfig, 
 				choice = ad.Top[0].Player
 				if ad.Top[0].GateForced {
 					res.GateFired[choice.Pos]++
-					if len(ad.Candidates) > 0 && ad.Candidates[0].Player.Pos != choice.Pos {
+					if ad.GateChanged {
 						res.GateBinding[choice.Pos]++
 					}
 				}

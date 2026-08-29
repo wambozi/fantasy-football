@@ -52,10 +52,13 @@ type Advice struct {
 	Top          []Recommendation                    `json:"top"`
 	ByPosition   map[players.Position]Recommendation `json:"by_position"`
 	Warnings     []string                            `json:"warnings"`
-	SpecCount    int                                 `json:"spec_count"`          // keeper-speculative players already on my roster
-	GateBand     string                              `json:"gate_band,omitempty"` // red band text, e.g. "QB GATE: 1 pick left"
-	Replacement  map[players.Position]float64        `json:"replacement"`
-	Waiver       map[players.Position]float64        `json:"waiver"` // best available beyond the last draft slot
+	SpecCount    int                                 `json:"spec_count"` // keeper-speculative players already on my roster
+	GateBand     string                              `json:"gate_band,omitempty"`
+	// GateChanged: a gate bound this pick and the best-scoring player it could
+	// otherwise have taken is at a position outside the binding set.
+	GateChanged bool                         `json:"gate_changed,omitempty"` // red band text, e.g. "QB GATE: 1 pick left"
+	Replacement map[players.Position]float64 `json:"replacement"`
+	Waiver      map[players.Position]float64 `json:"waiver"` // best available beyond the last draft slot
 	// PosByTeam is, per opposing team picking before my next turn, the share of Monte
 	// Carlo sims in which that team's next pick was at each position. Derived from the
 	// same sims that produce PSurvive — no extra simulation cost.
@@ -195,6 +198,15 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 			eligible = append(eligible, r)
 		}
 	}
+	if len(g.forced) > 0 {
+		best, bestScore := players.Position(""), 0.0
+		for _, r := range recs {
+			if g.unbound[r.Player.Pos] && (best == "" || r.Score > bestScore) {
+				best, bestScore = r.Player.Pos, r.Score
+			}
+		}
+		ad.GateChanged = best != "" && !g.forced[best]
+	}
 	// Keeper cap: once max_speculative 2027 assets are rostered, speculative candidates
 	// are off the board — the bench still has to carry byes and injuries in 2026.
 	ad.SpecCount = e.specCount(snap, me)
@@ -227,10 +239,10 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 	}
 
 	top := eligible
-	if g.forced != "" {
+	if len(g.forced) > 0 {
 		var forced []Recommendation
 		for _, r := range eligible {
-			if r.Player.Pos == g.forced {
+			if g.forced[r.Player.Pos] {
 				r.GateForced = true
 				forced = append(forced, r)
 			}

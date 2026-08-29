@@ -3,5 +3,5 @@ events.jsonl
 data/events*.jsonl
 web/node_modules/
 web/dist/
-server
+/server
 data/fandraft-frames*.jsonl

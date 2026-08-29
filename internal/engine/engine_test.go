@@ -250,8 +250,8 @@ func TestGates(t *testing.T) {
 	for _, c := range cases {
 		rc, ad := mk(c.counts, c.live, c.left)
 		g := e.gates(rc, me, c.live, ad)
-		if g.forced != c.wantForced {
-			t.Errorf("%s: forced=%q want %q (warnings %v)", c.name, g.forced, c.wantForced, ad.Warnings)
+		if got := onlyForced(g); got != c.wantForced {
+			t.Errorf("%s: forced=%v want %q (warnings %v)", c.name, g.forced, c.wantForced, ad.Warnings)
 		}
 		for _, b := range c.wantBan {
 			if g.allowed[b] {
@@ -337,13 +337,15 @@ func TestDemoMidDraft(t *testing.T) {
 	}
 }
 
-// TestGatePriorityIgnoresYAMLOrder covers the case two gates want the same pick. Before
-// this, force() took whichever gate appeared first in strategy.yaml and silently dropped
-// the other; the winner has to be the more urgent one, and the loser has to be visible.
-func TestGatePriorityIgnoresYAMLOrder(t *testing.T) {
+// TestGatesResolveJointly covers deadlines that share a pick budget. Each requirement
+// used to be judged on its own, so two gates whose last chance was the same pick both
+// waited for it and then collided; whichever was listed first in strategy.yaml won.
+// Now demand is summed per deadline: the pick before the collision binds to the set,
+// value picks among them, and the second is taken on the deadline itself.
+func TestGatesResolveJointly(t *testing.T) {
 	lg, pool, cfg := fixture(t)
 	me := lg.MyTeam
-	mk := func(e *Engine, counts map[players.Position]int, live, left int) (*rosterCounts, *Advice) {
+	mk := func(counts map[players.Position]int, live, left int) (*rosterCounts, *Advice) {
 		rc := &rosterCounts{cfg: cfg, counts: map[string]map[players.Position]int{me: counts}, left: map[string]int{me: left}}
 		slot, _ := lg.SlotForLive(live)
 		return rc, &Advice{Round: slot.Round}
@@ -353,83 +355,130 @@ func TestGatePriorityIgnoresYAMLOrder(t *testing.T) {
 		c.Gates = gs
 		return New(lg, pool, &c, 1)
 	}
+	both := []strategy.Gate{
+		{Position: players.QB, MustDraftByLivePick: 68},
+		{Position: players.TE, MustDraftByLivePick: 68},
+	}
+	base := map[players.Position]int{players.WR: 2, players.RB: 2}
 
-	// Tighter slack wins even though it is declared second. QB has exactly one pick
-	// left for one QB (slack 0); RB has one pick left for two RBs (slack -1).
-	t.Run("tighter slack beats declaration order", func(t *testing.T) {
-		e := withGates([]strategy.Gate{
-			{Position: players.QB, MustDraftByLivePick: 68},
-			{Position: players.RB, MinCountByLivePick: map[int]int{68: 2}},
-		})
-		rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.TE: 1}, 68, 10)
-		g := e.gates(rc, me, 68, ad)
-		if g.forced != players.RB {
-			t.Errorf("forced=%q want RB (QB is declared first but has more slack)", g.forced)
+	// Picks 65 and 68 remain, two slots due by 68: #65 binds to {QB, TE}.
+	t.Run("shared deadline binds one pick early to the set", func(t *testing.T) {
+		e := withGates(both)
+		rc, ad := mk(base, 65, 11)
+		g := e.gates(rc, me, 65, ad)
+		if !g.forced[players.QB] || !g.forced[players.TE] || len(g.forced) != 2 {
+			t.Errorf("forced=%v want {QB TE}; band=%q", g.forced, ad.GateBand)
 		}
-		if !hasWarning(ad, "GATE CONFLICT") {
-			t.Errorf("losing gate dropped silently; warnings=%v", ad.Warnings)
+		if g.allowed[players.WR] || g.allowed[players.RB] {
+			t.Errorf("allowed=%v: only the binding positions may be drafted", g.allowed)
+		}
+		if !strings.HasPrefix(ad.GateBand, "QB/TE GATE") {
+			t.Errorf("band=%q", ad.GateBand)
+		}
+	})
+
+	// Having taken one of them at #65, #68 is the other's last pick.
+	t.Run("then the remaining one binds on the deadline", func(t *testing.T) {
+		e := withGates(both)
+		rc, ad := mk(map[players.Position]int{players.WR: 2, players.RB: 2, players.TE: 1}, 68, 10)
+		g := e.gates(rc, me, 68, ad)
+		if onlyForced(g) != players.QB {
+			t.Errorf("forced=%v want QB", g.forced)
+		}
+	})
+
+	// Cumulative requirements at one position do not double count: TE by #65 plus
+	// two TE by #90 is two TE slots, not three.
+	t.Run("same position requirements are cumulative", func(t *testing.T) {
+		e := withGates([]strategy.Gate{
+			{Position: players.TE, MustDraftByLivePick: 65, MinCountByLivePick: map[int]int{90: 2}},
+		})
+		rc, ad := mk(base, 49, 12) // picks 49, 65 before 65; 49, 65, 68, 85, 90 before 90
+		g := e.gates(rc, me, 49, ad)
+		if len(g.forced) != 0 {
+			t.Errorf("nothing should bind at #49 (forced=%v band=%q)", g.forced, ad.GateBand)
 		}
 	})
 
 	// A deadline that has already passed cannot be saved by forcing, so a gate that
-	// still can be met outranks it regardless of order.
+	// still can be met outranks it.
 	t.Run("savable beats already-missed", func(t *testing.T) {
 		e := withGates([]strategy.Gate{
 			{Position: players.TE, MustDraftByLivePick: 26},
 			{Position: players.QB, MustDraftByLivePick: 68},
 		})
-		rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.RB: 2}, 68, 10)
+		rc, ad := mk(base, 68, 10)
 		g := e.gates(rc, me, 68, ad)
-		if g.forced != players.QB {
-			t.Errorf("forced=%q want QB (TE deadline #26 is already gone)", g.forced)
+		if onlyForced(g) != players.QB {
+			t.Errorf("forced=%v want QB (TE deadline #26 is already gone)", g.forced)
+		}
+		if !hasWarning(ad, "TE GATE MISSED") {
+			t.Errorf("missed TE gate not reported; warnings=%v", ad.Warnings)
+		}
+	})
+
+	// Impossible on this pick: two slots, one pick. Reported, and the set still binds.
+	t.Run("hole is reported, not silent", func(t *testing.T) {
+		e := withGates(both)
+		rc, ad := mk(base, 68, 10)
+		g := e.gates(rc, me, 68, ad)
+		if !hasWarning(ad, "GATE HOLE") {
+			t.Errorf("warnings=%v", ad.Warnings)
+		}
+		if len(g.forced) != 2 {
+			t.Errorf("forced=%v want {QB TE}", g.forced)
 		}
 	})
 
 	// Same gate set, reversed in the file: the outcome must not move.
 	t.Run("deterministic under reordering", func(t *testing.T) {
-		a := []strategy.Gate{
-			{Position: players.QB, MustDraftByLivePick: 68},
-			{Position: players.RB, MinCountByLivePick: map[int]int{68: 2}},
-		}
-		b := []strategy.Gate{a[1], a[0]}
-		var got []players.Position
-		for _, gs := range [][]strategy.Gate{a, b} {
+		rev := []strategy.Gate{both[1], both[0]}
+		var got []string
+		for _, gs := range [][]strategy.Gate{both, rev} {
 			e := withGates(gs)
-			rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.TE: 1}, 68, 10)
-			got = append(got, e.gates(rc, me, 68, ad).forced)
+			rc, ad := mk(base, 65, 11)
+			g := e.gates(rc, me, 65, ad)
+			got = append(got, fmt.Sprint(g.forced, ad.GateBand))
 		}
 		if got[0] != got[1] {
-			t.Errorf("reordering strategy.yaml changed the forced position: %q vs %q", got[0], got[1])
+			t.Errorf("reordering strategy.yaml changed the result: %q vs %q", got[0], got[1])
 		}
 	})
 }
 
-// TestShippedGatesDoNotCollide is the config guard: no two must-draft deadlines in the
-// real strategy.yaml may share a last-chance pick, because only one of them can win.
-func TestShippedGatesDoNotCollide(t *testing.T) {
+// TestCheckGates is the boot guard: the shipped strategy.yaml must be feasible, and a
+// config that asks for more slots than there are picks before a deadline must not be.
+func TestCheckGates(t *testing.T) {
 	lg, _, cfg := fixture(t)
-	lastChance := map[int][]players.Position{}
-	for _, gt := range cfg.Gates {
-		if gt.MustDraftByLivePick == 0 {
-			continue
-		}
-		last := 0
-		for _, lp := range lg.MyLivePicks {
-			if lp <= gt.MustDraftByLivePick {
-				last = lp
-			}
-		}
-		if last == 0 {
-			t.Errorf("%s gate deadline #%d is before my first pick", gt.Position, gt.MustDraftByLivePick)
-			continue
-		}
-		lastChance[last] = append(lastChance[last], gt.Position)
+	if err := CheckGates(lg, cfg); err != nil {
+		t.Fatalf("shipped strategy.yaml: %v", err)
 	}
-	for pick, pos := range lastChance {
-		if len(pos) > 1 {
-			t.Errorf("gates %v all have their last chance at pick #%d; only one can be forced", pos, pick)
-		}
+	c := *cfg
+	c.Gates = []strategy.Gate{
+		{Position: players.QB, MustDraftByLivePick: 8},
+		{Position: players.TE, MustDraftByLivePick: 8},
 	}
+	if err := CheckGates(lg, &c); err == nil {
+		t.Error("two slots due by my first pick should fail feasibility")
+	}
+	// Shared deadlines are fine when the picks are there.
+	c.Gates = []strategy.Gate{
+		{Position: players.QB, MustDraftByLivePick: 68},
+		{Position: players.TE, MustDraftByLivePick: 68},
+	}
+	if err := CheckGates(lg, &c); err != nil {
+		t.Errorf("QB and TE by #68 is feasible (picks 65, 68): %v", err)
+	}
+}
+
+func onlyForced(g gateResult) players.Position {
+	if len(g.forced) != 1 {
+		return ""
+	}
+	for p := range g.forced {
+		return p
+	}
+	return ""
 }
 
 func hasWarning(ad *Advice, sub string) bool {
