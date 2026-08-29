@@ -7,18 +7,15 @@
 <link rel="stylesheet" href="/broadsheet.css">
 <link rel="stylesheet" href="/draft-copilot.css">
 </head>
-<body data-density="dense">
+<body data-density="airy">
 <div class="dc-page" id="app">
   <div class="dc-rule-thick"></div>
   <header class="dc-masthead">
     <div class="dc-wordmark">The Draft Copilot</div>
     <div class="dc-dateline dc-kicker" id="dateline"></div>
     <div class="dc-masthead-actions">
+      <div class="dc-clock hidden" id="clock"><span class="dc-kicker" id="clock-kicker">On the clock</span><b class="dc-num" id="clock-figure">—</b></div>
       <span class="dc-auto dc-kicker hidden" id="auto"></span>
-      <div class="seg dc-seg" id="density">
-        <label class="seg-opt dc-seg-opt"><input type="radio" name="density" value="airy">Airy</label>
-        <label class="seg-opt dc-seg-opt"><input type="radio" name="density" value="dense" checked>Dense</label>
-      </div>
       <button class="btn btn-secondary dc-btn-small" id="undo" type="button" title="Cmd/Ctrl+Z">&#9003; Undo</button>
     </div>
   </header>
@@ -103,8 +100,9 @@
         </div>
         <div class="dc-section">
           <div class="dc-roster-head">
-            <span class="dc-kicker">My team</span>
+            <span class="dc-kicker" id="myteam-title">My team</span>
             <span class="dc-kicker dc-kicker--faint dc-num" id="myteam-count"></span>
+            <button class="btn btn-secondary dc-btn-small hidden" id="myteam-back" type="button">&#8592; Back to my team</button>
           </div>
           <table class="table dc-myteam">
             <thead><tr><th>Slot</th><th>Player</th><th>Pos</th><th>Team</th><th class="is-num">Bye</th><th class="is-num">Pick</th><th class="is-num">ADP</th><th class="is-num">ECR</th><th class="is-num">Proj</th><th class="is-num">VOR</th><th class="is-num">Age</th><th class="is-num">2025</th></tr></thead>

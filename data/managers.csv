@@ -1,0 +1,17 @@
+# Franchise identity across seasons. FanDraft labels the identity column with whatever
+# the league had configured that year: team names in 2023-24, manager handles in 2025.
+# Linked by keeper cross-reference (a player kept in year N was rostered in year N-1),
+# with ties broken by name continuity. See docs/ for the derivation.
+# manager_2025,team_2024,team_2023,team_2026
+Eric,Lawson Country Let's Ride,Used Carr Salesman,Lawson Country Lets Ride
+Time Stamps,Large Mouth Ass,Early Morning Time Stamps,Time Stamps
+Aaron,Trash Pandas,Trash Pandas,Trash Pandas
+Rub,The Comeback Story,The Comeback Story,The Comeback Story
+Jim & TCal,# Pass Eatin Szn,# Pass Eatin Szn,Patient Zeros Aids Epidemic
+Tom,You Like That?!?!?,CeeDeez TDs,Tom
+Chuck,Netflix and Hill,OMG IT'S JASON BOURNE,Pollock Debacle
+Ben,Fields of Dreams,Fields of Dreams,Ja'Marr & Jahmyr
+Brian,Savannah Alley Cats,Savannah Alley Cats,Svannah Alley Cats
+Drizzy,Woke Mob Warriors,Woke Mob Warriors,Woke Mob Warriors
+Twizzler,Defenders of the Multiverse,Defenders of the Multiverse,Sittin Purdy
+Mike,Stopped The Steal,Stopped The Steal,Stopped The Steal!

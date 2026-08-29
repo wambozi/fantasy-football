@@ -179,7 +179,7 @@ func (e *Engine) computeFor(snap state.Snapshot, me string) *Advice {
 		if rc.fillsStarter(me, p.Pos) {
 			return p.ProjPoints - ad.Replacement[p.Pos], 1
 		}
-		f := e.cfg.Engine.BenchFactor(p.Pos) * math.Pow(e.cfg.Engine.BenchDecay, float64(rc.benchIndex(me, p.Pos)))
+		f := e.cfg.Engine.BenchFactorAt(p.Pos, ad.Round) * math.Pow(e.cfg.Engine.BenchDecay, float64(rc.benchIndex(me, p.Pos)))
 		return (p.ProjPoints - ad.Waiver[p.Pos]) * f, f
 	}
 	recs := make([]Recommendation, 0, len(board))

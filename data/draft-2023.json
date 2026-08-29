@@ -1,0 +1,1824 @@
+{
+  "year": 2023,
+  "source": "fandraft.app",
+  "scraped_at": "2026-08-29T03:35:50.149Z",
+  "managers": [
+    "# Pass Eatin Szn",
+    "CeeDeez TDs",
+    "Defenders of the Multiverse",
+    "Early Morning Time Stamps",
+    "Fields of Dreams",
+    "OMG IT'S JASON BOURNE",
+    "Savannah Alley Cats",
+    "Stopped The Steal",
+    "The Comeback Story",
+    "Trash Pandas",
+    "Used Carr Salesman",
+    "Woke Mob Warriors"
+  ],
+  "picks": [
+    {
+      "round": 1,
+      "pick": 1,
+      "slot": "1.1",
+      "manager": "Used Carr Salesman",
+      "player": "Bijan Robinson",
+      "pos": "RB",
+      "nfl_team": "ATL"
+    },
+    {
+      "round": 1,
+      "pick": 2,
+      "slot": "1.2",
+      "manager": "Fields of Dreams",
+      "player": "Stefon Diggs",
+      "pos": "WR",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 1,
+      "pick": 3,
+      "slot": "1.3",
+      "manager": "CeeDeez TDs",
+      "player": "CeeDee Lamb",
+      "pos": "WR",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 1,
+      "pick": 4,
+      "slot": "1.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Saquon Barkley",
+      "pos": "RB",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 1,
+      "pick": 5,
+      "slot": "1.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Derrick Henry",
+      "pos": "RB",
+      "nfl_team": "BAL"
+    },
+    {
+      "round": 1,
+      "pick": 6,
+      "slot": "1.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Josh Jacobs",
+      "pos": "RB",
+      "nfl_team": "GBP"
+    },
+    {
+      "round": 1,
+      "pick": 7,
+      "slot": "1.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Davante Adams",
+      "pos": "WR",
+      "nfl_team": "LAR",
+      "keeper": true
+    },
+    {
+      "round": 1,
+      "pick": 8,
+      "slot": "1.8",
+      "manager": "The Comeback Story",
+      "player": "Christian McCaffrey",
+      "pos": "RB",
+      "nfl_team": "SFO",
+      "keeper": true
+    },
+    {
+      "round": 1,
+      "pick": 9,
+      "slot": "1.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Austin Ekeler",
+      "pos": "RB",
+      "nfl_team": "FA",
+      "keeper": true
+    },
+    {
+      "round": 1,
+      "pick": 10,
+      "slot": "1.10",
+      "manager": "Trash Pandas",
+      "player": "Joe Mixon",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 1,
+      "pick": 11,
+      "slot": "1.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Nick Chubb",
+      "pos": "RB",
+      "nfl_team": "FA",
+      "keeper": true
+    },
+    {
+      "round": 1,
+      "pick": 12,
+      "slot": "1.12",
+      "manager": "Stopped The Steal",
+      "player": "Justin Jefferson",
+      "pos": "WR",
+      "nfl_team": "MIN",
+      "keeper": true
+    },
+    {
+      "round": 2,
+      "pick": 1,
+      "slot": "2.1",
+      "manager": "Early Morning Time Stamps",
+      "player": "Jaylen Waddle",
+      "pos": "WR",
+      "nfl_team": "DEN",
+      "traded_pick": true
+    },
+    {
+      "round": 2,
+      "pick": 2,
+      "slot": "2.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Patrick Mahomes",
+      "pos": "QB",
+      "nfl_team": "KCC"
+    },
+    {
+      "round": 2,
+      "pick": 3,
+      "slot": "2.3",
+      "manager": "Trash Pandas",
+      "player": "Najee Harris",
+      "pos": "RB",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 2,
+      "pick": 4,
+      "slot": "2.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Tyreek Hill",
+      "pos": "WR",
+      "nfl_team": "FA",
+      "keeper": true
+    },
+    {
+      "round": 2,
+      "pick": 5,
+      "slot": "2.5",
+      "manager": "The Comeback Story",
+      "player": "Mark Andrews",
+      "pos": "TE",
+      "nfl_team": "BAL"
+    },
+    {
+      "round": 2,
+      "pick": 6,
+      "slot": "2.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Travis Etienne",
+      "pos": "RB",
+      "nfl_team": "NOS"
+    },
+    {
+      "round": 2,
+      "pick": 7,
+      "slot": "2.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Jonathan Taylor",
+      "pos": "RB",
+      "nfl_team": "IND"
+    },
+    {
+      "round": 2,
+      "pick": 8,
+      "slot": "2.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Josh Allen",
+      "pos": "QB",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 2,
+      "pick": 9,
+      "slot": "2.9",
+      "manager": "Stopped The Steal",
+      "player": "Travis Kelce",
+      "pos": "TE",
+      "nfl_team": "KCC",
+      "keeper": true,
+      "traded_pick": true
+    },
+    {
+      "round": 2,
+      "pick": 10,
+      "slot": "2.10",
+      "manager": "CeeDeez TDs",
+      "player": "Aaron Jones",
+      "pos": "RB",
+      "nfl_team": "MIN"
+    },
+    {
+      "round": 2,
+      "pick": 11,
+      "slot": "2.11",
+      "manager": "Fields of Dreams",
+      "player": "Jahmyr Gibbs",
+      "pos": "RB",
+      "nfl_team": "DET"
+    },
+    {
+      "round": 2,
+      "pick": 12,
+      "slot": "2.12",
+      "manager": "Used Carr Salesman",
+      "player": "Cooper Kupp",
+      "pos": "WR",
+      "nfl_team": "SEA",
+      "keeper": true
+    },
+    {
+      "round": 3,
+      "pick": 1,
+      "slot": "3.1",
+      "manager": "Used Carr Salesman",
+      "player": "Keenan Allen",
+      "pos": "WR",
+      "nfl_team": "IND"
+    },
+    {
+      "round": 3,
+      "pick": 2,
+      "slot": "3.2",
+      "manager": "Fields of Dreams",
+      "player": "DK Metcalf",
+      "pos": "WR",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 3,
+      "pick": 3,
+      "slot": "3.3",
+      "manager": "CeeDeez TDs",
+      "player": "Jalen Hurts",
+      "pos": "QB",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 3,
+      "pick": 4,
+      "slot": "3.4",
+      "manager": "Stopped The Steal",
+      "player": "Jahan Dotson",
+      "pos": "WR",
+      "nfl_team": "ATL",
+      "traded_pick": true
+    },
+    {
+      "round": 3,
+      "pick": 5,
+      "slot": "3.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Deebo Samuel",
+      "pos": "WR",
+      "nfl_team": "SFO"
+    },
+    {
+      "round": 3,
+      "pick": 6,
+      "slot": "3.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Amari Cooper",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 3,
+      "pick": 7,
+      "slot": "3.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Tee Higgins",
+      "pos": "WR",
+      "nfl_team": "CIN",
+      "keeper": true
+    },
+    {
+      "round": 3,
+      "pick": 8,
+      "slot": "3.8",
+      "manager": "The Comeback Story",
+      "player": "Darren Waller",
+      "pos": "TE",
+      "nfl_team": "CAR"
+    },
+    {
+      "round": 3,
+      "pick": 9,
+      "slot": "3.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Lamar Jackson",
+      "pos": "QB",
+      "nfl_team": "BAL"
+    },
+    {
+      "round": 3,
+      "pick": 10,
+      "slot": "3.10",
+      "manager": "Trash Pandas",
+      "player": "Javonte Williams",
+      "pos": "RB",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 3,
+      "pick": 11,
+      "slot": "3.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Rachaad White",
+      "pos": "RB",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 3,
+      "pick": 12,
+      "slot": "3.12",
+      "manager": "Early Morning Time Stamps",
+      "player": "A.J. Brown",
+      "pos": "WR",
+      "nfl_team": "NEP",
+      "keeper": true,
+      "traded_pick": true
+    },
+    {
+      "round": 4,
+      "pick": 1,
+      "slot": "4.1",
+      "manager": "Stopped The Steal",
+      "player": "Tyler Lockett",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 4,
+      "pick": 2,
+      "slot": "4.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Christian Watson",
+      "pos": "WR",
+      "nfl_team": "GBP"
+    },
+    {
+      "round": 4,
+      "pick": 3,
+      "slot": "4.3",
+      "manager": "Trash Pandas",
+      "player": "Ja'Marr Chase",
+      "pos": "WR",
+      "nfl_team": "CIN",
+      "keeper": true
+    },
+    {
+      "round": 4,
+      "pick": 4,
+      "slot": "4.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Drake London",
+      "pos": "WR",
+      "nfl_team": "ATL"
+    },
+    {
+      "round": 4,
+      "pick": 5,
+      "slot": "4.5",
+      "manager": "The Comeback Story",
+      "player": "Mike Williams",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 4,
+      "pick": 6,
+      "slot": "4.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Alexander Mattison",
+      "pos": "RB",
+      "nfl_team": "MIA"
+    },
+    {
+      "round": 4,
+      "pick": 7,
+      "slot": "4.7",
+      "manager": "Savannah Alley Cats",
+      "player": "James Cook",
+      "pos": "RB",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 4,
+      "pick": 8,
+      "slot": "4.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Miles Sanders",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 4,
+      "pick": 9,
+      "slot": "4.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Diontae Johnson",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 4,
+      "pick": 10,
+      "slot": "4.10",
+      "manager": "CeeDeez TDs",
+      "player": "Kenneth Walker III",
+      "pos": "RB",
+      "nfl_team": "KCC"
+    },
+    {
+      "round": 4,
+      "pick": 11,
+      "slot": "4.11",
+      "manager": "Fields of Dreams",
+      "player": "Jerry Jeudy",
+      "pos": "WR",
+      "nfl_team": "CLE"
+    },
+    {
+      "round": 4,
+      "pick": 12,
+      "slot": "4.12",
+      "manager": "Fields of Dreams",
+      "player": "D.J. Moore",
+      "pos": "WR",
+      "nfl_team": "BUF",
+      "traded_pick": true
+    },
+    {
+      "round": 5,
+      "pick": 1,
+      "slot": "5.1",
+      "manager": "Stopped The Steal",
+      "player": "DeAndre Hopkins",
+      "pos": "WR",
+      "nfl_team": "FA",
+      "traded_pick": true
+    },
+    {
+      "round": 5,
+      "pick": 2,
+      "slot": "5.2",
+      "manager": "Used Carr Salesman",
+      "player": "Breece Hall",
+      "pos": "RB",
+      "nfl_team": "NYJ",
+      "traded_pick": true
+    },
+    {
+      "round": 5,
+      "pick": 3,
+      "slot": "5.3",
+      "manager": "CeeDeez TDs",
+      "player": "Amon-Ra St. Brown",
+      "pos": "WR",
+      "nfl_team": "DET",
+      "keeper": true
+    },
+    {
+      "round": 5,
+      "pick": 4,
+      "slot": "5.4",
+      "manager": "Stopped The Steal",
+      "player": "Khalil Herbert",
+      "pos": "RB",
+      "nfl_team": "SFO",
+      "traded_pick": true
+    },
+    {
+      "round": 5,
+      "pick": 5,
+      "slot": "5.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Chris Godwin",
+      "pos": "WR",
+      "nfl_team": "TBB"
+    },
+    {
+      "round": 5,
+      "pick": 6,
+      "slot": "5.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Joe Burrow",
+      "pos": "QB",
+      "nfl_team": "CIN",
+      "keeper": true
+    },
+    {
+      "round": 5,
+      "pick": 7,
+      "slot": "5.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Cam Akers",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 5,
+      "pick": 8,
+      "slot": "5.8",
+      "manager": "The Comeback Story",
+      "player": "Brandon Aiyuk",
+      "pos": "WR",
+      "nfl_team": "SFO"
+    },
+    {
+      "round": 5,
+      "pick": 9,
+      "slot": "5.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Terry McLaurin",
+      "pos": "WR",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 5,
+      "pick": 11,
+      "slot": "5.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Marquise Brown",
+      "pos": "WR",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 5,
+      "pick": 12,
+      "slot": "5.12",
+      "manager": "Used Carr Salesman",
+      "player": "Justin Herbert",
+      "pos": "QB",
+      "nfl_team": "LAC",
+      "traded_pick": true
+    },
+    {
+      "round": 6,
+      "pick": 1,
+      "slot": "6.1",
+      "manager": "Stopped The Steal",
+      "player": "James Conner",
+      "pos": "RB",
+      "nfl_team": "ARI"
+    },
+    {
+      "round": 6,
+      "pick": 2,
+      "slot": "6.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "T.J. Hockenson",
+      "pos": "TE",
+      "nfl_team": "MIN",
+      "keeper": true
+    },
+    {
+      "round": 6,
+      "pick": 3,
+      "slot": "6.3",
+      "manager": "Trash Pandas",
+      "player": "Trevor Lawrence",
+      "pos": "QB",
+      "nfl_team": "JAC"
+    },
+    {
+      "round": 6,
+      "pick": 4,
+      "slot": "6.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "J.K. Dobbins",
+      "pos": "RB",
+      "nfl_team": "DEN"
+    },
+    {
+      "round": 6,
+      "pick": 5,
+      "slot": "6.5",
+      "manager": "The Comeback Story",
+      "player": "George Pickens",
+      "pos": "WR",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 6,
+      "pick": 6,
+      "slot": "6.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "George Kittle",
+      "pos": "TE",
+      "nfl_team": "SFO"
+    },
+    {
+      "round": 6,
+      "pick": 7,
+      "slot": "6.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Skyy Moore",
+      "pos": "WR",
+      "nfl_team": "GBP"
+    },
+    {
+      "round": 6,
+      "pick": 8,
+      "slot": "6.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Dallas Goedert",
+      "pos": "TE",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 6,
+      "pick": 9,
+      "slot": "6.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Mike Evans",
+      "pos": "WR",
+      "nfl_team": "SFO"
+    },
+    {
+      "round": 6,
+      "pick": 10,
+      "slot": "6.10",
+      "manager": "CeeDeez TDs",
+      "player": "Kyle Pitts",
+      "pos": "TE",
+      "nfl_team": "ATL"
+    },
+    {
+      "round": 6,
+      "pick": 11,
+      "slot": "6.11",
+      "manager": "Trash Pandas",
+      "player": "Alvin Kamara",
+      "pos": "RB",
+      "nfl_team": "NOS",
+      "traded_pick": true
+    },
+    {
+      "round": 6,
+      "pick": 12,
+      "slot": "6.12",
+      "manager": "Used Carr Salesman",
+      "player": "David Montgomery",
+      "pos": "RB",
+      "nfl_team": "HOU"
+    },
+    {
+      "round": 7,
+      "pick": 1,
+      "slot": "7.1",
+      "manager": "Used Carr Salesman",
+      "player": "DeVonta Smith",
+      "pos": "WR",
+      "nfl_team": "PHI",
+      "keeper": true
+    },
+    {
+      "round": 7,
+      "pick": 2,
+      "slot": "7.2",
+      "manager": "Fields of Dreams",
+      "player": "Antonio Gibson",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 7,
+      "pick": 3,
+      "slot": "7.3",
+      "manager": "CeeDeez TDs",
+      "player": "Isiah Pacheco",
+      "pos": "RB",
+      "nfl_team": "DET"
+    },
+    {
+      "round": 7,
+      "pick": 4,
+      "slot": "7.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Jaxon Smith-Njigba",
+      "pos": "WR",
+      "nfl_team": "SEA"
+    },
+    {
+      "round": 7,
+      "pick": 5,
+      "slot": "7.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Chris Olave",
+      "pos": "WR",
+      "nfl_team": "NOS",
+      "keeper": true
+    },
+    {
+      "round": 7,
+      "pick": 6,
+      "slot": "7.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Pat Freiermuth",
+      "pos": "TE",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 7,
+      "pick": 7,
+      "slot": "7.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Michael Pittman",
+      "pos": "WR",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 7,
+      "pick": 8,
+      "slot": "7.8",
+      "manager": "The Comeback Story",
+      "player": "Tony Pollard",
+      "pos": "RB",
+      "nfl_team": "TEN",
+      "keeper": true
+    },
+    {
+      "round": 7,
+      "pick": 9,
+      "slot": "7.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Evan Engram",
+      "pos": "TE",
+      "nfl_team": "DEN"
+    },
+    {
+      "round": 7,
+      "pick": 10,
+      "slot": "7.10",
+      "manager": "Trash Pandas",
+      "player": "Dameon Pierce",
+      "pos": "RB",
+      "nfl_team": "PHI",
+      "keeper": true
+    },
+    {
+      "round": 7,
+      "pick": 11,
+      "slot": "7.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Courtland Sutton",
+      "pos": "WR",
+      "nfl_team": "DEN"
+    },
+    {
+      "round": 7,
+      "pick": 12,
+      "slot": "7.12",
+      "manager": "Early Morning Time Stamps",
+      "player": "Rhamondre Stevenson",
+      "pos": "RB",
+      "nfl_team": "NEP",
+      "keeper": true,
+      "traded_pick": true
+    },
+    {
+      "round": 8,
+      "pick": 1,
+      "slot": "8.1",
+      "manager": "Stopped The Steal",
+      "player": "Samaje Perine",
+      "pos": "RB",
+      "nfl_team": "CIN"
+    },
+    {
+      "round": 8,
+      "pick": 2,
+      "slot": "8.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Jordan Addison",
+      "pos": "WR",
+      "nfl_team": "MIN"
+    },
+    {
+      "round": 8,
+      "pick": 3,
+      "slot": "8.3",
+      "manager": "Used Carr Salesman",
+      "player": "Dalvin Cook",
+      "pos": "RB",
+      "nfl_team": "FA",
+      "traded_pick": true
+    },
+    {
+      "round": 8,
+      "pick": 4,
+      "slot": "8.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Brian Robinson",
+      "pos": "RB",
+      "nfl_team": "ATL"
+    },
+    {
+      "round": 8,
+      "pick": 5,
+      "slot": "8.5",
+      "manager": "The Comeback Story",
+      "player": "Gabriel Davis",
+      "pos": "WR",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 8,
+      "pick": 6,
+      "slot": "8.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Tyler Boyd",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 8,
+      "pick": 7,
+      "slot": "8.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Christian Kirk",
+      "pos": "WR",
+      "nfl_team": "SFO",
+      "keeper": true
+    },
+    {
+      "round": 8,
+      "pick": 8,
+      "slot": "8.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Garrett Wilson",
+      "pos": "WR",
+      "nfl_team": "NYJ",
+      "keeper": true
+    },
+    {
+      "round": 8,
+      "pick": 9,
+      "slot": "8.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Elijah Moore",
+      "pos": "WR",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 8,
+      "pick": 10,
+      "slot": "8.10",
+      "manager": "CeeDeez TDs",
+      "player": "Brandin Cooks",
+      "pos": "WR",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 8,
+      "pick": 11,
+      "slot": "8.11",
+      "manager": "Fields of Dreams",
+      "player": "Calvin Ridley",
+      "pos": "WR",
+      "nfl_team": "TEN",
+      "keeper": true
+    },
+    {
+      "round": 8,
+      "pick": 12,
+      "slot": "8.12",
+      "manager": "Fields of Dreams",
+      "player": "Justin Fields",
+      "pos": "QB",
+      "nfl_team": "KCC",
+      "keeper": true,
+      "traded_pick": true
+    },
+    {
+      "round": 9,
+      "pick": 1,
+      "slot": "9.1",
+      "manager": "Used Carr Salesman",
+      "player": "Zay Flowers",
+      "pos": "WR",
+      "nfl_team": "BAL",
+      "traded_pick": true
+    },
+    {
+      "round": 9,
+      "pick": 2,
+      "slot": "9.2",
+      "manager": "Fields of Dreams",
+      "player": "D'Andre Swift",
+      "pos": "RB",
+      "nfl_team": "CHI"
+    },
+    {
+      "round": 9,
+      "pick": 3,
+      "slot": "9.3",
+      "manager": "CeeDeez TDs",
+      "player": "Quentin Johnston",
+      "pos": "WR",
+      "nfl_team": "LAC"
+    },
+    {
+      "round": 9,
+      "pick": 4,
+      "slot": "9.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Zach Charbonnet",
+      "pos": "RB",
+      "nfl_team": "SEA"
+    },
+    {
+      "round": 9,
+      "pick": 5,
+      "slot": "9.5",
+      "manager": "Woke Mob Warriors",
+      "player": "AJ Dillon",
+      "pos": "RB",
+      "nfl_team": "CAR"
+    },
+    {
+      "round": 9,
+      "pick": 6,
+      "slot": "9.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Adam Thielen",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 9,
+      "pick": 7,
+      "slot": "9.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Daniel Jones",
+      "pos": "QB",
+      "nfl_team": "IND"
+    },
+    {
+      "round": 9,
+      "pick": 8,
+      "slot": "9.8",
+      "manager": "The Comeback Story",
+      "player": "Jaylen Warren",
+      "pos": "RB",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 9,
+      "pick": 9,
+      "slot": "9.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "JuJu Smith-Schuster",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 9,
+      "pick": 10,
+      "slot": "9.10",
+      "manager": "Trash Pandas",
+      "player": "Tyler Higbee",
+      "pos": "TE",
+      "nfl_team": "LAR"
+    },
+    {
+      "round": 9,
+      "pick": 11,
+      "slot": "9.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Jamaal Williams",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 10,
+      "pick": 1,
+      "slot": "10.1",
+      "manager": "Stopped The Steal",
+      "player": "Treylon Burks",
+      "pos": "WR",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 10,
+      "pick": 2,
+      "slot": "10.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Ezekiel Elliott",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 10,
+      "pick": 3,
+      "slot": "10.3",
+      "manager": "Trash Pandas",
+      "player": "Nico Collins",
+      "pos": "WR",
+      "nfl_team": "HOU"
+    },
+    {
+      "round": 10,
+      "pick": 4,
+      "slot": "10.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "David Njoku",
+      "pos": "TE",
+      "nfl_team": "LAC"
+    },
+    {
+      "round": 10,
+      "pick": 5,
+      "slot": "10.5",
+      "manager": "The Comeback Story",
+      "player": "Elijah Mitchell",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 10,
+      "pick": 7,
+      "slot": "10.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Jakobi Meyers",
+      "pos": "WR",
+      "nfl_team": "JAC"
+    },
+    {
+      "round": 10,
+      "pick": 8,
+      "slot": "10.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Dalton Schultz",
+      "pos": "TE",
+      "nfl_team": "HOU"
+    },
+    {
+      "round": 10,
+      "pick": 9,
+      "slot": "10.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Deshaun Watson",
+      "pos": "QB",
+      "nfl_team": "CLE"
+    },
+    {
+      "round": 10,
+      "pick": 10,
+      "slot": "10.10",
+      "manager": "CeeDeez TDs",
+      "player": "Allen Lazard",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 10,
+      "pick": 11,
+      "slot": "10.11",
+      "manager": "Fields of Dreams",
+      "player": "Kenneth Gainwell",
+      "pos": "RB",
+      "nfl_team": "TBB"
+    },
+    {
+      "round": 10,
+      "pick": 12,
+      "slot": "10.12",
+      "manager": "Used Carr Salesman",
+      "player": "Dalton Kincaid",
+      "pos": "TE",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 11,
+      "pick": 1,
+      "slot": "11.1",
+      "manager": "Stopped The Steal",
+      "player": "Anthony Richardson",
+      "pos": "QB",
+      "nfl_team": "IND",
+      "traded_pick": true
+    },
+    {
+      "round": 11,
+      "pick": 3,
+      "slot": "11.3",
+      "manager": "CeeDeez TDs",
+      "player": "Marvin Mims",
+      "pos": "WR",
+      "nfl_team": "DEN"
+    },
+    {
+      "round": 11,
+      "pick": 4,
+      "slot": "11.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Greg Dulcich",
+      "pos": "TE",
+      "nfl_team": "MIA"
+    },
+    {
+      "round": 11,
+      "pick": 5,
+      "slot": "11.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Aaron Rodgers",
+      "pos": "QB",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 11,
+      "pick": 6,
+      "slot": "11.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Tank Bigsby",
+      "pos": "RB",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 11,
+      "pick": 7,
+      "slot": "11.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Kadarius Toney",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 11,
+      "pick": 8,
+      "slot": "11.8",
+      "manager": "The Comeback Story",
+      "player": "De'Von Achane",
+      "pos": "RB",
+      "nfl_team": "MIA"
+    },
+    {
+      "round": 11,
+      "pick": 9,
+      "slot": "11.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Rashod Bateman",
+      "pos": "WR",
+      "nfl_team": "BAL"
+    },
+    {
+      "round": 11,
+      "pick": 10,
+      "slot": "11.10",
+      "manager": "Trash Pandas",
+      "player": "Tyler Allgeier",
+      "pos": "RB",
+      "nfl_team": "ARI"
+    },
+    {
+      "round": 11,
+      "pick": 11,
+      "slot": "11.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Zach Ertz",
+      "pos": "TE",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 11,
+      "pick": 12,
+      "slot": "11.12",
+      "manager": "Used Carr Salesman",
+      "player": "Tua Tagovailoa",
+      "pos": "QB",
+      "nfl_team": "ATL",
+      "traded_pick": true
+    },
+    {
+      "round": 12,
+      "pick": 1,
+      "slot": "12.1",
+      "manager": "Stopped The Steal",
+      "player": "Roschon Johnson",
+      "pos": "RB",
+      "nfl_team": "CHI"
+    },
+    {
+      "round": 12,
+      "pick": 2,
+      "slot": "12.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Zay Jones",
+      "pos": "WR",
+      "nfl_team": "HOU"
+    },
+    {
+      "round": 12,
+      "pick": 3,
+      "slot": "12.3",
+      "manager": "Trash Pandas",
+      "player": "Raheem Mostert",
+      "pos": "RB",
+      "nfl_team": "LVR"
+    },
+    {
+      "round": 12,
+      "pick": 4,
+      "slot": "12.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "K.J. Osborn",
+      "pos": "WR",
+      "nfl_team": "TEN"
+    },
+    {
+      "round": 12,
+      "pick": 5,
+      "slot": "12.5",
+      "manager": "The Comeback Story",
+      "player": "Deuce Vaughn",
+      "pos": "RB",
+      "nfl_team": "HOU"
+    },
+    {
+      "round": 12,
+      "pick": 6,
+      "slot": "12.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Jalin Hyatt",
+      "pos": "WR",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 12,
+      "pick": 7,
+      "slot": "12.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Jerome Ford",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 12,
+      "pick": 8,
+      "slot": "12.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Odell Beckham",
+      "pos": "WR",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 12,
+      "pick": 9,
+      "slot": "12.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Chigoziem Okonkwo",
+      "pos": "TE",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 12,
+      "pick": 10,
+      "slot": "12.10",
+      "manager": "CeeDeez TDs",
+      "player": "Kirk Cousins",
+      "pos": "QB",
+      "nfl_team": "LVR"
+    },
+    {
+      "round": 12,
+      "pick": 11,
+      "slot": "12.11",
+      "manager": "Fields of Dreams",
+      "player": "Philadelphia Eagles",
+      "pos": "DST",
+      "nfl_team": "PHI"
+    },
+    {
+      "round": 12,
+      "pick": 12,
+      "slot": "12.12",
+      "manager": "Used Carr Salesman",
+      "player": "Cole Kmet",
+      "pos": "TE",
+      "nfl_team": "CHI"
+    },
+    {
+      "round": 13,
+      "pick": 1,
+      "slot": "13.1",
+      "manager": "Used Carr Salesman",
+      "player": "Jeffery Wilson",
+      "pos": "RB",
+      "nfl_team": "MIA"
+    },
+    {
+      "round": 13,
+      "pick": 2,
+      "slot": "13.2",
+      "manager": "Fields of Dreams",
+      "player": "Tyjae Spears",
+      "pos": "RB",
+      "nfl_team": "TEN"
+    },
+    {
+      "round": 13,
+      "pick": 3,
+      "slot": "13.3",
+      "manager": "CeeDeez TDs",
+      "player": "Dawson Knox",
+      "pos": "TE",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 13,
+      "pick": 4,
+      "slot": "13.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Romeo Doubs",
+      "pos": "WR",
+      "nfl_team": "NEP"
+    },
+    {
+      "round": 13,
+      "pick": 5,
+      "slot": "13.5",
+      "manager": "Woke Mob Warriors",
+      "player": "San Francisco 49ers",
+      "pos": "DST",
+      "nfl_team": "SFO"
+    },
+    {
+      "round": 13,
+      "pick": 6,
+      "slot": "13.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Pittsburgh Steelers",
+      "pos": "DST",
+      "nfl_team": "PIT"
+    },
+    {
+      "round": 13,
+      "pick": 7,
+      "slot": "13.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Buffalo Bills",
+      "pos": "DST",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 13,
+      "pick": 8,
+      "slot": "13.8",
+      "manager": "The Comeback Story",
+      "player": "Dallas Cowboys",
+      "pos": "DST",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 13,
+      "pick": 10,
+      "slot": "13.10",
+      "manager": "Trash Pandas",
+      "player": "Rashee Rice",
+      "pos": "WR",
+      "nfl_team": "KCC"
+    },
+    {
+      "round": 13,
+      "pick": 11,
+      "slot": "13.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "New Orleans Saints",
+      "pos": "DST",
+      "nfl_team": "NOS"
+    },
+    {
+      "round": 13,
+      "pick": 12,
+      "slot": "13.12",
+      "manager": "Stopped The Steal",
+      "player": "Keaontay Ingram",
+      "pos": "RB",
+      "nfl_team": "KCC"
+    },
+    {
+      "round": 14,
+      "pick": 1,
+      "slot": "14.1",
+      "manager": "Stopped The Steal",
+      "player": "Geno Smith",
+      "pos": "QB",
+      "nfl_team": "NYJ"
+    },
+    {
+      "round": 14,
+      "pick": 2,
+      "slot": "14.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Parris Campbell",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 14,
+      "pick": 3,
+      "slot": "14.3",
+      "manager": "Trash Pandas",
+      "player": "New York Jets",
+      "pos": "DST",
+      "nfl_team": "NYJ"
+    },
+    {
+      "round": 14,
+      "pick": 4,
+      "slot": "14.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Jake Ferguson",
+      "pos": "TE",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 14,
+      "pick": 5,
+      "slot": "14.5",
+      "manager": "The Comeback Story",
+      "player": "Gerald Everett",
+      "pos": "TE",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 14,
+      "pick": 6,
+      "slot": "14.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Darnell Mooney",
+      "pos": "WR",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 14,
+      "pick": 7,
+      "slot": "14.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Kyren Williams",
+      "pos": "RB",
+      "nfl_team": "LAR"
+    },
+    {
+      "round": 14,
+      "pick": 8,
+      "slot": "14.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Jelani Woods",
+      "pos": "TE",
+      "nfl_team": "NYJ"
+    },
+    {
+      "round": 14,
+      "pick": 9,
+      "slot": "14.9",
+      "manager": "Early Morning Time Stamps",
+      "player": "Dak Prescott",
+      "pos": "QB",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 14,
+      "pick": 10,
+      "slot": "14.10",
+      "manager": "CeeDeez TDs",
+      "player": "Miami Dolphins",
+      "pos": "DST",
+      "nfl_team": "MIA"
+    },
+    {
+      "round": 14,
+      "pick": 11,
+      "slot": "14.11",
+      "manager": "Fields of Dreams",
+      "player": "Sam LaPorta",
+      "pos": "TE",
+      "nfl_team": "DET"
+    },
+    {
+      "round": 14,
+      "pick": 12,
+      "slot": "14.12",
+      "manager": "Used Carr Salesman",
+      "player": "Devin Singletary",
+      "pos": "RB",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 15,
+      "pick": 1,
+      "slot": "15.1",
+      "manager": "Used Carr Salesman",
+      "player": "Jameson Williams",
+      "pos": "WR",
+      "nfl_team": "DET"
+    },
+    {
+      "round": 15,
+      "pick": 2,
+      "slot": "15.2",
+      "manager": "Fields of Dreams",
+      "player": "Zack Moss",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 15,
+      "pick": 3,
+      "slot": "15.3",
+      "manager": "CeeDeez TDs",
+      "player": "Mecole Hardman",
+      "pos": "WR",
+      "nfl_team": "BUF"
+    },
+    {
+      "round": 15,
+      "pick": 4,
+      "slot": "15.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Denver Broncos",
+      "pos": "DST",
+      "nfl_team": "DEN"
+    },
+    {
+      "round": 15,
+      "pick": 5,
+      "slot": "15.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Chuba Hubbard",
+      "pos": "RB",
+      "nfl_team": "CAR"
+    },
+    {
+      "round": 15,
+      "pick": 6,
+      "slot": "15.6",
+      "manager": "Savannah Alley Cats",
+      "player": "D.J. Chark",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 15,
+      "pick": 7,
+      "slot": "15.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "D'Onta Foreman",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 15,
+      "pick": 8,
+      "slot": "15.8",
+      "manager": "The Comeback Story",
+      "player": "Jared Goff",
+      "pos": "QB",
+      "nfl_team": "DET"
+    },
+    {
+      "round": 15,
+      "pick": 10,
+      "slot": "15.10",
+      "manager": "Trash Pandas",
+      "player": "Curtis Samuel",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 15,
+      "pick": 11,
+      "slot": "15.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Josh Downs",
+      "pos": "WR",
+      "nfl_team": "IND"
+    },
+    {
+      "round": 15,
+      "pick": 12,
+      "slot": "15.12",
+      "manager": "Stopped The Steal",
+      "player": "Jayden Reed",
+      "pos": "WR",
+      "nfl_team": "GBP"
+    },
+    {
+      "round": 16,
+      "pick": 1,
+      "slot": "16.1",
+      "manager": "Stopped The Steal",
+      "player": "Justyn Ross",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 16,
+      "pick": 2,
+      "slot": "16.2",
+      "manager": "Defenders of the Multiverse",
+      "player": "Cedric Tillman",
+      "pos": "WR",
+      "nfl_team": "CLE"
+    },
+    {
+      "round": 16,
+      "pick": 3,
+      "slot": "16.3",
+      "manager": "Trash Pandas",
+      "player": "Gus Edwards",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 16,
+      "pick": 4,
+      "slot": "16.4",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Marquez Valdes-Scantling",
+      "pos": "WR",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 16,
+      "pick": 5,
+      "slot": "16.5",
+      "manager": "The Comeback Story",
+      "player": "Rashid Shaheed",
+      "pos": "WR",
+      "nfl_team": "SEA"
+    },
+    {
+      "round": 16,
+      "pick": 6,
+      "slot": "16.6",
+      "manager": "# Pass Eatin Szn",
+      "player": "Kendre Miller",
+      "pos": "RB",
+      "nfl_team": "NOS"
+    },
+    {
+      "round": 16,
+      "pick": 7,
+      "slot": "16.7",
+      "manager": "Savannah Alley Cats",
+      "player": "Chase Claypool",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 16,
+      "pick": 8,
+      "slot": "16.8",
+      "manager": "Woke Mob Warriors",
+      "player": "Wan'Dale Robinson",
+      "pos": "WR",
+      "nfl_team": "TEN"
+    },
+    {
+      "round": 16,
+      "pick": 10,
+      "slot": "16.10",
+      "manager": "CeeDeez TDs",
+      "player": "Chase Brown",
+      "pos": "RB",
+      "nfl_team": "CIN"
+    },
+    {
+      "round": 16,
+      "pick": 11,
+      "slot": "16.11",
+      "manager": "Fields of Dreams",
+      "player": "Irv Smith",
+      "pos": "TE",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 16,
+      "pick": 12,
+      "slot": "16.12",
+      "manager": "Used Carr Salesman",
+      "player": "Jonathan Mingo",
+      "pos": "WR",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 17,
+      "pick": 1,
+      "slot": "17.1",
+      "manager": "Used Carr Salesman",
+      "player": "Baltimore Ravens",
+      "pos": "DST",
+      "nfl_team": "BAL"
+    },
+    {
+      "round": 17,
+      "pick": 3,
+      "slot": "17.3",
+      "manager": "CeeDeez TDs",
+      "player": "Bryce Young",
+      "pos": "QB",
+      "nfl_team": "CAR"
+    },
+    {
+      "round": 17,
+      "pick": 4,
+      "slot": "17.4",
+      "manager": "Early Morning Time Stamps",
+      "player": "Zamir White",
+      "pos": "RB",
+      "nfl_team": "NOS"
+    },
+    {
+      "round": 17,
+      "pick": 5,
+      "slot": "17.5",
+      "manager": "Woke Mob Warriors",
+      "player": "Cordarrelle Patterson",
+      "pos": "RB",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 17,
+      "pick": 6,
+      "slot": "17.6",
+      "manager": "Savannah Alley Cats",
+      "player": "Isaiah Hodgins",
+      "pos": "WR",
+      "nfl_team": "NYG"
+    },
+    {
+      "round": 17,
+      "pick": 7,
+      "slot": "17.7",
+      "manager": "# Pass Eatin Szn",
+      "player": "Donovan Peoples-Jones",
+      "pos": "WR",
+      "nfl_team": "FA"
+    },
+    {
+      "round": 17,
+      "pick": 8,
+      "slot": "17.8",
+      "manager": "The Comeback Story",
+      "player": "Sam Howell",
+      "pos": "QB",
+      "nfl_team": "DAL"
+    },
+    {
+      "round": 17,
+      "pick": 9,
+      "slot": "17.9",
+      "manager": "OMG IT'S JASON BOURNE",
+      "player": "Washington Commanders",
+      "pos": "DST",
+      "nfl_team": "WAS"
+    },
+    {
+      "round": 17,
+      "pick": 10,
+      "slot": "17.10",
+      "manager": "Trash Pandas",
+      "player": "Juwan Johnson",
+      "pos": "TE",
+      "nfl_team": "NOS"
+    },
+    {
+      "round": 17,
+      "pick": 11,
+      "slot": "17.11",
+      "manager": "Defenders of the Multiverse",
+      "player": "Tyrod Taylor",
+      "pos": "QB",
+      "nfl_team": "GBP"
+    },
+    {
+      "round": 17,
+      "pick": 12,
+      "slot": "17.12",
+      "manager": "Stopped The Steal",
+      "player": "New England Patriots",
+      "pos": "DST",
+      "nfl_team": "NEP"
+    }
+  ]
+}

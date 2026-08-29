@@ -56,10 +56,26 @@ type Engine struct {
 	// map are undiscounted. QB2 in a 1-QB league is the canonical case: league-level
 	// replacement says it has value, my lineup says it does not.
 	BenchDiscount map[players.Position]float64 `yaml:"bench_discount"`
+	// From BenchLateRound the bench multiplier switches to BenchDiscountLate. A backup at
+	// a one-slot position is worthless mid-draft and is bye insurance in the endgame; one
+	// flat number cannot say both.
+	BenchLateRound    int                          `yaml:"bench_late_round"`
+	BenchDiscountLate map[players.Position]float64 `yaml:"bench_discount_late"`
 	// BenchDecay multiplies bench value by decay^k for the k-th bench player at a
 	// position (k=0 for the first). Diminishing returns keep the bench diversified
 	// instead of stacking the position with the lowest waiver level.
 	BenchDecay float64 `yaml:"bench_decay"`
+}
+
+// BenchFactorAt is BenchFactor for a given round: from bench_late_round the late
+// discount applies where one is configured, otherwise the ordinary one does.
+func (e Engine) BenchFactorAt(pos players.Position, round int) float64 {
+	if e.BenchLateRound > 0 && round >= e.BenchLateRound {
+		if v, ok := e.BenchDiscountLate[pos]; ok {
+			return v
+		}
+	}
+	return e.BenchFactor(pos)
 }
 
 // BenchFactor returns the bench multiplier for pos (1.0 when unset).
@@ -68,6 +84,91 @@ func (e Engine) BenchFactor(pos players.Position) float64 {
 		return v
 	}
 	return 1.0
+}
+
+// ManagerTendency is one franchise's measured drafting habits: positional bias relative
+// to the league mean, and the round they usually take their first QB/TE/DST. Derived from
+// past seasons (data/draft-20*.json joined by data/managers.csv), not hand-tuned.
+type ManagerTendency struct {
+	QB       float64 `yaml:"qb"`
+	RB       float64 `yaml:"rb"`
+	WR       float64 `yaml:"wr"`
+	TE       float64 `yaml:"te"`
+	DST      float64 `yaml:"dst"`
+	FirstQB  int     `yaml:"first_qb"`
+	FirstTE  int     `yaml:"first_te"`
+	FirstDST int     `yaml:"first_dst"`
+}
+
+// Bias is the multiplier for pos, 1.0 when unknown so a missing team is simply neutral.
+func (m ManagerTendency) Bias(pos players.Position) float64 {
+	switch pos {
+	case players.QB:
+		return nz(m.QB)
+	case players.RB:
+		return nz(m.RB)
+	case players.WR:
+		return nz(m.WR)
+	case players.TE:
+		return nz(m.TE)
+	case players.DST:
+		return nz(m.DST)
+	}
+	return 1
+}
+
+// FirstRound is the round this manager usually takes their first player at pos, or 0 when
+// there is no meaningful "first" for that position (RB and WR go in round 1 regardless).
+func (m ManagerTendency) FirstRound(pos players.Position) int {
+	switch pos {
+	case players.QB:
+		return m.FirstQB
+	case players.TE:
+		return m.FirstTE
+	case players.DST:
+		return m.FirstDST
+	}
+	return 0
+}
+
+func nz(v float64) float64 {
+	if v == 0 {
+		return 1
+	}
+	return v
+}
+
+// ManagerBias turns the per-team tendencies on. weight 0 falls back to the league-average
+// opponent model, which is what every manager got before this existed.
+type ManagerBias struct {
+	Weight    float64 `yaml:"weight"`
+	EarlyDamp float64 `yaml:"early_damp"`
+	// AppliesTo: "surplus" (the default) leans only on picks past a team's starter and
+	// flex slots. Hoarding is a bench habit — scaling the starter-filling term instead
+	// just models an opponent who is BETTER at building a roster, which is the opposite
+	// of what the tendency describes. "all" keeps the naive reading measurable.
+	AppliesTo string                     `yaml:"applies_to"`
+	Teams     map[string]ManagerTendency `yaml:"teams"`
+}
+
+// For returns the multiplier to apply to a team's need at pos in this round.
+func (b ManagerBias) For(team string, pos players.Position, round int, fillsStarter bool) float64 {
+	if b.Weight <= 0 {
+		return 1
+	}
+	if b.AppliesTo != "all" && fillsStarter {
+		return 1 // filling a slot they genuinely need is not a habit, it is arithmetic
+	}
+	t, ok := b.Teams[team]
+	if !ok {
+		return 1
+	}
+	// Scale the deviation, not the multiplier: weight 0.5 applies half the observed lean.
+	m := 1 + (t.Bias(pos)-1)*b.Weight
+	if fr := t.FirstRound(pos); fr > 0 && round < fr && b.EarlyDamp > 0 {
+		m *= b.EarlyDamp
+	}
+	return m
 }
 
 type Gate struct {
@@ -96,6 +197,10 @@ type Keeper struct {
 
 type Config struct {
 	Keeper Keeper `yaml:"keeper"`
+	Draft  struct {
+		SecondsPerPick   int `yaml:"seconds_per_pick"`
+		ClockWarnSeconds int `yaml:"clock_warn_seconds"`
+	} `yaml:"draft"`
 	Roster struct {
 		Starters map[players.Position]int `yaml:"starters"`
 		Flex     struct {
@@ -114,10 +219,11 @@ type Config struct {
 		VariancePreference float64 `yaml:"variance_preference"`
 		KeeperHorizonBonus float64 `yaml:"keeper_horizon_bonus"`
 	} `yaml:"objective"`
-	ADP        ADP    `yaml:"adp"`
-	Engine     Engine `yaml:"engine"`
-	Gates      []Gate `yaml:"gates"`
-	FlexPolicy string `yaml:"flex_policy"`
+	ADP         ADP         `yaml:"adp"`
+	Engine      Engine      `yaml:"engine"`
+	Gates       []Gate      `yaml:"gates"`
+	ManagerBias ManagerBias `yaml:"manager_bias"`
+	FlexPolicy  string      `yaml:"flex_policy"`
 }
 
 // Load reads and validates strategy.yaml.

@@ -311,7 +311,6 @@
   color: var(--dc-dim);
   font-variant-numeric: tabular-nums;
 }
-[data-density="airy"] .dc-card-stats { display: none; }
 
 /* ── best available by position ────────────────────────────────────────── */
 
@@ -679,7 +678,6 @@
 .dc-calc-tag.is-value    { background: var(--dc-tint-live);   color: var(--color-accent-800); }
 .dc-calc-sum b { color: var(--dc-ink); }
 .dc-card-was { color: var(--dc-faint); font-size: 10px; }
-[data-density="airy"] .dc-card-calc { display: none; }
 
 /* ── still on the board ─────────────────────────────────────────────────────
    The full remaining pool at one position. The shortlist answers "who should I
@@ -691,6 +689,11 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  /* Clear the view tabs. The sibling views open with a flat 16px (.dc-cards,
+     .dc-needs); this one leads with a segmented control rather than a grid or a
+     table header, so it needs the section token instead — same 17px in dense, but
+     it opens up to 30px in airy where a boxed control wants the room. */
+  margin-top: var(--dc-section);
   padding-bottom: 8px;
   border-bottom: var(--dc-rule-thin) solid var(--dc-ink);
 }
@@ -774,3 +777,29 @@
   content: " ↓";
   color: var(--dc-live);
 }
+
+/* ── opposing rosters ───────────────────────────────────────────────────────
+   A row in The League swaps the roster table to that team. Mine stays the
+   default; the affordance is quiet until hover so the grid still reads as data. */
+
+.dc-needs-row { cursor: pointer; }
+.dc-needs-row:hover,
+.dc-needs-row:focus-visible { background: var(--dc-tint-live); outline: none; }
+.dc-needs-row.is-viewing { box-shadow: inset var(--dc-marker) 0 0 var(--dc-live-fill); }
+#myteam-back { margin-left: auto; }
+
+/* ── the pick clock ─────────────────────────────────────────────────────────
+   Derived from the last pick's timestamp plus draft.seconds_per_pick, so it needs
+   no server state and every open tab agrees. Counts up past zero rather than
+   stopping at 0:00 — knowing a pick is 40s overdue is useful. */
+
+.dc-clock { display: flex; align-items: baseline; gap: 7px; }
+.dc-clock b {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  color: var(--dc-ink);
+}
+.dc-clock.is-urgent b, .dc-clock.is-urgent .dc-kicker { color: var(--dc-urgent); }
+.dc-clock.is-over b { color: var(--dc-urgent); opacity: 0.6; }

@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"sort"
+
 	"github.com/wambozi/draft-copilot/internal/league"
 	"github.com/wambozi/draft-copilot/internal/players"
 	"github.com/wambozi/draft-copilot/internal/state"
@@ -122,20 +124,96 @@ func (rc *rosterCounts) need(team string, pos players.Position, round int) float
 	if pos == players.DST && round < n.DSTBeforeRound {
 		m *= n.DSTEarlyMult
 	}
+	// Per-manager lean, measured from past seasons. Applied last and multiplicatively so
+	// it nudges an otherwise league-average model rather than replacing it: the roster
+	// state above still decides most of the weight, this only says that (for example)
+	// Pollock Debacle reaches for tight ends and Svannah Alley Cats will not take a QB
+	// before round 12. Neutral (1.0) for any team not in the table.
+	m *= rc.cfg.ManagerBias.For(team, pos, round, rc.fillsStarter(team, pos))
 	return m
 }
 
 // benchIndex is how many players at pos the team already holds beyond what its
-// starter and flex slots can absorb — 0 for the first pure-bench player.
+// starter slots at pos and its share of the flex pool can absorb — 0 for the first
+// pure-bench player at that position.
+//
+// The flex slots are ONE shared pool of Flex.Count, not one pool per position. The
+// previous version added Flex.Count to every flex-eligible position independently, so
+// a 2-flex league looked able to absorb 4 RB + 4 WR + 3 TE into eight slots. Stacking
+// one position therefore went undiscounted long past the point where the extra bodies
+// could only sit on the bench, which is exactly the RB pile-up this fixes.
+//
+// Which surplus players actually hold the flex slots depends on projections, and
+// rosterCounts is deliberately counts-only — it is cloned per Monte Carlo sim, so it
+// cannot carry the pool. The shared slots are therefore apportioned in proportion to
+// each position's surplus (largest remainder). That preserves the identity that
+// matters: summed over positions, benchIndex equals total surplus minus the flex slots
+// actually filled, so the roster is never credited with more starting spots than exist.
 func (rc *rosterCounts) benchIndex(team string, pos players.Position) int {
-	cap := rc.cfg.Roster.Starters[pos]
-	if isFlex(rc.cfg, pos) {
-		cap += rc.cfg.Roster.Flex.Count
+	surplus := rc.count(team, pos) - rc.cfg.Roster.Starters[pos]
+	if surplus <= 0 {
+		return 0
 	}
-	if n := rc.count(team, pos) - cap; n > 0 {
+	if !isFlex(rc.cfg, pos) {
+		return surplus
+	}
+	if n := surplus - rc.flexClaim(team)[pos]; n > 0 {
 		return n
 	}
 	return 0
+}
+
+// flexClaim splits the shared flex slots across the flex-eligible positions in
+// proportion to each one's surplus, largest remainder first, ties to the bigger
+// surplus and then by position name so the result is deterministic.
+func (rc *rosterCounts) flexClaim(team string) map[players.Position]int {
+	elig := rc.cfg.Roster.Flex.Eligible
+	surplus := make(map[players.Position]int, len(elig))
+	total := 0
+	for _, p := range elig {
+		if s := rc.count(team, p) - rc.cfg.Roster.Starters[p]; s > 0 {
+			surplus[p] = s
+			total += s
+		}
+	}
+	out := make(map[players.Position]int, len(elig))
+	if total == 0 {
+		return out
+	}
+	slots := rc.cfg.Roster.Flex.Count
+	if total < slots {
+		slots = total
+	}
+	type rem struct {
+		pos  players.Position
+		r, s int
+	}
+	var rs []rem
+	assigned := 0
+	for _, p := range elig {
+		s := surplus[p]
+		if s == 0 {
+			continue
+		}
+		q := slots * s / total
+		out[p] = q
+		assigned += q
+		rs = append(rs, rem{p, slots * s % total, s})
+	}
+	sort.Slice(rs, func(a, b int) bool {
+		if rs[a].r != rs[b].r {
+			return rs[a].r > rs[b].r
+		}
+		if rs[a].s != rs[b].s {
+			return rs[a].s > rs[b].s
+		}
+		return rs[a].pos < rs[b].pos
+	})
+	for i := 0; assigned < slots && i < len(rs); i++ {
+		out[rs[i].pos]++
+		assigned++
+	}
+	return out
 }
 
 // byPos groups a team's rostered players for display.

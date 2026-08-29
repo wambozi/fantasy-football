@@ -183,6 +183,10 @@ func (s *Server) handleLeague(w http.ResponseWriter, _ *http.Request) {
 		}
 		out["need"] = s.cfg.Engine.Need
 		out["keeper"] = map[string]any{"cost_floor_round": s.cfg.Keeper.CostFloorRound}
+		out["draft"] = map[string]any{
+			"seconds_per_pick":   s.cfg.Draft.SecondsPerPick,
+			"clock_warn_seconds": s.cfg.Draft.ClockWarnSeconds,
+		}
 	}
 	writeJSON(w, http.StatusOK, out)
 }
