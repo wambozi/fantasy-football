@@ -125,7 +125,8 @@ func (e *Engine) valueAtADPRank(rank int) float64 {
 		}
 		sort.SliceStable(ps, func(i, j int) bool { return ps[i].ADPMean < ps[j].ADPMean })
 		// Value over the position's waiver level, so QB points and WR points compare.
-		waiver := e.waiverLevel(ps)
+		// Full pool, nobody taken: with waiver_drafted set the index is the table itself.
+		waiver := e.waiverLevel(ps, nil)
 		e.valueByRank = make([]float64, len(ps))
 		for i, p := range ps {
 			e.valueByRank[i] = math.Max(0, p.ProjPoints-waiver[p.Pos])

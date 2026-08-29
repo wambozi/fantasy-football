@@ -75,7 +75,15 @@ func (e *Engine) survival(board []*players.Player, snap state.Snapshot, rc *rost
 	weights := make([]float64, e.cfg.Engine.CandidatePool)
 	picked := make([]int, 0, h)
 	rng := rand.New(rand.NewPCG(e.seed, uint64(snap.Version)))
-	lam := e.cfg.Engine.LambdaRank
+	// λ_rank is per opposing team (measured reach-vs-ADP, docs/reach-vs-adp-2026-08-29.md);
+	// resolved once per window pick, not per sim.
+	lamByTeam := map[string]float64{}
+	for _, live := range opp {
+		slot, _ := e.lg.SlotForLive(live)
+		if _, ok := lamByTeam[slot.Team]; !ok {
+			lamByTeam[slot.Team] = e.cfg.ManagerBias.LambdaFor(slot.Team, e.cfg.Engine.LambdaRank)
+		}
+	}
 	firstPick := map[string]bool{} // per sim: has this team's first window pick been tallied
 	tally := map[string]map[players.Position]int{}
 
@@ -92,6 +100,7 @@ func (e *Engine) survival(board []*players.Player, snap state.Snapshot, rc *rost
 		for _, live := range opp {
 			slot, _ := e.lg.SlotForLive(live)
 			team := slot.Team
+			lam := lamByTeam[team]
 			// Walk the noisy order collecting the first `candidate_pool` untaken players.
 			total := 0.0
 			n := 0
