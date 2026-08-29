@@ -69,9 +69,13 @@ gates:
     max: 2
     rationale: "0 QBs kept; 12 teams × 1 QB. QB12 by ADP is ~Stafford/Purdy."
   - position: TE
-    must_draft_by_live_pick: 49
+    must_draft_by_live_pick: 65
     max: 2
-    rationale: "Bowers/Loveland/Warren kept. Kraft/LaPorta/Pitts/Fannin tier lands here."
+    # Deadlines are quantised to MY live picks, so anything in [49,64] is the same gate.
+    # 65 is the last of my picks before the tier is gone; 68 is the QB gate's own last
+    # chance, and two gates cannot share one pick. Swept 2026-08-28: 49 -> 65 is worth
+    # +6 paired median and +4pp win rate (docs/gate-sweep-2026-08-28.md).
+    rationale: "Bowers/Loveland/Warren kept. #65 is my last pick before the Kraft/Pitts/Fannin tier is gone."
   - position: DST
     exactly: 1
     not_before_round: 16

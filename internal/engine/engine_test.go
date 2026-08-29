@@ -240,7 +240,7 @@ func TestGates(t *testing.T) {
 		{"opening: nothing forced, DST banned", map[players.Position]int{players.WR: 2}, 8, 15, "", []players.Position{players.DST}, ""},
 		{"RB gate at #26 with 0 RB forces RB", map[players.Position]int{players.WR: 2}, 26, 13, players.RB, nil, "RB GATE"},
 		{"RB gate at #11 with 0 RB: 2 picks for 2 RBs forces", map[players.Position]int{players.WR: 2}, 11, 14, players.RB, nil, "RB GATE"},
-		{"TE gate last pick before #49", map[players.Position]int{players.WR: 2, players.RB: 2}, 49, 12, players.TE, nil, "TE GATE"},
+		{"TE gate last pick before #65", map[players.Position]int{players.WR: 2, players.RB: 2}, 65, 11, players.TE, nil, "TE GATE"},
 		{"QB gate last pick before #68", map[players.Position]int{players.WR: 2, players.RB: 2, players.TE: 1}, 68, 10, players.QB, nil, "QB GATE"},
 		{"QB max 2 bans QB", map[players.Position]int{players.QB: 2, players.WR: 2, players.RB: 2, players.TE: 1}, 90, 8, "", []players.Position{players.QB}, ""},
 		{"DST last pick forced", map[players.Position]int{players.QB: 1, players.WR: 5, players.RB: 5, players.TE: 2}, 181, 1, players.DST, nil, "DST GATE"},
@@ -335,4 +335,108 @@ func TestDemoMidDraft(t *testing.T) {
 	if len(ad.Top) == 0 {
 		t.Fatal("no recommendation")
 	}
+}
+
+// TestGatePriorityIgnoresYAMLOrder covers the case two gates want the same pick. Before
+// this, force() took whichever gate appeared first in strategy.yaml and silently dropped
+// the other; the winner has to be the more urgent one, and the loser has to be visible.
+func TestGatePriorityIgnoresYAMLOrder(t *testing.T) {
+	lg, pool, cfg := fixture(t)
+	me := lg.MyTeam
+	mk := func(e *Engine, counts map[players.Position]int, live, left int) (*rosterCounts, *Advice) {
+		rc := &rosterCounts{cfg: cfg, counts: map[string]map[players.Position]int{me: counts}, left: map[string]int{me: left}}
+		slot, _ := lg.SlotForLive(live)
+		return rc, &Advice{Round: slot.Round}
+	}
+	withGates := func(gs []strategy.Gate) *Engine {
+		c := *cfg
+		c.Gates = gs
+		return New(lg, pool, &c, 1)
+	}
+
+	// Tighter slack wins even though it is declared second. QB has exactly one pick
+	// left for one QB (slack 0); RB has one pick left for two RBs (slack -1).
+	t.Run("tighter slack beats declaration order", func(t *testing.T) {
+		e := withGates([]strategy.Gate{
+			{Position: players.QB, MustDraftByLivePick: 68},
+			{Position: players.RB, MinCountByLivePick: map[int]int{68: 2}},
+		})
+		rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.TE: 1}, 68, 10)
+		g := e.gates(rc, me, 68, ad)
+		if g.forced != players.RB {
+			t.Errorf("forced=%q want RB (QB is declared first but has more slack)", g.forced)
+		}
+		if !hasWarning(ad, "GATE CONFLICT") {
+			t.Errorf("losing gate dropped silently; warnings=%v", ad.Warnings)
+		}
+	})
+
+	// A deadline that has already passed cannot be saved by forcing, so a gate that
+	// still can be met outranks it regardless of order.
+	t.Run("savable beats already-missed", func(t *testing.T) {
+		e := withGates([]strategy.Gate{
+			{Position: players.TE, MustDraftByLivePick: 26},
+			{Position: players.QB, MustDraftByLivePick: 68},
+		})
+		rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.RB: 2}, 68, 10)
+		g := e.gates(rc, me, 68, ad)
+		if g.forced != players.QB {
+			t.Errorf("forced=%q want QB (TE deadline #26 is already gone)", g.forced)
+		}
+	})
+
+	// Same gate set, reversed in the file: the outcome must not move.
+	t.Run("deterministic under reordering", func(t *testing.T) {
+		a := []strategy.Gate{
+			{Position: players.QB, MustDraftByLivePick: 68},
+			{Position: players.RB, MinCountByLivePick: map[int]int{68: 2}},
+		}
+		b := []strategy.Gate{a[1], a[0]}
+		var got []players.Position
+		for _, gs := range [][]strategy.Gate{a, b} {
+			e := withGates(gs)
+			rc, ad := mk(e, map[players.Position]int{players.WR: 2, players.TE: 1}, 68, 10)
+			got = append(got, e.gates(rc, me, 68, ad).forced)
+		}
+		if got[0] != got[1] {
+			t.Errorf("reordering strategy.yaml changed the forced position: %q vs %q", got[0], got[1])
+		}
+	})
+}
+
+// TestShippedGatesDoNotCollide is the config guard: no two must-draft deadlines in the
+// real strategy.yaml may share a last-chance pick, because only one of them can win.
+func TestShippedGatesDoNotCollide(t *testing.T) {
+	lg, _, cfg := fixture(t)
+	lastChance := map[int][]players.Position{}
+	for _, gt := range cfg.Gates {
+		if gt.MustDraftByLivePick == 0 {
+			continue
+		}
+		last := 0
+		for _, lp := range lg.MyLivePicks {
+			if lp <= gt.MustDraftByLivePick {
+				last = lp
+			}
+		}
+		if last == 0 {
+			t.Errorf("%s gate deadline #%d is before my first pick", gt.Position, gt.MustDraftByLivePick)
+			continue
+		}
+		lastChance[last] = append(lastChance[last], gt.Position)
+	}
+	for pick, pos := range lastChance {
+		if len(pos) > 1 {
+			t.Errorf("gates %v all have their last chance at pick #%d; only one can be forced", pos, pick)
+		}
+	}
+}
+
+func hasWarning(ad *Advice, sub string) bool {
+	for _, w := range ad.Warnings {
+		if strings.Contains(w, sub) {
+			return true
+		}
+	}
+	return false
 }

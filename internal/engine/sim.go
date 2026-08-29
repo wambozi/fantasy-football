@@ -31,6 +31,11 @@ type SimResult struct {
 	Violations []string           // §10 invariants this draft broke
 	SpecCount  int                // keeper-speculative players on my final roster
 	Counts     map[players.Position]int
+	// GateFired counts my picks where a gate band was active and forced a position.
+	// GateBinding counts the subset where that changed the pick: the best-scoring
+	// eligible player was at a different position, so the deadline actually bit.
+	GateFired   map[players.Position]int
+	GateBinding map[players.Position]int
 }
 
 // SimOptions tune one mock draft.
@@ -56,7 +61,7 @@ func SimulateDraft(lg *league.League, pool *players.Pool, cfg0 *strategyConfig, 
 		return SimResult{}, err
 	}
 	rng := rand.New(rand.NewPCG(seed, 0x5eed))
-	res := SimResult{Seed: seed, Counts: map[players.Position]int{}}
+	res := SimResult{Seed: seed, Counts: map[players.Position]int{}, GateFired: map[players.Position]int{}, GateBinding: map[players.Position]int{}}
 	me := lg.MyTeam
 
 	for {
@@ -75,6 +80,12 @@ func SimulateDraft(lg *league.League, pool *players.Pool, cfg0 *strategyConfig, 
 					return res, fmt.Errorf("seed %d live %d: engine returned no recommendation", seed, snap.LivePick)
 				}
 				choice = ad.Top[0].Player
+				if ad.Top[0].GateForced {
+					res.GateFired[choice.Pos]++
+					if len(ad.Candidates) > 0 && ad.Candidates[0].Player.Pos != choice.Pos {
+						res.GateBinding[choice.Pos]++
+					}
+				}
 			}
 		} else {
 			choice = e.opponentPick(rng, snap, slot)

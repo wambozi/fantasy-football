@@ -107,10 +107,18 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	bad := 0
 	flexPos := map[players.Position]int{}
 	posTotals := map[players.Position]int{}
-	var engLineup, baseLineup []float64
+	var engLineup, baseLineup, diffs []float64
 	specTotal := 0
+	gateFired := map[players.Position]int{}
+	gateBinding := map[players.Position]int{}
 	for i, r := range engRes {
 		specTotal += r.SpecCount
+		for pos, c := range r.GateFired {
+			gateFired[pos] += c
+		}
+		for pos, c := range r.GateBinding {
+			gateBinding[pos] += c
+		}
 		if len(r.Violations) > 0 {
 			bad++
 			if verbose {
@@ -128,6 +136,7 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 		}
 		engLineup = append(engLineup, r.Lineup)
 		baseLineup = append(baseLineup, baseRes[i].Lineup)
+		diffs = append(diffs, r.Lineup-baseRes[i].Lineup)
 	}
 	for i := 0; i < show && i < len(engRes); i++ {
 		printDraft(engRes[i])
@@ -150,8 +159,31 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 	for _, pos := range []players.Position{players.RB, players.WR, players.TE} {
 		fmt.Printf("  %s %d", pos, flexPos[pos])
 	}
+	fmt.Printf("\ngate-forced picks per draft (band fired / changed the pick):")
+	for _, pos := range []players.Position{players.QB, players.RB, players.WR, players.TE, players.DST} {
+		if gateFired[pos] == 0 {
+			continue
+		}
+		fmt.Printf("  %s %.2f/%.2f", pos, float64(gateFired[pos])/float64(n), float64(gateBinding[pos])/float64(n))
+	}
+	if len(gateFired) == 0 {
+		fmt.Printf("  none")
+	}
 	em, bm := median(engLineup), median(baseLineup)
 	fmt.Printf("\nmedian lineup points: engine %.0f  baseline(BPA) %.0f  (%+.1f%%)\n", em, bm, 100*(em-bm)/bm)
+	// Seeds are paired (same opponent draws), so compare per-seed differences, not medians.
+	wins, losses := 0, 0
+	for _, d := range diffs {
+		switch {
+		case d > 0:
+			wins++
+		case d < 0:
+			losses++
+		}
+	}
+	md := median(diffs)
+	fmt.Printf("paired engine−baseline: median %+.0f  mean %+.0f  p10 %+.0f  p90 %+.0f  win %.1f%%  loss %.1f%%\n",
+		md, mean(diffs), quantile(diffs, 0.10), quantile(diffs, 0.90), 100*float64(wins)/float64(n), 100*float64(losses)/float64(n))
 
 	// §10 thresholds.
 	fail := false
@@ -183,7 +215,7 @@ func run(n, sims int, dataDir, myTeam string, seed uint64, verbose bool, show in
 		}
 	}
 	check(hard == 0, fmt.Sprintf("100%% of drafts satisfy every hard invariant (%d failing)", hard))
-	check(em > bm, "median lineup beats naive BPA baseline")
+	check(md > 0 && wins > losses, fmt.Sprintf("engine beats naive BPA baseline on paired seeds (median %+.0f, %d–%d)", md, wins, losses))
 	check(flexPos[players.RB] > 0 && flexPos[players.WR] > 0, "flex is filled by value, not a fixed position")
 	if fail {
 		return fmt.Errorf("invariants failed")
@@ -206,6 +238,27 @@ func median(v []float64) float64 {
 		return 0
 	}
 	return s[len(s)/2]
+}
+
+func mean(v []float64) float64 {
+	if len(v) == 0 {
+		return 0
+	}
+	t := 0.0
+	for _, x := range v {
+		t += x
+	}
+	return t / float64(len(v))
+}
+
+func quantile(v []float64, q float64) float64 {
+	s := append([]float64(nil), v...)
+	sort.Float64s(s)
+	if len(s) == 0 {
+		return 0
+	}
+	i := int(q * float64(len(s)-1))
+	return s[i]
 }
 
 func printDraft(r engine.SimResult) {
