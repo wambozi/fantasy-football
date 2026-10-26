@@ -65,6 +65,12 @@ type Engine struct {
 	// position (k=0 for the first). Diminishing returns keep the bench diversified
 	// instead of stacking the position with the lowest waiver level.
 	BenchDecay float64 `yaml:"bench_decay"`
+	// WaiverDrafted is how many players THIS room drafts per position (keepers
+	// included), measured from its own past boards. It sets the waiver-level index:
+	// expected drafted minus already taken. Empty falls back to counting available
+	// players with ADP inside the draft, which imports other formats' positional
+	// habits — consensus ADP drafts far more QBs and TEs by pick 204 than this room.
+	WaiverDrafted map[players.Position]int `yaml:"waiver_drafted"`
 }
 
 // BenchFactorAt is BenchFactor for a given round: from bench_late_round the late
@@ -98,6 +104,10 @@ type ManagerTendency struct {
 	FirstQB  int     `yaml:"first_qb"`
 	FirstTE  int     `yaml:"first_te"`
 	FirstDST int     `yaml:"first_dst"`
+	// LambdaRank is this manager's measured λ_rank — how steeply they prefer the best
+	// available player over a deeper reach — on the same scale as engine.lambda_rank.
+	// 0 means unmeasured: the team draws the global value.
+	LambdaRank float64 `yaml:"lambda_rank"`
 }
 
 // Bias is the multiplier for pos, 1.0 when unknown so a missing team is simply neutral.
@@ -143,6 +153,11 @@ func nz(v float64) float64 {
 type ManagerBias struct {
 	Weight    float64 `yaml:"weight"`
 	EarlyDamp float64 `yaml:"early_damp"`
+	// LambdaWeight scales the per-team lambda_rank deviations the way Weight scales the
+	// positional ones: 0 gives every opponent the global engine.lambda_rank, 1 applies
+	// the measured per-team value in full. Separate knobs because the two tendencies
+	// were measured by different pipelines and either can be switched off alone.
+	LambdaWeight float64 `yaml:"lambda_weight"`
 	// AppliesTo: "surplus" (the default) leans only on picks past a team's starter and
 	// flex slots. Hoarding is a bench habit — scaling the starter-filling term instead
 	// just models an opponent who is BETTER at building a roster, which is the opposite
@@ -169,6 +184,22 @@ func (b ManagerBias) For(team string, pos players.Position, round int, fillsStar
 		m *= b.EarlyDamp
 	}
 	return m
+}
+
+// LambdaFor is the λ_rank the opponent model should use for team: the global value
+// nudged toward the team's measured one by lambda_weight. Neutral for unmeasured teams
+// and at weight 0, exactly like For. Floored well above zero so no configuration can
+// make an opponent draw uniformly from the whole candidate pool.
+func (b ManagerBias) LambdaFor(team string, global float64) float64 {
+	t, ok := b.Teams[team]
+	if !ok || b.LambdaWeight <= 0 || t.LambdaRank <= 0 {
+		return global
+	}
+	lam := global + (t.LambdaRank-global)*b.LambdaWeight
+	if min := global * 0.25; lam < min {
+		return min
+	}
+	return lam
 }
 
 type Gate struct {
@@ -260,6 +291,20 @@ func (c *Config) validate() error {
 	}
 	if c.Engine.Sims < 1 || c.Engine.CandidatePool < 1 || c.Engine.LambdaRank <= 0 {
 		return fmt.Errorf("engine sims/candidate_pool/lambda_rank must be positive")
+	}
+	for team, t := range c.ManagerBias.Teams {
+		if t.LambdaRank < 0 {
+			return fmt.Errorf("manager_bias.teams[%s].lambda_rank must be >= 0", team)
+		}
+	}
+	if len(c.Engine.WaiverDrafted) > 0 {
+		// Partial tables are a silent foot-gun: a missing position would pin its waiver
+		// level to the best available player and zero out that position's bench value.
+		for pos := range c.Roster.Starters {
+			if _, ok := c.Engine.WaiverDrafted[pos]; !ok {
+				return fmt.Errorf("engine.waiver_drafted is set but missing %s", pos)
+			}
+		}
 	}
 	if c.Roster.TotalSpots != sumStarters(c.Roster.Starters)+c.Roster.Flex.Count+c.Roster.Bench {
 		return fmt.Errorf("roster.total_spots %d != starters+flex+bench", c.Roster.TotalSpots)

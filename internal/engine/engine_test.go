@@ -584,6 +584,55 @@ func TestBenchIndexSharesFlexPool(t *testing.T) {
 	}
 }
 
+// TestWaiverLevelUsesRoomCounts: with engine.waiver_drafted set, the waiver baseline
+// indexes by how many players THIS room still expects to draft at the position, not by
+// how many have consensus ADP inside the draft — and it adapts as players are taken.
+func TestWaiverLevelUsesRoomCounts(t *testing.T) {
+	lg, pool, cfg := fixture(t)
+	if len(cfg.Engine.WaiverDrafted) == 0 {
+		t.Fatal("strategy.yaml has no engine.waiver_drafted — the room-measured counts did not load")
+	}
+	e := New(lg, pool, cfg, 1)
+	var board []*players.Player
+	for _, p := range pool.Players {
+		if p.Pos.Draftable() {
+			board = append(board, p)
+		}
+	}
+	kth := func(pos players.Position, k int) float64 {
+		var pts []float64
+		for _, p := range board {
+			if p.Pos == pos {
+				pts = append(pts, p.ProjPoints)
+			}
+		}
+		sortDesc(pts)
+		if k >= len(pts) {
+			k = len(pts) - 1
+		}
+		return pts[k]
+	}
+	w := e.waiverLevel(board, nil)
+	for pos, k := range cfg.Engine.WaiverDrafted {
+		if want := kth(pos, k); w[pos] != want {
+			t.Errorf("%s waiver level %.1f, want %.1f (the %d-th best projection)", pos, w[pos], want, k)
+		}
+	}
+	// Once the room has taken its expected share, the wire is the best remaining player.
+	taken := map[players.Position]int{players.QB: cfg.Engine.WaiverDrafted[players.QB] + 3}
+	if w2 := e.waiverLevel(board, taken); w2[players.QB] != kth(players.QB, 0) {
+		t.Errorf("QB fully drafted: waiver level %.1f, want best available %.1f", w2[players.QB], kth(players.QB, 0))
+	}
+	// The room count must actually move the needle off the ADP-count fallback.
+	cfg2 := *cfg
+	eng2 := cfg2.Engine
+	eng2.WaiverDrafted = nil
+	cfg2.Engine = eng2
+	if w3 := New(lg, pool, &cfg2, 1).waiverLevel(board, nil); w3[players.QB] >= w[players.QB] {
+		t.Errorf("ADP-count QB level %.1f should sit below the room-count level %.1f — consensus drafts more QBs than this room", w3[players.QB], w[players.QB])
+	}
+}
+
 // TestManagerBias covers the per-manager lean measured from past seasons: it must nudge
 // the opponent model without replacing it, stay neutral for unknown teams, and switch off
 // cleanly at weight 0 so the league-average model is always one config edit away.
@@ -647,6 +696,32 @@ func TestManagerBias(t *testing.T) {
 		late := b.For("Svannah Alley Cats", players.QB, 13, false)
 		if !(early < late) {
 			t.Errorf("QB weight round 4 (%v) should be below round 13 (%v)", early, late)
+		}
+	})
+	t.Run("per-team lambda_rank nudges, never replaces", func(t *testing.T) {
+		global := cfg.Engine.LambdaRank
+		if got := b.LambdaFor("Nobody FC", global); got != global {
+			t.Errorf("unknown team λ = %v, want global %v", got, global)
+		}
+		off := b
+		off.LambdaWeight = 0
+		for _, team := range lg.Teams {
+			if got := off.LambdaFor(team, global); got != global {
+				t.Fatalf("lambda_weight 0: %s λ = %v, want global %v", team, got, global)
+			}
+		}
+		half := b
+		half.LambdaWeight = 0.5
+		full := b.LambdaFor("Lawson Country Lets Ride", global)
+		if got, want := half.LambdaFor("Lawson Country Lets Ride", global), global+(full-global)/2; math.Abs(got-want) > 1e-9 {
+			t.Errorf("half weight λ = %v, want %v", got, want)
+		}
+		// Every shipped value stays a nudge: within [0.5, 1.5]× the global steepness.
+		for _, team := range lg.Teams {
+			lam := b.LambdaFor(team, global)
+			if lam < 0.5*global || lam > 1.5*global {
+				t.Errorf("%s λ = %v — outside the nudge band around %v; remeasure before shipping", team, lam, global)
+			}
 		}
 	})
 	t.Run("the standout profiles survived the pipeline", func(t *testing.T) {

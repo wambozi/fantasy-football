@@ -26,8 +26,9 @@ type SimResult struct {
 	Picks      []SimPick // every live pick, in order
 	Mine       []SimPick // my picks only
 	Roster     []*players.Player
-	Lineup     float64            // ProjPoints of my optimal starting lineup
+	Lineup     float64            // season points of my optimal week-by-week lineup (bye-aware)
 	FlexPos    []players.Position // positions that ended up in my flex slots
+	ByeHoles   int                // starter/flex slot-weeks left empty because everyone eligible was on bye
 	Violations []string           // §10 invariants this draft broke
 	SpecCount  int                // keeper-speculative players on my final roster
 	Counts     map[players.Position]int
@@ -108,7 +109,16 @@ func SimulateDraft(lg *league.League, pool *players.Pool, cfg0 *strategyConfig, 
 		res.Roster = append(res.Roster, p)
 		res.Counts[p.Pos]++
 	}
-	res.Lineup, res.FlexPos = lineup(&cfg, res.Roster)
+	// The wire a bye hole streams from: end-of-draft waiver level, every roster counted.
+	taken := map[players.Position]int{}
+	for _, ids := range final.Rosters {
+		for _, id := range ids {
+			if p, ok := pool.ByID[id]; ok {
+				taken[p.Pos]++
+			}
+		}
+	}
+	res.Lineup, res.FlexPos, res.ByeHoles = lineup(&cfg, res.Roster, e.waiverLevel(e.board(final), taken))
 	res.Violations = checkInvariants(e, lg, &cfg, &res)
 	return res, nil
 }
@@ -131,7 +141,7 @@ func (e *Engine) opponentPick(rng *rand.Rand, snap state.Snapshot, slot league.D
 	}
 	sort.Slice(cs, func(a, b int) bool { return cs[a].noisy < cs[b].noisy })
 	cs = cs[:K]
-	lam := e.cfg.Engine.LambdaRank
+	lam := e.cfg.ManagerBias.LambdaFor(slot.Team, e.cfg.Engine.LambdaRank)
 	weights := make([]float64, K)
 	total := 0.0
 	for i, c := range cs {
@@ -188,33 +198,93 @@ func (e *Engine) baselinePick(snap state.Snapshot, me string) *players.Player {
 	return nil
 }
 
-// lineup returns the ProjPoints of the best legal starting lineup and which positions
-// fill the flex slots.
-func lineup(cfg *strategyConfig, roster []*players.Player) (float64, []players.Position) {
+// seasonWeeks is the NFL regular season: 18 weeks, 17 games, one bye per team.
+const seasonWeeks = 18
+
+// lineup returns the season points of the best legal lineup set week by week, which
+// positions fill the flex slots at full strength, and how many starter/flex slots had
+// nobody rostered to fill them because everyone eligible was on bye.
+//
+// Week by week is the part that matters: a roster with one QB used to book a full 17
+// games from the slot no matter that week 7 is a zero; the holes were found by a human
+// reading the board. A hole is priced at the wire, not at zero: waiver is the
+// end-of-draft waiver level per position, what streaming that week actually delivers
+// in a FAAB league (nil means no wire — the hole is a true zero). Pricing holes at
+// zero instead demands a drafted backup even where the wire outscores every backup the
+// engine could buy, which is insurance against a fiction. The unpriced count still
+// comes back in ByeHoles so a naked bye is never invisible.
+func lineup(cfg *strategyConfig, roster []*players.Player, waiver map[players.Position]float64) (float64, []players.Position, int) {
+	// Flex identity comes from the full-strength week: the diversity invariant asks
+	// which positions hold the flex when everybody plays, not who covered a bye.
+	_, flex, _ := weekLineup(cfg, roster, 0, nil)
+	total := 0.0
+	holes := 0
+	for w := 1; w <= seasonWeeks; w++ {
+		pts, _, open := weekLineup(cfg, roster, w, waiver)
+		total += pts
+		holes += open
+	}
+	return total, flex, holes
+}
+
+// weekLineup fills the starting slots for one week from the players not on bye that
+// week (week 0 = full strength). A player's weekly points are ProjPoints spread over
+// the games they play, so a roster deep enough to cover every bye sums back to at
+// least the season-total figure; a slot nobody can fill is worth one streamed week
+// from the waiver level (zero when waiver is nil) and is counted as open either way.
+func weekLineup(cfg *strategyConfig, roster []*players.Player, week int, waiver map[players.Position]float64) (float64, []players.Position, int) {
+	weekly := func(p *players.Player) float64 {
+		games := float64(seasonWeeks)
+		if p.Bye >= 1 && p.Bye <= seasonWeeks {
+			games--
+		}
+		return p.ProjPoints / games
+	}
 	byPos := map[players.Position][]*players.Player{}
 	for _, p := range roster {
+		if week > 0 && p.Bye == week {
+			continue
+		}
 		byPos[p.Pos] = append(byPos[p.Pos], p)
 	}
 	total := 0.0
+	open := 0
 	var surplus []*players.Player
+	for pos, n := range cfg.Roster.Starters {
+		if have := len(byPos[pos]); have < n {
+			open += n - have
+			total += float64(n-have) * waiver[pos] / (seasonWeeks - 1)
+		}
+	}
 	for pos, list := range byPos {
-		sort.Slice(list, func(a, b int) bool { return list[a].ProjPoints > list[b].ProjPoints })
+		sort.Slice(list, func(a, b int) bool { return weekly(list[a]) > weekly(list[b]) })
 		n := cfg.Roster.Starters[pos]
 		for i, p := range list {
 			if i < n {
-				total += p.ProjPoints
+				total += weekly(p)
 			} else if isFlex(cfg, pos) {
 				surplus = append(surplus, p)
 			}
 		}
 	}
-	sort.Slice(surplus, func(a, b int) bool { return surplus[a].ProjPoints > surplus[b].ProjPoints })
+	sort.Slice(surplus, func(a, b int) bool { return weekly(surplus[a]) > weekly(surplus[b]) })
 	var flex []players.Position
 	for i := 0; i < cfg.Roster.Flex.Count && i < len(surplus); i++ {
-		total += surplus[i].ProjPoints
+		total += weekly(surplus[i])
 		flex = append(flex, surplus[i].Pos)
 	}
-	return total, flex
+	if short := cfg.Roster.Flex.Count - len(surplus); short > 0 {
+		open += short
+		// A flex hole streams the best wire among the eligible positions.
+		best := 0.0
+		for _, pos := range cfg.Roster.Flex.Eligible {
+			if waiver[pos] > best {
+				best = waiver[pos]
+			}
+		}
+		total += float64(short) * best / (seasonWeeks - 1)
+	}
+	return total, flex, open
 }
 
 // checkInvariants evaluates the §10 per-draft invariants.
